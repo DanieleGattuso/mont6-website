@@ -1,28 +1,35 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 // Funzione ausiliaria per calcolare il prezzo per ogni specifica notte del soggiorno.
-// Questo risolve automaticamente i soggiorni che a cavallo di due mesi con tariffe diverse!
+// Questo risolve automaticamente i soggiorni a cavallo di due mesi con tariffe diverse!
 function getPriceForDate(date) {
-    const month = date.getMonth(); // 0 = Gennaio, 11 = Dicembre
+    const monthIndex = date.getMonth(); // 0 = Gennaio, 11 = Dicembre
     
-    // Tariffe provvisorie per notte in base al mese (in EUR)
-    // Queste tariffe possono essere personalizzate liberamente.
-    const monthlyRates = {
-        0: 120,  // Gennaio
-        1: 120,  // Febbraio
-        2: 140,  // Marzo
-        3: 180,  // Aprile
-        4: 200,  // Maggio
-        5: 250,  // Giugno
-        6: 300,  // Luglio
-        7: 350,  // Agosto
-        8: 260,  // Settembre
-        9: 180,  // Ottobre
-        10: 130, // Novembre
-        11: 150  // Dicembre
+    const monthsMapping = {
+        0: "Gennaio",
+        1: "Febbraio",
+        2: "Marzo",
+        3: "Aprile",
+        4: "Maggio",
+        5: "Giugno",
+        6: "Luglio",
+        7: "Agosto",
+        8: "Settembre",
+        9: "Ottobre",
+        10: "Novembre",
+        11: "Dicembre"
     };
 
-    return monthlyRates[month] || 150;
+    const monthName = monthsMapping[monthIndex];
+    
+    try {
+        // Carica dinamicamente il file prezzi.json (esbuild lo includerà nel bundle su Netlify)
+        const prezzi = require('../../prezzi.json');
+        return prezzi[monthName] || 150;
+    } catch (e) {
+        console.error("Errore nel caricamento di prezzi.json:", e);
+        return 150; // Tariffa di fallback in caso di errore
+    }
 }
 
 exports.handler = async (event) => {
