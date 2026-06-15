@@ -115,7 +115,6 @@ exports.handler = async (event) => {
 
         // Crea la sessione di checkout di Stripe
         const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card', 'ideal'], // Puoi aggiungere altri metodi come 'sepa_debit' o 'klarna'
             line_items: [
                 {
                     price_data: {
