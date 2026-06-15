@@ -17,13 +17,9 @@ exports.handler = async (event) => {
 
     let bookedDates = [];
 
-    // 1. Carica le date bloccate manualmente dal file local blocked-dates.json
+    // 1. Carica le date bloccate manualmente
     try {
-        const filePath = path.join(process.cwd(), 'blocked-dates.json');
-        if (fs.existsSync(filePath)) {
-            const fileData = fs.readFileSync(filePath, 'utf8');
-            bookedDates = JSON.parse(fileData);
-        }
+        bookedDates = require('../../blocked-dates.json');
     } catch (e) {
         console.error("Errore nella lettura di blocked-dates.json:", e);
     }
