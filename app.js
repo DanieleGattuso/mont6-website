@@ -157,6 +157,26 @@ function initBookingForm() {
         rangeSeparator: " al "
     });
 
+    // Funzione ausiliaria per convertire le date del server (stringhe YYYY-MM-DD) in veri oggetti Date
+    // e forzare il ridisegno del calendario Flatpickr
+    const updateCalendarDisabledDates = (bookedDates) => {
+        if (Array.isArray(bookedDates)) {
+            const formattedDates = bookedDates.map(range => {
+                if (range.from && range.to) {
+                    const [fY, fM, fD] = range.from.split('-');
+                    const [tY, tM, tD] = range.to.split('-');
+                    return {
+                        from: new Date(fY, fM - 1, fD),
+                        to: new Date(tY, tM - 1, tD)
+                    };
+                }
+                return range;
+            });
+            fp.set('disable', formattedDates);
+            fp.redraw();
+        }
+    };
+
     // Carica dinamicamente le date bloccate dal server (manuali + Airbnb)
     fetch('/.netlify/functions/get-booked-dates')
         .then(response => {
@@ -164,9 +184,7 @@ function initBookingForm() {
             return response.json();
         })
         .then(bookedDates => {
-            if (Array.isArray(bookedDates)) {
-                fp.set('disable', bookedDates);
-            }
+            updateCalendarDisabledDates(bookedDates);
         })
         .catch(err => {
             console.warn("Funzione Netlify non disponibile in locale. Tento il caricamento diretto di blocked-dates.json:", err);
@@ -177,9 +195,7 @@ function initBookingForm() {
                     return res.json();
                 })
                 .then(bookedDates => {
-                    if (Array.isArray(bookedDates)) {
-                        fp.set('disable', bookedDates);
-                    }
+                    updateCalendarDisabledDates(bookedDates);
                 })
                 .catch(localErr => console.error("Impossibile caricare le date bloccate in locale:", localErr));
         });
