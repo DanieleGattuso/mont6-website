@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="it" data-lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mont°6 — Prenotazione Confermata</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- CSS (riutilizza il foglio di stile principale) -->
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        .success-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-m) 0;
+            background-color: var(--color-bg-light);
+            text-align: center;
+        }
+        .success-card {
+            background: #fff;
+            padding: 4rem;
+            border-radius: 12px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.04);
+            max-width: 600px;
+            width: 90%;
+            margin: 0 auto;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        .success-icon {
+            color: var(--color-accent);
+            margin-bottom: 2rem;
+        }
+        .success-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 1.5rem;
+        }
+        .success-card p {
+            margin-bottom: 1.5rem;
+        }
+        .btn-success-home {
+            background-color: var(--color-bg-dark);
+            color: #fff;
+            margin-top: 2rem;
+            width: 100%;
+        }
+        .btn-success-home:hover {
+            background-color: var(--color-accent);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(197, 160, 89, 0.3);
+            color: #fff;
+        }
+    </style>
+</head>
+<body class="editorial-theme">
+
+    <div class="success-wrapper">
+        <div class="success-card">
+            <div class="success-icon">
+                <svg viewBox="0 0 24 24" width="64" height="64" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            </div>
+            
+            <h1 class="success-title">
+                <span class="lang-it">Pagamento Ricevuto!</span>
+                <span class="lang-en">Payment Received!</span>
+            </h1>
+            
+            <p class="lead-text">
+                <span class="lang-it">Grazie, la tua richiesta di soggiorno a Mont°6 è stata registrata con successo.</span>
+                <span class="lang-en">Thank you, your stay request at Mont°6 has been successfully registered.</span>
+            </p>
+            
+            <p>
+                <span class="lang-it">Ti invieremo un'e-mail di conferma contenente tutti i dettagli del soggiorno e le istruzioni per il self check-in a Cefalù.</span>
+                <span class="lang-en">We will send you a confirmation email containing all your stay details and self check-in instructions for Cefalù.</span>
+            </p>
+
+            <a href="index.html" class="btn-luxe btn-success-home">
+                <span class="lang-it">Torna alla Home</span>
+                <span class="lang-en">Back to Home</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Semplice script per gestire la lingua salvata -->
+    <script>
+        const savedLang = localStorage.getItem('mont6_lang') || 'it';
+        document.documentElement.setAttribute('data-lang', savedLang);
+    </script>
+</body>
+</html>

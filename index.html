@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="it" data-lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mont°6 — Luxury Retreat a Cefalù</title>
+    
+    <!-- Meta SEO -->
+    <meta name="description" content="Scopri Mont°6, un rifugio di lusso nel cuore di Cefalù. Un design ricercato e comfort esclusivi per la tua vacanza indimenticabile in Sicilia.">
+    <meta name="theme-color" content="#1a2b22">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Flatpickr (Calendar UI) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="editorial-theme">
+
+    <!-- CUSTOM CURSOR -->
+    <div class="custom-cursor"></div>
+    <div class="custom-cursor-follower"></div>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#home">
+                <img src="img/PROFILO_Tavola disegno 2.png" alt="Mont°6 Logo" class="brand-logo">
+            </a>
+            <div class="nav-links">
+                <a href="#concept">
+                    <span class="lang-it">La Filosofia</span>
+                    <span class="lang-en">The Concept</span>
+                </a>
+                <a href="#gallery">
+                    <span class="lang-it">La Dimora</span>
+                    <span class="lang-en">The House</span>
+                </a>
+                <a href="#reviews">
+                    <span class="lang-it">Esperienze</span>
+                    <span class="lang-en">Experiences</span>
+                </a>
+                <a href="#booking" class="btn-nav-book nav-cta-btn">
+                    <span class="lang-it">Verifica Disponibilità</span>
+                    <span class="lang-en">Check Availability</span>
+                </a>
+            </div>
+            
+            <div class="nav-right-actions">
+                <!-- Language Selector Desktop -->
+                <div class="lang-selector desktop-only">
+                    <button class="lang-btn active" onclick="setLang('it')">IT</button>
+                    <span class="lang-divider">|</span>
+                    <button class="lang-btn" onclick="setLang('en')">EN</button>
+                </div>
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Menu">
+                    <div class="hamburger">
+                        <span></span><span></span><span></span>
+                    </div>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Dropdown Fullscreen -->
+        <div class="mobile-nav-fullscreen" id="mobile-nav">
+            <!-- Language Selector Mobile -->
+            <div class="lang-selector mobile-lang">
+                <button class="lang-btn active" onclick="setLang('it')">IT</button>
+                <span class="lang-divider">|</span>
+                <button class="lang-btn" onclick="setLang('en')">EN</button>
+            </div>
+            
+            <div class="mobile-nav-content">
+                <a href="#concept" class="mobile-link">
+                    <span class="lang-it">La Filosofia</span>
+                    <span class="lang-en">The Concept</span>
+                    <span class="num">01</span>
+                </a>
+                <a href="#gallery" class="mobile-link">
+                    <span class="lang-it">La Dimora</span>
+                    <span class="lang-en">The House</span>
+                    <span class="num">02</span>
+                </a>
+                <a href="#amenities" class="mobile-link">
+                    <span class="lang-it">I Servizi</span>
+                    <span class="lang-en">Amenities</span>
+                    <span class="num">03</span>
+                </a>
+                <a href="#reviews" class="mobile-link">
+                    <span class="lang-it">Esperienze</span>
+                    <span class="lang-en">Experiences</span>
+                    <span class="num">04</span>
+                </a>
+                <a href="#booking" class="mobile-link btn-mobile-book" style="color: var(--color-accent); font-size: 1.8rem; margin-top: 2rem;">
+                    <span class="lang-it">Prenota Ora</span>
+                    <span class="lang-en">Book Now</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="hero" id="home">
+        <!-- Parallax Background Image -->
+        <div class="hero-bg parallax-img" style="background-image: url('img/_MG_4132.jpg');"></div>
+        <div class="hero-overlay-gradient"></div>
+        
+        <div class="hero-content reveal-up">
+            <p class="hero-kicker">
+                <span class="lang-it">Rifugio d'Autore • Cefalù</span>
+                <span class="lang-en">Designer Retreat • Cefalù</span>
+            </p>
+            <h1 class="hero-title display-title">
+                <span class="lang-it"><span class="italic-accent">Un'oasi</span> di pace<br>e design.</span>
+                <span class="lang-en">An <span class="italic-accent">oasis</span> of peace<br>and design.</span>
+            </h1>
+            <div class="hero-cta-wrapper mt-4">
+                <a href="#booking" class="btn-luxe btn-hero">
+                    <span class="lang-it">Verifica Disponibilità</span>
+                    <span class="lang-en">Check Availability</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="hero-bottom-bar">
+            <div class="hero-location">
+                <span class="lang-it">Sicilia, Italia</span>
+                <span class="lang-en">Sicily, Italy</span>
+            </div>
+            <a href="#concept" class="scroll-down-btn">
+                <span class="lang-it">Scopri</span>
+                <span class="lang-en">Discover</span>
+                <div class="line-down"></div>
+            </a>
+        </div>
+    </header>
+
+    <!-- CONCEPT / ASYMMETRICAL SECTION -->
+    <section class="section concept-editorial" id="concept">
+        <div class="container relative">
+            <div class="bg-text-watermark">
+                <span class="lang-it">Essenza</span>
+                <span class="lang-en">Essence</span>
+            </div>
+            
+            <div class="editorial-grid">
+                <!-- Text Block -->
+                <div class="ed-text-box reveal-up">
+                    <h2 class="section-title">
+                        <span class="lang-it">L'Arte<br>dell'Accoglienza</span>
+                        <span class="lang-en">The Art of<br>Hospitality</span>
+                    </h2>
+                    <div class="accent-line"></div>
+                    <p class="lead-text">
+                        <span class="lang-it">Mont°6 non è solo un luogo dove dormire, ma un'esperienza estetica nel cuore vibrante di Cefalù.</span>
+                        <span class="lang-en">Mont°6 is not just a place to sleep, but an aesthetic experience in the vibrant heart of Cefalù.</span>
+                    </p>
+                    <p>
+                        <span class="lang-it">Un rifugio finemente ristrutturato dove il lusso sussurrato incontra l'anima calda della Sicilia. L'arredamento di pregio e la cura maniacale per i dettagli sono stati pensati per chi cerca la perfezione estetica senza rinunciare al comfort assoluto.</span>
+                        <span class="lang-en">A finely restored retreat where whispered luxury meets the warm soul of Sicily. The premium furnishings and meticulous attention to detail are designed for those seeking aesthetic perfection without compromising on absolute comfort.</span>
+                    </p>
+                </div>
+                
+                <!-- Images Block -->
+                <div class="img-wrapper">
+                    <div class="img-main reveal-right">
+                        <img src="img/_MG_4135.jpg" alt="Dettagli di design" loading="lazy">
+                    </div>
+                    <div class="img-sec reveal-up parallax-float">
+                        <img src="img/_MG_4179.jpg" alt="Atmosfera Living" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AMENITIES (ELEGANT REDESIGN) -->
+    <section class="section amenities-minimal" id="amenities">
+        <div class="container reveal-up">
+            <div class="section-header text-center split-header">
+                <h2 class="section-title">
+                    <span class="lang-it">Comfort Senza Compromessi</span>
+                    <span class="lang-en">Uncompromising Comfort</span>
+                </h2>
+                <div class="accent-line center"></div>
+                <p class="lead-text">
+                    <span class="lang-it">Dettagli pensati per farti sentire coccolato.</span>
+                    <span class="lang-en">Details designed to pamper you.</span>
+                </p>
+            </div>
+            
+            <div class="horizontal-scroller-mobile mt-4">
+                <div class="amenities-elegant-grid">
+                    <div class="am-elegant-item">
+                        <div class="am-icon-svg"><svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+                        <h3>
+                            <span class="lang-it">Interior Design</span>
+                            <span class="lang-en">Interior Design</span>
+                        </h3>
+                        <p>
+                            <span class="lang-it">Materiali di pregio, finiture artigianali e un'estetica calda.</span>
+                            <span class="lang-en">Premium materials, artisanal finishes, and a warm aesthetic.</span>
+                        </p>
+                    </div>
+                    <div class="am-elegant-item">
+                        <div class="am-icon-svg"><svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+                        <h3>
+                            <span class="lang-it">Posizione Prime</span>
+                            <span class="lang-en">Prime Location</span>
+                        </h3>
+                        <p>
+                            <span class="lang-it">A due passi dal Duomo UNESCO e dal mare.</span>
+                            <span class="lang-en">Steps away from the UNESCO Cathedral and the sea.</span>
+                        </p>
+                    </div>
+                    <div class="am-elegant-item">
+                        <div class="am-icon-svg"><svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M2 12h20M12 2v20M19 5l-14 14M5 5l14 14"/></svg></div>
+                        <h3>
+                            <span class="lang-it">Clima Perfetto</span>
+                            <span class="lang-en">Perfect Climate</span>
+                        </h3>
+                        <p>
+                            <span class="lang-it">Aria condizionata intelligente in ogni ambiente.</span>
+                            <span class="lang-en">Smart air conditioning in every room.</span>
+                        </p>
+                    </div>
+                    <div class="am-elegant-item">
+                        <div class="am-icon-svg"><svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M5 12.55a11 11 0 0114.08 0M1.42 9a16 16 0 0121.16 0M8.53 16.11a6 6 0 016.95 0M12 20h.01"/></svg></div>
+                        <h3>
+                            <span class="lang-it">Fibra Ottica</span>
+                            <span class="lang-en">High-Speed Wi-Fi</span>
+                        </h3>
+                        <p>
+                            <span class="lang-it">Connessione ultra-veloce gratuita, perfetta per smart working.</span>
+                            <span class="lang-en">Free ultra-fast connection, perfect for smart working.</span>
+                        </p>
+                    </div>
+                    <div class="am-elegant-item">
+                        <div class="am-icon-svg"><svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg></div>
+                        <h3>
+                            <span class="lang-it">Cucina Premium</span>
+                            <span class="lang-en">Premium Kitchen</span>
+                        </h3>
+                        <p>
+                            <span class="lang-it">Dotazione completa di alta gamma e macchina da caffè.</span>
+                            <span class="lang-en">Fully equipped with high-end appliances and coffee machine.</span>
+                        </p>
+                    </div>
+                    <div class="am-elegant-item">
+                        <div class="am-icon-svg"><svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+                        <h3>
+                            <span class="lang-it">Dettagli Luxury</span>
+                            <span class="lang-en">Luxury Details</span>
+                        </h3>
+                        <p>
+                            <span class="lang-it">Biancheria pregiata, asciugamani soffici e set di cortesia.</span>
+                            <span class="lang-en">Fine linens, soft towels, and premium courtesy sets.</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FULL WIDTH PARALLAX BREAK -->
+    <section class="parallax-break" style="background-image: url('img/_MG_4133.jpg');">
+        <div class="parallax-overlay">
+            <h2 class="break-title reveal-up">
+                <span class="lang-it">Riposo di Classe.</span>
+                <span class="lang-en">Rest in Style.</span>
+            </h2>
+        </div>
+    </section>
+
+    <!-- GALLERY (EDITORIAL MASONRY DESKTOP, SCROLL MOBILE) -->
+    <section class="section gallery-editorial bg-light" id="gallery">
+        <div class="container reveal-up">
+            <h2 class="section-title text-center">
+                <span class="lang-it">I Nostri Spazi</span>
+                <span class="lang-en">Our Spaces</span>
+            </h2>
+            <div class="accent-line center"></div>
+            
+            <div class="horizontal-scroller-mobile mt-l">
+                <div class="gallery-grid-desktop">
+                    <figure class="gal-fig tall">
+                        <img src="img/_MG_4136.jpg" alt="Master Bedroom" loading="lazy">
+                        <figcaption>
+                            <span class="lang-it">La Camera</span>
+                            <span class="lang-en">The Bedroom</span>
+                        </figcaption>
+                    </figure>
+                    <figure class="gal-fig wide">
+                        <img src="img/_MG_4126.jpg" alt="Dettagli arredo" loading="lazy">
+                        <figcaption>
+                            <span class="lang-it">Estetica Pura</span>
+                            <span class="lang-en">Pure Aesthetics</span>
+                        </figcaption>
+                    </figure>
+                    <figure class="gal-fig">
+                        <img src="img/_MG_4193.jpg" alt="Cucina design" loading="lazy">
+                        <figcaption>
+                            <span class="lang-it">La Cucina</span>
+                            <span class="lang-en">The Kitchen</span>
+                        </figcaption>
+                    </figure>
+                    <figure class="gal-fig">
+                        <img src="img/_MG_4152.jpg" alt="Atmosfera e luci" loading="lazy">
+                        <figcaption>
+                            <span class="lang-it">Atmosfere</span>
+                            <span class="lang-en">Atmosphere</span>
+                        </figcaption>
+                    </figure>
+                    <figure class="gal-fig">
+                        <img src="img/_MG_4189.jpg" alt="La zona bagno" loading="lazy">
+                        <figcaption>
+                            <span class="lang-it">Il Bagno</span>
+                            <span class="lang-en">The Bathroom</span>
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- REVIEWS (DARK MODE) -->
+    <section class="section reviews-dark" id="reviews">
+        <div class="container reveal-up">
+            <h2 class="section-title text-white text-center">
+                <span class="lang-it">Eccellenza Riconosciuta</span>
+                <span class="lang-en">Recognized Excellence</span>
+            </h2>
+            <p class="lead-text text-white opacity-70 text-center">
+                <span class="lang-it">I racconti di chi ha vissuto l'esperienza Mont°6.</span>
+                <span class="lang-en">Stories from those who experienced Mont°6.</span>
+            </p>
+            
+            <div class="horizontal-scroller-mobile mt-l">
+                <div class="reviews-desktop-grid">
+                    <div class="review-card-luxe">
+                        <div class="quote-mark">"</div>
+                        <p class="review-text">
+                            <span class="lang-it">Appartamento stupendo, curato nei minimi dettagli. La posizione è fantastica, a due passi da tutto. L'eleganza è tangibile in ogni stanza. Torneremo sicuramente!</span>
+                            <span class="lang-en">Stunning apartment, curated in every detail. The location is fantastic, a stone's throw from everything. Elegance is tangible in every room. We will definitely return!</span>
+                        </p>
+                        <div class="reviewer-box">
+                            <div class="rev-stars">★★★★★</div>
+                            <div class="rev-name">Marco <span>Italia</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="review-card-luxe">
+                        <div class="quote-mark">"</div>
+                        <p class="review-text">The most beautiful place we stayed in Sicily! Impeccably clean, extremely comfortable bed, and wonderful host. It felt like a 5-star boutique hotel.</p>
+                        <div class="reviewer-box">
+                            <div class="rev-stars">★★★★★</div>
+                            <div class="rev-name">Sarah <span>Regno Unito</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="review-card-luxe">
+                        <div class="quote-mark">"</div>
+                        <p class="review-text">
+                            <span class="lang-it">Un gioiello nel centro di Cefalù. L'arredamento è di un gusto squisito e la pulizia è impareggiabile. Assolutamente consigliato per coppie in cerca di relax.</span>
+                            <span class="lang-en">A jewel in the center of Cefalù. The decor is in exquisite taste and the cleanliness is unmatched. Absolutely recommended for couples seeking relaxation.</span>
+                        </p>
+                        <div class="reviewer-box">
+                            <div class="rev-stars">★★★★★</div>
+                            <div class="rev-name">Elena <span>Italia</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BOOKING SECTION WITH CALENDAR -->
+    <section class="section booking-premium bg-light" id="booking">
+        <div class="container reveal-up">
+            <div class="booking-wrapper">
+                
+                <div class="booking-info">
+                    <h2 class="section-title">
+                        <span class="lang-it">Prenota il tuo<br>Soggiorno</span>
+                        <span class="lang-en">Book your<br>Stay</span>
+                    </h2>
+                    <p class="lead-text mt-3">
+                        <span class="lang-it">Verifica la disponibilità e richiedi una prenotazione diretta, garantendoti la nostra migliore tariffa riservata.</span>
+                        <span class="lang-en">Check availability and request a direct booking, securing our best exclusive rate.</span>
+                    </p>
+                    
+                    <div class="faq-list">
+                        <div class="faq-item">
+                            <button class="faq-question">
+                                <span class="lang-it">Orari di Check-in e Check-out</span>
+                                <span class="lang-en">Check-in & Check-out Times</span>
+                                <span class="faq-icon">+</span>
+                            </button>
+                            <div class="faq-answer">
+                                <p>
+                                    <span class="lang-it">Il Check-in è dalle ore 15:00. Il Check-out è richiesto entro le ore 10:00 per garantire la pulizia meticolosa. Offriamo self check-in automatizzato.</span>
+                                    <span class="lang-en">Check-in is from 3:00 PM. Check-out is required by 10:00 AM to ensure meticulous cleaning. We offer automated self check-in.</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">
+                                <span class="lang-it">Dove posso parcheggiare?</span>
+                                <span class="lang-en">Where can I park?</span>
+                                <span class="faq-icon">+</span>
+                            </button>
+                            <div class="faq-answer">
+                                <p>
+                                    <span class="lang-it">Trovandoci nel centro storico pedonale, consigliamo di parcheggiare l'auto al "Parcheggio Coco" sul lungomare, a circa 5 minuti a piedi da noi.</span>
+                                    <span class="lang-en">Being located in the pedestrian historical center, we recommend parking at "Parcheggio Coco" on the seafront, about a 5-minute walk from us.</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="booking-form-card shadow-luxe">
+                    <h3 class="form-title">
+                        <span class="lang-it">Richiesta Diretta</span>
+                        <span class="lang-en">Direct Request</span>
+                    </h3>
+                    <p class="form-sub">
+                        <span class="lang-it">Risposta istantanea via WhatsApp</span>
+                        <span class="lang-en">Instant response via WhatsApp</span>
+                    </p>
+                    
+                    <div class="form-group mt-3">
+                        <label>
+                            <span class="lang-it">Date del Soggiorno</span>
+                            <span class="lang-en">Stay Dates</span>
+                        </label>
+                        <input type="text" id="date-range" class="luxe-input" placeholder="Check-in / Check-out" readonly>
+                        <p style="font-size: 0.75rem; color: var(--color-text-light); margin-top: 0.5rem; opacity: 0.8; font-style: italic; text-align: left;">
+                            <span class="lang-it">* Le date sbarrate nel calendario sono già prenotate.</span>
+                            <span class="lang-en">* Crossed out dates in the calendar are already booked.</span>
+                        </p>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label>
+                            <span class="lang-it">Ospiti</span>
+                            <span class="lang-en">Guests</span>
+                        </label>
+                        <select id="guest-count" class="luxe-input">
+                            <option value="1">1 Ospite</option>
+                            <option value="2" selected>2 Ospiti</option>
+                        </select>
+                    </div>
+                    
+                    <button id="btn-request-whatsapp" class="btn-luxe btn-whatsapp full-width mt-4">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                        <span class="lang-it">Richiedi su WhatsApp</span>
+                        <span class="lang-en">Request via WhatsApp</span>
+                    </button>
+
+                    <button id="btn-request-stripe" class="btn-luxe btn-stripe full-width mt-3">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+                        <span class="lang-it">Prenota e Paga Subito</span>
+                        <span class="lang-en">Book & Pay Online</span>
+                    </button>
+                    
+                    <div class="direct-benefits-box mt-4" style="border-top: 1px solid rgba(0,0,0,0.08); padding-top: 2rem;">
+                        <h4 style="font-family: var(--font-heading); font-size: 1.1rem; margin-bottom: 1rem; color: var(--color-text);">
+                            <span class="lang-it">Vantaggi della Prenotazione Diretta</span>
+                            <span class="lang-en">Direct Booking Advantages</span>
+                        </h4>
+                        <ul style="list-style: none; padding-left: 0; font-size: 0.9rem; color: var(--color-text-light); display: flex; flex-direction: column; gap: 0.8rem; text-align: left;">
+                            <li style="display: flex; align-items: start; gap: 10px;">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--color-accent)" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>
+                                    <strong class="lang-it" style="color: var(--color-text);">Miglior Prezzo Garantito:</strong>
+                                    <strong class="lang-en" style="color: var(--color-text);">Best Price Guaranteed:</strong>
+                                    <span class="lang-it"> Risparmia fino al 15% rispetto ai portali di prenotazione online (nessuna commissione).</span>
+                                    <span class="lang-en"> Save up to 15% compared to online booking portals (zero booking fees).</span>
+                                </span>
+                            </li>
+                            <li style="display: flex; align-items: start; gap: 10px;">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--color-accent)" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>
+                                    <strong class="lang-it" style="color: var(--color-text);">Omaggio di Benvenuto:</strong>
+                                    <strong class="lang-en" style="color: var(--color-text);">Welcome Gift:</strong>
+                                    <span class="lang-it"> Una bottiglia di vino locale e prodotti tipici in omaggio all'arrivo.</span>
+                                    <span class="lang-en"> A complimentary bottle of local wine and typical products at check-in.</span>
+                                </span>
+                            </li>
+                            <li style="display: flex; align-items: start; gap: 10px;">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--color-accent)" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>
+                                    <strong class="lang-it" style="color: var(--color-text);">Flessibilità & Contatto Diretto:</strong>
+                                    <strong class="lang-en" style="color: var(--color-text);">Direct Contact & Flexibility:</strong>
+                                    <span class="lang-it"> Contatto diretto e flessibilità per orari di check-in/check-out (ove possibile).</span>
+                                    <span class="lang-en"> Direct line with the host and check-in/check-out flexibility (subject to availability).</span>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer-editorial">
+        <div class="container">
+            <div class="footer-logo-box">
+                <img src="img/PROFILO_Tavola disegno 2.png" alt="Mont°6" class="footer-logo">
+            </div>
+            <div class="footer-bottom">
+                <p>
+                    <span class="lang-it">Un rifugio di charme a Cefalù, Sicilia.</span>
+                    <span class="lang-en">A charming retreat in Cefalù, Sicily.</span>
+                    <br>
+                    <span style="font-size: 0.8rem; opacity: 0.6; display: block; margin-top: 0.5rem;">
+                        CIR: 19082027C206522 &bull; CIN: IT082027C2YCA7QI4V
+                    </span>
+                </p>
+                <div class="footer-links-ed">
+                    <a href="#concept">
+                        <span class="lang-it">Filosofia</span>
+                        <span class="lang-en">Concept</span>
+                    </a>
+                    <a href="#gallery">
+                        <span class="lang-it">Spazi</span>
+                        <span class="lang-en">Spaces</span>
+                    </a>
+                    <a href="mailto:host@mont6.it">
+                        <span class="lang-it">Contatti</span>
+                        <span class="lang-en">Contact</span>
+                    </a>
+                    <a href="privacy.html">
+                        <span class="lang-it">Privacy Policy</span>
+                        <span class="lang-en">Privacy Policy</span>
+                    </a>
+                </div>
+                <p class="copyright">© 2026 Mont°6 Vacation Home.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JS Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/it.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="app.js"></script>
+</body>
+</html>

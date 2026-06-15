@@ -1,0 +1,12 @@
+{
+  "name": "mont6-retreat",
+  "version": "1.0.0",
+  "description": "Mont°6 Luxury Retreat Website",
+  "main": "app.js",
+  "scripts": {
+    "build": "echo 'No build step required'"
+  },
+  "dependencies": {
+    "stripe": "^14.0.0"
+  }
+}
