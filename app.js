@@ -1,25 +1,24 @@
 /* ==========================================================================
-   APP.JS - INTERACTIVE FUNCTIONS FOR MONT°6 EDITORIAL THEME
+   APP.JS — MONT°6 EDITORIAL THEME (Phase 1)
+   Alpine.js + GSAP Animations + Tailwind Integration
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
     initLang();
-    initNavbar();
     initScrollReveal();
-    initSmoothScroll();
-    initBookingForm();
-    initFAQ();
-    initParallax();
+    initGSAPHero();
+    initGSAPScrollTrigger();
     initCustomCursor();
-    initMagneticButtons();
     initGalleryLightbox();
-    initCookieBanner();
+    initBookingForm();
+    initNavbar();
     initFloatingCTA();
+    initCookieBanner();
 });
 
-/**
- * Handle Bilingual logic
- */
+/* --------------------------------------------------------------------------
+   LANGUAGE SWITCHER
+   -------------------------------------------------------------------------- */
 function initLang() {
     const savedLang = localStorage.getItem('mont6_lang') || 'it';
     setLang(savedLang);
@@ -28,331 +27,375 @@ function initLang() {
 window.setLang = function(lang) {
     document.documentElement.setAttribute('data-lang', lang);
     localStorage.setItem('mont6_lang', lang);
-    
+
+    // Update Alpine.js lang buttons
     document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if(btn.textContent.toLowerCase() === lang) {
-            btn.classList.add('active');
-        }
+        const isActive = btn.textContent.toLowerCase().trim() === lang;
+        btn.classList.toggle('font-semibold', isActive);
+        btn.classList.toggle('text-white', isActive);
+        btn.classList.toggle('text-white/60', !isActive);
     });
 };
 
-/**
- * Handles the sticky navbar state and the FULL-SCREEN mobile menu toggle
- */
-function initNavbar() {
-    const navbar = document.getElementById('navbar');
-    const mobileBtn = document.getElementById('mobile-menu-btn');
-    const mobileNav = document.getElementById('mobile-nav');
-    const mobileLinks = document.querySelectorAll('.mobile-link');
-    const body = document.body;
-
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    });
-
-    if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
-    }
-
-    if (mobileBtn && mobileNav) {
-        mobileBtn.addEventListener('click', () => {
-            navbar.classList.toggle('nav-open');
-            mobileNav.classList.toggle('open');
-            
-            if (mobileNav.classList.contains('open')) {
-                body.style.overflow = 'hidden';
-            } else {
-                body.style.overflow = '';
-            }
-        });
-
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                navbar.classList.remove('nav-open');
-                mobileNav.classList.remove('open');
-                body.style.overflow = '';
-            });
-        });
-    }
-}
-
-/**
- * Intersection Observer for scroll animations
- */
+/* --------------------------------------------------------------------------
+   SCROLL REVEAL (Intersection Observer — Tailwind compatible)
+   -------------------------------------------------------------------------- */
 function initScrollReveal() {
-    const reveals = document.querySelectorAll('.reveal-up, .reveal-right, .reveal-left');
+    const reveals = document.querySelectorAll('.reveal-up, .reveal-right, .reveal-scale');
 
-    const revealOptions = {
+    const observerOptions = {
         threshold: 0.15,
-        rootMargin: "0px 0px -50px 0px"
+        rootMargin: '0px 0px -50px 0px'
     };
 
-    const revealObserver = new IntersectionObserver((entries, observer) => {
+    const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-                observer.unobserve(entry.target);
+                entry.target.classList.add('is-visible');
+                revealObserver.unobserve(entry.target);
             }
         });
-    }, revealOptions);
+    }, observerOptions);
 
-    reveals.forEach(reveal => {
-        revealObserver.observe(reveal);
+    reveals.forEach(reveal => revealObserver.observe(reveal));
+}
+
+/* --------------------------------------------------------------------------
+   GSAP HERO ANIMATION (Cinematic Entrance)
+   -------------------------------------------------------------------------- */
+function initGSAPHero() {
+    if (typeof gsap === 'undefined') return;
+
+    // Register ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
+
+    const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+    // 1. Background Ken Burns effect
+    heroTl.from('#hero-bg', {
+        scale: 1.15,
+        duration: 2,
+        ease: 'power2.out'
+    }, 0);
+
+    // 2. Overlay fade in
+    heroTl.from('.hero-overlay', {
+        opacity: 0,
+        duration: 1.5
+    }, 0);
+
+    // 3. Kicker
+    heroTl.to('#hero-kicker', {
+        opacity: 1,
+        duration: 0.8,
+        delay: 0.3
+    }, 0);
+
+    // 4. Title
+    heroTl.from('#hero-title', {
+        opacity: 0,
+        y: 60,
+        duration: 1
+    }, 0.4);
+
+    // 5. Meta badges with stagger
+    heroTl.to('#hero-meta', {
+        opacity: 1,
+        duration: 0.6
+    }, 0.8);
+
+    // 6. CTA button
+    heroTl.to('#hero-cta', {
+        opacity: 1,
+        y: 0,
+        duration: 0.8
+    }, 1);
+
+    // 7. Bottom bar
+    heroTl.to('#hero-bottom', {
+        opacity: 1,
+        duration: 0.6
+    }, 1.2);
+
+    // Parallax on scroll
+    gsap.to('#hero-bg', {
+        yPercent: 30,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: '#home',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true
+        }
     });
 }
 
-/**
- * Smooth scrolling for internal anchor links
- */
-function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                const headerOffset = 80;
-                const elementPosition = targetElement.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-  
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: "smooth"
-                });
+/* --------------------------------------------------------------------------
+   GSAP SCROLL TRIGGER (Section Animations)
+   -------------------------------------------------------------------------- */
+function initGSAPScrollTrigger() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+
+    // Animate sections on scroll
+    document.querySelectorAll('.section').forEach(section => {
+        const items = section.querySelectorAll('.reveal-up, .reveal-right, .reveal-scale');
+
+        if (items.length === 0) return;
+
+        gsap.from(items, {
+            opacity: 0,
+            y: 40,
+            stagger: 0.15,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+                trigger: section,
+                start: 'top 80%',
+                toggleActions: 'play none none reverse'
             }
         });
     });
-}
 
-/**
- * Price data (mirrors prezzi.json for client-side calculation)
- */
-const PREZZI = {
-    0: 90,   // Gennaio
-    1: 90,   // Febbraio
-    2: 90,   // Marzo
-    3: 100,  // Aprile
-    4: 135,  // Maggio
-    5: 160,  // Giugno
-    6: 190,  // Luglio
-    7: 220,  // Agosto
-    8: 140,  // Settembre
-    9: 100,  // Ottobre
-    10: 90,  // Novembre
-    11: 90   // Dicembre
-};
+    // Parallax images
+    document.querySelectorAll('.parallax-break').forEach(el => {
+        gsap.to(el, {
+            backgroundPosition: '50% 100%',
+            ease: 'none',
+            scrollTrigger: {
+                trigger: el,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: true
+            }
+        });
+    });
 
-/**
- * Calculate total price for a date range
- */
-function calculatePrice(startDate, endDate) {
-    let total = 0;
-    let nightCount = 0;
-    let currentDate = new Date(startDate);
-    
-    while (currentDate < endDate) {
-        const monthIndex = currentDate.getMonth();
-        total += PREZZI[monthIndex] || 150;
-        nightCount++;
-        currentDate.setDate(currentDate.getDate() + 1);
+    // Review cards stagger
+    const reviewsGrid = document.querySelector('.reviews-dark .grid');
+    if (reviewsGrid) {
+        gsap.from(reviewsGrid.children, {
+            opacity: 0,
+            y: 50,
+            stagger: 0.2,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+                trigger: reviewsGrid,
+                start: 'top 80%',
+                toggleActions: 'play none none reverse'
+            }
+        });
     }
-    
-    const avgNightly = nightCount > 0 ? Math.round(total / nightCount) : 0;
-    
-    return { total, nightCount, avgNightly };
 }
 
-/**
- * Initialize Flatpickr calendar, dynamic pricing, and WhatsApp/Stripe booking
- */
+/* --------------------------------------------------------------------------
+   CUSTOM CURSOR (Desktop Only)
+   -------------------------------------------------------------------------- */
+function initCustomCursor() {
+    if (window.innerWidth < 1024) return;
+
+    const dot = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+    if (!dot || !ring) return;
+
+    document.body.classList.add('custom-cursor-active');
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let dotX = mouseX;
+    let dotY = mouseY;
+    let ringX = mouseX;
+    let ringY = mouseY;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    function animateCursor() {
+        // Dot follows immediately
+        dotX += (mouseX - dotX) * 0.5;
+        dotY += (mouseY - dotY) * 0.5;
+        dot.style.left = `${dotX}px`;
+        dot.style.top = `${dotY}px`;
+
+        // Ring follows with lag
+        ringX += (mouseX - ringX) * 0.15;
+        ringY += (mouseY - ringY) * 0.15;
+        ring.style.left = `${ringX}px`;
+        ring.style.top = `${ringY}px`;
+
+        requestAnimationFrame(animateCursor);
+    }
+    requestAnimationFrame(animateCursor);
+
+    // Hover states
+    const hoverTargets = 'a, button, input, select, [role="button"]';
+    document.querySelectorAll(hoverTargets).forEach(el => {
+        el.addEventListener('mouseenter', () => ring.classList.add('is-hovering'));
+        el.addEventListener('mouseleave', () => ring.classList.remove('is-hovering'));
+    });
+}
+
+/* --------------------------------------------------------------------------
+   GALLERY LIGHTBOX
+   -------------------------------------------------------------------------- */
+function initGalleryLightbox() {
+    if (typeof GLightbox === 'undefined') return;
+
+    GLightbox({
+        selector: '.glightbox-custom',
+        touchNavigation: true,
+        loop: true,
+        autoplayVideos: false,
+        openEffect: 'zoom',
+        closeEffect: 'fade',
+        cssEfects: { fade: { in: 'fadeIn', out: 'fadeOut' } }
+    });
+}
+
+/* --------------------------------------------------------------------------
+   BOOKING FORM
+   -------------------------------------------------------------------------- */
+function bookingForm() {
+    return {
+        priceNightly: 160,
+        priceTotal: 0,
+        nights: 0,
+        checkIn: null,
+        checkOut: null,
+        guestCount: 2,
+
+        updatePrice() {
+            if (this.checkIn && this.checkOut) {
+                const nights = Math.ceil((this.checkOut - this.checkIn) / (1000 * 60 * 60 * 24));
+                this.nights = nights;
+                this.priceNightly = this.getMonthlyRate(this.checkIn);
+                this.priceTotal = this.priceNightly * nights;
+            }
+        },
+
+        getMonthlyRate(date) {
+            const month = date.getMonth();
+            const rates = [90, 90, 90, 100, 135, 160, 190, 220, 140, 100, 90, 90];
+            return rates[month] || 160;
+        }
+    };
+}
+
 function initBookingForm() {
     const dateInput = document.getElementById('date-range');
     const guestSelect = document.getElementById('guest-count');
-    const btnRequest = document.getElementById('btn-request-whatsapp');
+    const btnWhatsApp = document.getElementById('btn-request-whatsapp');
     const btnStripe = document.getElementById('btn-request-stripe');
-    const priceBox = document.getElementById('dynamicPriceBox');
-    const priceNightly = document.getElementById('priceNightly');
-    const priceTotal = document.getElementById('priceTotal');
 
-    if (!dateInput || (!btnRequest && !btnStripe)) return;
+    if (!dateInput) return;
 
-    // Setup Flatpickr
+    // Flatpickr setup
     const fp = flatpickr(dateInput, {
-        mode: "range",
-        minDate: "today",
-        dateFormat: "d/m/Y",
-        locale: "it",
+        mode: 'range',
+        minDate: 'today',
+        dateFormat: 'd/m/Y',
+        locale: 'it',
         showMonths: window.innerWidth > 768 ? 2 : 1,
-        rangeSeparator: " al ",
+        rangeSeparator: ' al ',
         onChange: function(selectedDates) {
-            // Dynamic price calculation when both dates are selected
-            if (selectedDates.length === 2 && priceBox) {
-                const start = selectedDates[0];
-                const end = selectedDates[1];
-                const { total, nightCount, avgNightly } = calculatePrice(start, end);
-                
-                if (nightCount > 0) {
-                    priceNightly.textContent = `€${avgNightly}`;
-                    priceTotal.textContent = `€${total}`;
-                    priceBox.classList.add('visible');
-                }
-            } else if (priceBox) {
-                priceBox.classList.remove('visible');
+            if (selectedDates.length === 2) {
+                // Dispatch custom event for Alpine.js
+                dateInput.dispatchEvent(new CustomEvent('dates-selected', {
+                    detail: selectedDates
+                }));
             }
         }
     });
 
-    // Load blocked dates from server
-    const updateCalendarDisabledDates = (bookedDates) => {
+    // Load blocked dates
+    const updateDisabledDates = (bookedDates) => {
         if (Array.isArray(bookedDates)) {
-            const formattedDates = bookedDates.map(range => {
+            const formatted = bookedDates.map(range => {
                 if (range.from && range.to) {
-                    const [fY, fM, fD] = range.from.split('-');
-                    const [tY, tM, tD] = range.to.split('-');
                     return {
-                        from: new Date(fY, fM - 1, fD),
-                        to: new Date(tY, tM - 1, tD)
+                        from: new Date(range.from),
+                        to: new Date(range.to)
                     };
                 }
                 return range;
             });
-            fp.set('disable', formattedDates);
+            fp.set('disable', formatted);
             fp.redraw();
         }
     };
 
+    // Try Netlify function first, fallback to local JSON
     fetch('/.netlify/functions/get-booked-dates')
-        .then(response => {
-            if (!response.ok) throw new Error("Serverless API non attiva");
-            return response.json();
+        .then(res => {
+            if (!res.ok) throw new Error('Function not available');
+            return res.json();
         })
-        .then(bookedDates => {
-            updateCalendarDisabledDates(bookedDates);
-        })
-        .catch(err => {
-            console.warn("Funzione Netlify non disponibile. Fallback locale:", err.message);
+        .then(updateDisabledDates)
+        .catch(() => {
             fetch('/blocked-dates.json')
-                .then(res => {
-                    if (!res.ok) throw new Error("File locale non trovato");
-                    return res.json();
-                })
-                .then(bookedDates => {
-                    updateCalendarDisabledDates(bookedDates);
-                })
-                .catch(localErr => console.error("Impossibile caricare date bloccate:", localErr.message));
+                .then(res => res.json())
+                .then(updateDisabledDates)
+                .catch(console.warn);
         });
 
-    // Min stay validation helper
-    const checkMinStay = (checkInStr, checkOutStr, currentLang) => {
-        const parseDate = (dStr) => {
-            const [d, m, y] = dStr.trim().split('/');
-            return new Date(y, m - 1, d);
-        };
-        const start = parseDate(checkInStr);
-        const end = parseDate(checkOutStr);
-        const nights = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
-        
-        if (nights < 2) {
-            const minStayMsg = currentLang === 'en' 
-                ? "Minimum stay is 2 nights." 
-                : "Il soggiorno minimo è di 2 notti.";
-            alert(minStayMsg);
-            return false;
-        }
-        return true;
-    };
-
-    // Handle WhatsApp Submission
-    if (btnRequest) {
-        btnRequest.addEventListener('click', () => {
+    // WhatsApp button
+    if (btnWhatsApp) {
+        btnWhatsApp.addEventListener('click', () => {
             const dates = dateInput.value;
-            const guestVal = guestSelect.options[guestSelect.selectedIndex].value;
-            const currentLang = document.documentElement.getAttribute('data-lang') || 'it';
-            
+            const lang = document.documentElement.getAttribute('data-lang') || 'it';
+
             if (!dates || !dates.includes(' al ')) {
-                const errorMsg = currentLang === 'en' 
-                    ? "Please select a Check-in and Check-out date from the calendar." 
-                    : "Per favore, seleziona una data di Check-in e una di Check-out dal calendario.";
-                alert(errorMsg);
+                alert(lang === 'en'
+                    ? 'Please select Check-in and Check-out dates.'
+                    : 'Per favore, seleziona le date di Check-in e Check-out.');
                 return;
             }
 
             const [checkIn, checkOut] = dates.split(' al ');
+            const guests = guestSelect.value;
 
-            if (!checkMinStay(checkIn, checkOut, currentLang)) {
-                return;
-            }
+            const hostPhone = '393881908816';
+            const message = lang === 'en'
+                ? `Hi! I'd like to check availability for Mont°6.\n\n📅 Check-in: ${checkIn.trim()}\n📅 Check-out: ${checkOut.trim()}\n👥 Guests: ${guests}\n\nThank you!`
+                : `Salve! Vorrei verificare la disponibilità per Mont°6.\n\n📅 Check-in: ${checkIn.trim()}\n📅 Check-out: ${checkOut.trim()}\n👥 Ospiti: ${guests}\n\nIn attesa di riscontro, grazie.`;
 
-            const hostPhone = "393881908816";
-
-            let message = '';
-            if (currentLang === 'en') {
-                message = `Hi! I'd like to check availability for Mont°6.%0A%0A🗓 Check-in: ${checkIn.trim()}%0A🗓 Check-out: ${checkOut.trim()}%0A👥 Guests: ${guestVal}%0A%0AThank you!`;
-            } else {
-                message = `Salve! Vorrei verificare la disponibilità per soggiornare a Mont°6.%0A%0A🗓 Check-in: ${checkIn.trim()}%0A🗓 Check-out: ${checkOut.trim()}%0A👥 Ospiti: ${guestVal}%0A%0AIn attesa di riscontro, grazie.`;
-            }
-            
-            const whatsappUrl = `https://wa.me/${hostPhone}?text=${message}`;
-            window.open(whatsappUrl, '_blank');
+            window.open(`https://wa.me/${hostPhone}?text=${encodeURIComponent(message)}`, '_blank');
         });
     }
 
-    // Handle Stripe Submission
+    // Stripe button
     if (btnStripe) {
         btnStripe.addEventListener('click', async () => {
             const dates = dateInput.value;
-            const guestVal = guestSelect.options[guestSelect.selectedIndex].value;
-            const currentLang = document.documentElement.getAttribute('data-lang') || 'it';
-            
+            const lang = document.documentElement.getAttribute('data-lang') || 'it';
+
             if (!dates || !dates.includes(' al ')) {
-                const errorMsg = currentLang === 'en' 
-                    ? "Please select a Check-in and Check-out date from the calendar." 
-                    : "Per favore, seleziona una data di Check-in e una di Check-out dal calendario.";
-                alert(errorMsg);
-                return;
-            }
-
-            const [checkIn, checkOut] = dates.split(' al ');
-
-            if (!checkMinStay(checkIn, checkOut, currentLang)) {
+                alert(lang === 'en'
+                    ? 'Please select Check-in and Check-out dates.'
+                    : 'Per favore, seleziona le date di Check-in e Check-out.');
                 return;
             }
 
             btnStripe.disabled = true;
             const originalText = btnStripe.innerHTML;
-            btnStripe.innerHTML = currentLang === 'en' ? 'Redirecting...' : 'Elaborazione...';
+            btnStripe.innerHTML = lang === 'en' ? 'Redirecting...' : 'Reindirizzamento...';
 
             try {
                 const response = await fetch('/.netlify/functions/create-checkout-session', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        checkIn: checkIn.trim(),
-                        checkOut: checkOut.trim(),
-                        guests: guestVal
-                    }),
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ dates: dateInput.value, guests: guestSelect.value })
                 });
 
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.error || (currentLang === 'en' ? 'Server error' : 'Errore del server'));
-                }
-
+                if (!response.ok) throw new Error('Server error');
                 const data = await response.json();
-                
+
                 if (data.url) {
                     window.location.href = data.url;
                 } else {
-                    throw new Error(currentLang === 'en' ? 'Unable to create checkout session' : 'Impossibile avviare la sessione di pagamento.');
+                    throw new Error('No checkout URL');
                 }
             } catch (err) {
                 alert(err.message);
@@ -363,183 +406,71 @@ function initBookingForm() {
     }
 }
 
-/**
- * Handle FAQ Accordion
- */
-function initFAQ() {
-    const faqItems = document.querySelectorAll('.faq-item');
-    
-    faqItems.forEach(item => {
-        const questionBtn = item.querySelector('.faq-question');
-        questionBtn.addEventListener('click', () => {
-            const isActive = item.classList.contains('active');
-            
-            // Close all
-            faqItems.forEach(faq => faq.classList.remove('active'));
-            
-            // Toggle current
-            if (!isActive) {
-                item.classList.add('active');
+/* --------------------------------------------------------------------------
+   NAVBAR (Scroll behavior + Mobile menu)
+   -------------------------------------------------------------------------- */
+function initNavbar() {
+    const navbar = document.getElementById('navbar');
+    const floatingCta = document.getElementById('floatingCta');
+
+    window.addEventListener('scroll', () => {
+        const scrolled = window.scrollY > 50;
+        navbar?.classList.toggle('scrolled', scrolled);
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href === '#') return;
+
+            const target = document.querySelector(href);
+            if (target) {
+                e.preventDefault();
+                const offset = 80;
+                const position = target.getBoundingClientRect().top + window.scrollY - offset;
+                window.scrollTo({ top: position, behavior: 'smooth' });
             }
         });
     });
 }
 
-/**
- * Parallax floating effect for secondary images
- */
-function initParallax() {
-    const floatingElements = document.querySelectorAll('.parallax-float');
-    
+/* --------------------------------------------------------------------------
+   FLOATING CTA (Mobile)
+   -------------------------------------------------------------------------- */
+function initFloatingCTA() {
+    const cta = document.getElementById('floatingCta');
+    if (!cta || window.innerWidth >= 1024) return;
+
     window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        floatingElements.forEach(el => {
-            const speed = 0.05;
-            el.style.transform = `translateY(${scrolled * speed * -1}px)`;
-        });
+        const heroHeight = window.innerHeight;
+        cta.classList.toggle('is-visible', window.scrollY > heroHeight * 0.7);
     });
 }
 
-/**
- * Custom Cursor (Pure JS, lightweight requestAnimationFrame)
- */
-function initCustomCursor() {
-    if (window.innerWidth <= 1024) return;
-
-    const cursor = document.querySelector('.custom-cursor');
-    const follower = document.querySelector('.custom-cursor-follower');
-    if (!cursor || !follower) return;
-
-    document.body.classList.add('custom-cursor-active');
-
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let cursorX = mouseX;
-    let cursorY = mouseY;
-    let followerX = mouseX;
-    let followerY = mouseY;
-
-    window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
-
-    function render() {
-        cursorX += (mouseX - cursorX) * 0.5;
-        cursorY += (mouseY - cursorY) * 0.5;
-        
-        followerX += (mouseX - followerX) * 0.15;
-        followerY += (mouseY - followerY) * 0.15;
-
-        cursor.style.left = `${cursorX}px`;
-        cursor.style.top = `${cursorY}px`;
-        follower.style.left = `${followerX}px`;
-        follower.style.top = `${followerY}px`;
-
-        requestAnimationFrame(render);
-    }
-    requestAnimationFrame(render);
-
-    // Hover states
-    const hoverElements = document.querySelectorAll('a, button, .luxe-input, .lang-btn, .am-elegant-item');
-    hoverElements.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            cursor.classList.add('hover');
-            follower.classList.add('hover');
-        });
-        el.addEventListener('mouseleave', () => {
-            cursor.classList.remove('hover');
-            follower.classList.remove('hover');
-        });
-    });
-}
-
-/**
- * Magnetic Buttons Logic (Pure JS)
- */
-function initMagneticButtons() {
-    if (window.innerWidth <= 1024) return;
-
-    const magnets = document.querySelectorAll('.btn-luxe');
-    
-    magnets.forEach(magnet => {
-        magnet.addEventListener('mousemove', function(e) {
-            const position = magnet.getBoundingClientRect();
-            const x = e.clientX - position.left - position.width / 2;
-            const y = e.clientY - position.top - position.height / 2;
-            
-            magnet.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
-            magnet.style.transition = 'transform 0.1s ease-out';
-        });
-
-        magnet.addEventListener('mouseleave', function() {
-            magnet.style.transform = `translate(0px, 0px)`;
-            magnet.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-        });
-    });
-}
-
-/**
- * GLightbox Gallery Initialization
- */
-function initGalleryLightbox() {
-    if (typeof GLightbox === 'undefined') return;
-    
-    GLightbox({
-        selector: '.glightbox-custom',
-        touchNavigation: true,
-        loop: true,
-        autoplayVideos: false,
-        openEffect: 'zoom',
-        closeEffect: 'fade',
-        cssEf498: 'fade'
-    });
-}
-
-/**
- * Cookie Banner Logic
- */
+/* --------------------------------------------------------------------------
+   COOKIE BANNER
+   -------------------------------------------------------------------------- */
 function initCookieBanner() {
-    const banner = document.getElementById('cookieBanner');
-    const acceptBtn = document.getElementById('cookieAccept');
-    
-    if (!banner || !acceptBtn) return;
-    
-    // Check if already accepted
-    const cookieAccepted = localStorage.getItem('mont6_cookie_accepted');
-    
-    if (!cookieAccepted) {
-        // Show banner after a short delay
+    if (localStorage.getItem('mont6_cookie_accepted')) return;
+
+    const banner = document.querySelector('.cookie-banner');
+    if (banner) {
         setTimeout(() => {
-            banner.classList.add('visible');
+            banner.classList.add('is-visible');
         }, 1500);
     }
-    
-    acceptBtn.addEventListener('click', () => {
-        localStorage.setItem('mont6_cookie_accepted', 'true');
-        banner.classList.remove('visible');
-    });
 }
 
-/**
- * Floating CTA on Mobile — show after scrolling past hero
- */
-function initFloatingCTA() {
-    const floatingCta = document.getElementById('floatingCta');
-    if (!floatingCta) return;
-    
-    const heroSection = document.getElementById('home');
-    if (!heroSection) return;
-    
-    const heroHeight = heroSection.offsetHeight;
-    
-    window.addEventListener('scroll', () => {
-        if (window.innerWidth > 768) return; // Only on mobile
-        
-        if (window.scrollY > heroHeight * 0.7) {
-            floatingCta.classList.add('visible');
-        } else {
-            floatingCta.classList.remove('visible');
+/* --------------------------------------------------------------------------
+   MOBILE MENU (Alpine.js handles the toggle, this handles body scroll)
+   -------------------------------------------------------------------------- */
+document.body.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const mobileMenu = document.querySelector('.mobile-menu');
+        if (mobileMenu?.classList.contains('is-open')) {
+            document.body.classList.remove('overflow-hidden');
+            mobileMenu.classList.remove('is-open');
         }
-    });
-}
+    }
+});

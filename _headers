@@ -1,0 +1,35 @@
+# ============================================
+# NETLIFY SECURITY HEADERS
+# Mont°6 Luxury Retreat — Security Hardening
+# ============================================
+
+/*
+  # Security Headers
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+  # Content Security Policy (CSP) — Strict Mode
+  # Allows: self, Google Fonts, jsDelivr CDN, Stripe, Google Maps
+  # Blocks: inline scripts (except whitelisted), foreign frames, unknown sources
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://js.stripe.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https://*.stripe.com https://mont6cefalu.it https://mont6.it https://*.googleapis.com https://*.gstatic.com https://*.google.com https://*.googleusercontent.com; connect-src 'self' https://api.stripe.com https://checkout.stripe.com https://wa.me; frame-src 'self' https://www.google.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self' https://api.stripe.com https://wa.me; object-src 'none'; worker-src 'self' blob:;
+
+  # Cache Control — Static Assets
+  Cache-Control: public, max-age=31536000, immutable
+
+# Stripe Webhook Endpoint — No CSP restrictions
+/.netlify/functions/*
+  Content-Security-Policy: default-src 'none'
+
+# Stripe.js needs special treatment (external script)
+Checkout.js
+  Content-Security-Policy: script-src 'self' https://js.stripe.com 'unsafe-inline'; connect-src https://api.stripe.com
+
+# Google Fonts — Allow external stylesheets
+/fonts/*
+  Content-Security-Policy: style-src 'self' 'unsafe-inline' https://fonts.googleapis.com
+
+# Google Maps iframe (embedded)
+  X-Frame-Options: ALLOW-FROM https://www.google.com/maps
