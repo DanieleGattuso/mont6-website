@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initParallax();
     initCustomCursor();
     initMagneticButtons();
+    initGalleryLightbox();
+    initCookieBanner();
+    initFloatingCTA();
 });
 
 /**
@@ -23,11 +26,9 @@ function initLang() {
 }
 
 window.setLang = function(lang) {
-    // Set the attribute on HTML element so CSS can toggle visibility
     document.documentElement.setAttribute('data-lang', lang);
     localStorage.setItem('mont6_lang', lang);
     
-    // Update active state of buttons
     document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.classList.remove('active');
         if(btn.textContent.toLowerCase() === lang) {
@@ -46,7 +47,6 @@ function initNavbar() {
     const mobileLinks = document.querySelectorAll('.mobile-link');
     const body = document.body;
 
-    // Sticky Navbar on Scroll
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
             navbar.classList.add('scrolled');
@@ -55,18 +55,15 @@ function initNavbar() {
         }
     });
 
-    // Initial check in case page is refreshed halfway down
     if (window.scrollY > 50) {
         navbar.classList.add('scrolled');
     }
 
-    // Mobile Menu Toggle (Fullscreen)
     if (mobileBtn && mobileNav) {
         mobileBtn.addEventListener('click', () => {
             navbar.classList.toggle('nav-open');
             mobileNav.classList.toggle('open');
             
-            // Prevent scrolling on body when menu is open
             if (mobileNav.classList.contains('open')) {
                 body.style.overflow = 'hidden';
             } else {
@@ -74,7 +71,6 @@ function initNavbar() {
             }
         });
 
-        // Close mobile menu when a link is clicked
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
                 navbar.classList.remove('nav-open');
@@ -122,7 +118,6 @@ function initSmoothScroll() {
             
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
-                // Adjust for fixed navbar height
                 const headerOffset = 80;
                 const elementPosition = targetElement.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
@@ -137,13 +132,54 @@ function initSmoothScroll() {
 }
 
 /**
- * Initialize Flatpickr calendar and WhatsApp booking redirect
+ * Price data (mirrors prezzi.json for client-side calculation)
+ */
+const PREZZI = {
+    0: 90,   // Gennaio
+    1: 90,   // Febbraio
+    2: 90,   // Marzo
+    3: 100,  // Aprile
+    4: 135,  // Maggio
+    5: 160,  // Giugno
+    6: 190,  // Luglio
+    7: 220,  // Agosto
+    8: 140,  // Settembre
+    9: 100,  // Ottobre
+    10: 90,  // Novembre
+    11: 90   // Dicembre
+};
+
+/**
+ * Calculate total price for a date range
+ */
+function calculatePrice(startDate, endDate) {
+    let total = 0;
+    let nightCount = 0;
+    let currentDate = new Date(startDate);
+    
+    while (currentDate < endDate) {
+        const monthIndex = currentDate.getMonth();
+        total += PREZZI[monthIndex] || 150;
+        nightCount++;
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    const avgNightly = nightCount > 0 ? Math.round(total / nightCount) : 0;
+    
+    return { total, nightCount, avgNightly };
+}
+
+/**
+ * Initialize Flatpickr calendar, dynamic pricing, and WhatsApp/Stripe booking
  */
 function initBookingForm() {
     const dateInput = document.getElementById('date-range');
     const guestSelect = document.getElementById('guest-count');
     const btnRequest = document.getElementById('btn-request-whatsapp');
     const btnStripe = document.getElementById('btn-request-stripe');
+    const priceBox = document.getElementById('dynamicPriceBox');
+    const priceNightly = document.getElementById('priceNightly');
+    const priceTotal = document.getElementById('priceTotal');
 
     if (!dateInput || (!btnRequest && !btnStripe)) return;
 
@@ -154,11 +190,26 @@ function initBookingForm() {
         dateFormat: "d/m/Y",
         locale: "it",
         showMonths: window.innerWidth > 768 ? 2 : 1,
-        rangeSeparator: " al "
+        rangeSeparator: " al ",
+        onChange: function(selectedDates) {
+            // Dynamic price calculation when both dates are selected
+            if (selectedDates.length === 2 && priceBox) {
+                const start = selectedDates[0];
+                const end = selectedDates[1];
+                const { total, nightCount, avgNightly } = calculatePrice(start, end);
+                
+                if (nightCount > 0) {
+                    priceNightly.textContent = `€${avgNightly}`;
+                    priceTotal.textContent = `€${total}`;
+                    priceBox.classList.add('visible');
+                }
+            } else if (priceBox) {
+                priceBox.classList.remove('visible');
+            }
+        }
     });
 
-    // Funzione ausiliaria per convertire le date del server (stringhe YYYY-MM-DD) in veri oggetti Date
-    // e forzare il ridisegno del calendario Flatpickr
+    // Load blocked dates from server
     const updateCalendarDisabledDates = (bookedDates) => {
         if (Array.isArray(bookedDates)) {
             const formattedDates = bookedDates.map(range => {
@@ -177,7 +228,6 @@ function initBookingForm() {
         }
     };
 
-    // Carica dinamicamente le date bloccate dal server (manuali + Airbnb)
     fetch('/.netlify/functions/get-booked-dates')
         .then(response => {
             if (!response.ok) throw new Error("Serverless API non attiva");
@@ -187,20 +237,19 @@ function initBookingForm() {
             updateCalendarDisabledDates(bookedDates);
         })
         .catch(err => {
-            console.warn("Funzione Netlify non disponibile in locale. Tento il caricamento diretto di blocked-dates.json:", err);
-            // Fallback locale: carica direttamente il file JSON locale (funziona sui server locali standard come Live Server o http-server)
+            console.warn("Funzione Netlify non disponibile. Fallback locale:", err.message);
             fetch('/blocked-dates.json')
                 .then(res => {
-                    if (!res.ok) throw new Error("Impossibile caricare il file locale");
+                    if (!res.ok) throw new Error("File locale non trovato");
                     return res.json();
                 })
                 .then(bookedDates => {
                     updateCalendarDisabledDates(bookedDates);
                 })
-                .catch(localErr => console.error("Impossibile caricare le date bloccate in locale:", localErr));
+                .catch(localErr => console.error("Impossibile caricare date bloccate:", localErr.message));
         });
 
-    // Helper per verificare il soggiorno minimo di 2 notti
+    // Min stay validation helper
     const checkMinStay = (checkInStr, checkOutStr, currentLang) => {
         const parseDate = (dStr) => {
             const [d, m, y] = dStr.trim().split('/');
@@ -241,10 +290,8 @@ function initBookingForm() {
                 return;
             }
 
-            // Real Host Phone Number
             const hostPhone = "393881908816";
 
-            // Pre-filled Message based on Language
             let message = '';
             if (currentLang === 'en') {
                 message = `Hi! I'd like to check availability for Mont°6.%0A%0A🗓 Check-in: ${checkIn.trim()}%0A🗓 Check-out: ${checkOut.trim()}%0A👥 Guests: ${guestVal}%0A%0AThank you!`;
@@ -278,13 +325,11 @@ function initBookingForm() {
                 return;
             }
 
-            // Cambia lo stato del pulsante per mostrare il caricamento
             btnStripe.disabled = true;
             const originalText = btnStripe.innerHTML;
             btnStripe.innerHTML = currentLang === 'en' ? 'Redirecting...' : 'Elaborazione...';
 
             try {
-                // Chiama la Serverless Function su Netlify
                 const response = await fetch('/.netlify/functions/create-checkout-session', {
                     method: 'POST',
                     headers: {
@@ -305,7 +350,6 @@ function initBookingForm() {
                 const data = await response.json();
                 
                 if (data.url) {
-                    // Reindirizza l'utente a Stripe Checkout
                     window.location.href = data.url;
                 } else {
                     throw new Error(currentLang === 'en' ? 'Unable to create checkout session' : 'Impossibile avviare la sessione di pagamento.');
@@ -350,7 +394,6 @@ function initParallax() {
     window.addEventListener('scroll', () => {
         const scrolled = window.pageYOffset;
         floatingElements.forEach(el => {
-            // Move up slightly faster than scroll
             const speed = 0.05;
             el.style.transform = `translateY(${scrolled * speed * -1}px)`;
         });
@@ -367,7 +410,6 @@ function initCustomCursor() {
     const follower = document.querySelector('.custom-cursor-follower');
     if (!cursor || !follower) return;
 
-    // Attiva la classe per nascondere il cursore nativo solo se la funzione è attiva
     document.body.classList.add('custom-cursor-active');
 
     let mouseX = window.innerWidth / 2;
@@ -383,11 +425,9 @@ function initCustomCursor() {
     });
 
     function render() {
-        // Cursor moves instantly
         cursorX += (mouseX - cursorX) * 0.5;
         cursorY += (mouseY - cursorY) * 0.5;
         
-        // Follower has lerp delay
         followerX += (mouseX - followerX) * 0.15;
         followerY += (mouseY - followerY) * 0.15;
 
@@ -428,7 +468,6 @@ function initMagneticButtons() {
             const x = e.clientX - position.left - position.width / 2;
             const y = e.clientY - position.top - position.height / 2;
             
-            // Move button slightly
             magnet.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
             magnet.style.transition = 'transform 0.1s ease-out';
         });
@@ -437,5 +476,70 @@ function initMagneticButtons() {
             magnet.style.transform = `translate(0px, 0px)`;
             magnet.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
         });
+    });
+}
+
+/**
+ * GLightbox Gallery Initialization
+ */
+function initGalleryLightbox() {
+    if (typeof GLightbox === 'undefined') return;
+    
+    GLightbox({
+        selector: '.glightbox-custom',
+        touchNavigation: true,
+        loop: true,
+        autoplayVideos: false,
+        openEffect: 'zoom',
+        closeEffect: 'fade',
+        cssEf498: 'fade'
+    });
+}
+
+/**
+ * Cookie Banner Logic
+ */
+function initCookieBanner() {
+    const banner = document.getElementById('cookieBanner');
+    const acceptBtn = document.getElementById('cookieAccept');
+    
+    if (!banner || !acceptBtn) return;
+    
+    // Check if already accepted
+    const cookieAccepted = localStorage.getItem('mont6_cookie_accepted');
+    
+    if (!cookieAccepted) {
+        // Show banner after a short delay
+        setTimeout(() => {
+            banner.classList.add('visible');
+        }, 1500);
+    }
+    
+    acceptBtn.addEventListener('click', () => {
+        localStorage.setItem('mont6_cookie_accepted', 'true');
+        banner.classList.remove('visible');
+    });
+}
+
+/**
+ * Floating CTA on Mobile — show after scrolling past hero
+ */
+function initFloatingCTA() {
+    const floatingCta = document.getElementById('floatingCta');
+    if (!floatingCta) return;
+    
+    const heroSection = document.getElementById('home');
+    if (!heroSection) return;
+    
+    const heroHeight = heroSection.offsetHeight;
+    
+    window.addEventListener('scroll', () => {
+        if (window.innerWidth > 768) return; // Only on mobile
+        
+        if (window.scrollY > heroHeight * 0.7) {
+            floatingCta.classList.add('visible');
+        } else {
+            floatingCta.classList.remove('visible');
+        }
     });
 }

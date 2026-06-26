@@ -8,6 +8,26 @@
     <!-- Meta SEO -->
     <meta name="description" content="Scopri Mont°6, un rifugio di lusso nel cuore di Cefalù. Un design ricercato e comfort esclusivi per la tua vacanza indimenticabile in Sicilia.">
     <meta name="theme-color" content="#1a2b22">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Mont°6 — Luxury Retreat a Cefalù">
+    <meta property="og:description" content="Un rifugio di design nel cuore di Cefalù. Design, comfort e la bellezza della Sicilia.">
+    <meta property="og:image" content="https://mont6cefalu.it/img/_MG_4132.jpg">
+    <meta property="og:url" content="https://mont6cefalu.it">
+    <meta property="og:locale" content="it_IT">
+    <meta property="og:locale:alternate" content="en_GB">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Mont°6 — Luxury Retreat a Cefalù">
+    <meta name="twitter:description" content="Un rifugio di design nel cuore di Cefalù.">
+    <meta name="twitter:image" content="https://mont6cefalu.it/img/_MG_4132.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="img/PROFILO_Tavola disegno 2.png">
+    <link rel="apple-touch-icon" href="img/PROFILO_Tavola disegno 2.png">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,14 +37,68 @@
     <!-- Flatpickr (Calendar UI) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     
+    <!-- GLightbox -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+    
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "VacationRental",
+        "name": "Mont°6 Luxury Retreat",
+        "description": "Un rifugio di design nel cuore di Cefalù, Sicilia",
+        "url": "https://mont6cefalu.it",
+        "telephone": "+39-388-190-8816",
+        "email": "mont6.home@gmail.com",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Cefalù",
+            "addressRegion": "Palermo",
+            "addressCountry": "IT"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "38.0386",
+            "longitude": "14.0226"
+        },
+        "starRating": {
+            "@type": "Rating",
+            "ratingValue": "5"
+        },
+        "amenityFeature": [
+            {"@type": "LocationFeatureSpecification", "name": "Wi-Fi", "value": "High-speed"},
+            {"@type": "LocationFeatureSpecification", "name": "Kitchen"},
+            {"@type": "LocationFeatureSpecification", "name": "Air Conditioning"}
+        ],
+        "checkinTime": "15:00",
+        "checkoutTime": "10:00",
+        "petsAllowed": false,
+        "childrenAllowed": true
+    }
+    </script>
 </head>
 <body class="editorial-theme">
 
     <!-- CUSTOM CURSOR -->
     <div class="custom-cursor"></div>
     <div class="custom-cursor-follower"></div>
+
+    <!-- COOKIE BANNER -->
+    <div class="cookie-banner" id="cookieBanner">
+        <div class="cookie-content">
+            <p>
+                <span class="lang-it">Questo sito utilizza cookie tecnici e cookie di terze parti per migliorare la tua esperienza. Per informazioni complete consulta la nostra <a href="privacy.html">Privacy Policy</a>.</span>
+                <span class="lang-en">This website uses technical cookies and third-party cookies to improve your experience. See our <a href="privacy.html">Privacy Policy</a> for details.</span>
+            </p>
+            <button id="cookieAccept" class="btn-cookie">
+                <span class="lang-it">Accetta</span>
+                <span class="lang-en">Accept</span>
+            </button>
+        </div>
+    </div>
 
     <!-- NAVIGATION -->
     <nav class="navbar" id="navbar">
@@ -40,6 +114,10 @@
                 <a href="#gallery">
                     <span class="lang-it">La Dimora</span>
                     <span class="lang-en">The House</span>
+                </a>
+                <a href="#location">
+                    <span class="lang-it">La Posizione</span>
+                    <span class="lang-en">Location</span>
                 </a>
                 <a href="#reviews">
                     <span class="lang-it">Esperienze</span>
@@ -88,15 +166,20 @@
                     <span class="lang-en">The House</span>
                     <span class="num">02</span>
                 </a>
-                <a href="#amenities" class="mobile-link">
-                    <span class="lang-it">I Servizi</span>
-                    <span class="lang-en">Amenities</span>
+                <a href="#location" class="mobile-link">
+                    <span class="lang-it">La Posizione</span>
+                    <span class="lang-en">Location</span>
                     <span class="num">03</span>
+                </a>
+                <a href="#explore" class="mobile-link">
+                    <span class="lang-it">Esplora Cefalù</span>
+                    <span class="lang-en">Explore Cefalù</span>
+                    <span class="num">04</span>
                 </a>
                 <a href="#reviews" class="mobile-link">
                     <span class="lang-it">Esperienze</span>
                     <span class="lang-en">Experiences</span>
-                    <span class="num">04</span>
+                    <span class="num">05</span>
                 </a>
                 <a href="#booking" class="mobile-link btn-mobile-book" style="color: var(--color-accent); font-size: 1.8rem; margin-top: 2rem;">
                     <span class="lang-it">Prenota Ora</span>
@@ -118,9 +201,30 @@
                 <span class="lang-en">Designer Retreat • Cefalù</span>
             </p>
             <h1 class="hero-title display-title">
-                <span class="lang-it"><span class="italic-accent">Un'oasi</span> di pace<br>e design.</span>
-                <span class="lang-en">An <span class="italic-accent">oasis</span> of peace<br>and design.</span>
+                <span class="lang-it"><span class="italic-accent">L'antica</span><br>Cefalù ti attende.</span>
+                <span class="lang-en"><span class="italic-accent">Ancient</span><br>Cefalù awaits you.</span>
             </h1>
+            <div class="hero-meta reveal-up">
+                <span class="hero-badge">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                    <span class="lang-it">2 Ospiti</span>
+                    <span class="lang-en">2 Guests</span>
+                </span>
+                <span class="hero-badge">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 00-8 0v2"/></svg>
+                    <span class="lang-it">1 Camera</span>
+                    <span class="lang-en">1 Bedroom</span>
+                </span>
+                <span class="hero-badge">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16a1 1 0 011 1v3a4 4 0 01-4 4H7a4 4 0 01-4-4v-3a1 1 0 011-1z"/><path d="M6 12V5a2 2 0 012-2h3v2.25"/></svg>
+                    <span class="lang-it">1 Bagno</span>
+                    <span class="lang-en">1 Bathroom</span>
+                </span>
+                <span class="hero-price">
+                    <span class="lang-it">da <strong class="price-value">€160</strong>/notte</span>
+                    <span class="lang-en">from <strong class="price-value">€160</strong>/night</span>
+                </span>
+            </div>
             <div class="hero-cta-wrapper mt-4">
                 <a href="#booking" class="btn-luxe btn-hero">
                     <span class="lang-it">Verifica Disponibilità</span>
@@ -154,27 +258,27 @@
                 <!-- Text Block -->
                 <div class="ed-text-box reveal-up">
                     <h2 class="section-title">
-                        <span class="lang-it">L'Arte<br>dell'Accoglienza</span>
-                        <span class="lang-en">The Art of<br>Hospitality</span>
+                        <span class="lang-it">Tra Pietra Antica<br>e Brezza di Mare</span>
+                        <span class="lang-en">Between Ancient Stone<br>and Sea Breeze</span>
                     </h2>
                     <div class="accent-line"></div>
                     <p class="lead-text">
-                        <span class="lang-it">Mont°6 non è solo un luogo dove dormire, ma un'esperienza estetica nel cuore vibrante di Cefalù.</span>
-                        <span class="lang-en">Mont°6 is not just a place to sleep, but an aesthetic experience in the vibrant heart of Cefalù.</span>
+                        <span class="lang-it">Mont°6 è un rifugio di design nel cuore pulsante di Cefalù, dove il fascino millenario della Sicilia incontra il comfort contemporaneo.</span>
+                        <span class="lang-en">Mont°6 is a design retreat in the beating heart of Cefalù, where Sicily's millenary charm meets contemporary comfort.</span>
                     </p>
                     <p>
-                        <span class="lang-it">Un rifugio finemente ristrutturato dove il lusso sussurrato incontra l'anima calda della Sicilia. L'arredamento di pregio e la cura maniacale per i dettagli sono stati pensati per chi cerca la perfezione estetica senza rinunciare al comfort assoluto.</span>
-                        <span class="lang-en">A finely restored retreat where whispered luxury meets the warm soul of Sicily. The premium furnishings and meticulous attention to detail are designed for those seeking aesthetic perfection without compromising on absolute comfort.</span>
+                        <span class="lang-it">Immerso nel centro storico pedonale, a pochi passi dal Duomo UNESCO e dal Tirreno, questo appartamento è stato progettato per chi cerca un'esperienza autentica — senza compromessi. Arredi di pregio, finiture artigianali e una luce che cambia con il sole di Sicilia.</span>
+                        <span class="lang-en">Set within the pedestrian historic center, a few steps from the UNESCO Cathedral and the Tyrrhenian Sea, this apartment is designed for those seeking an authentic experience — without compromise. Premium furnishings, artisanal finishes, and a light that changes with the Sicilian sun.</span>
                     </p>
                 </div>
                 
                 <!-- Images Block -->
                 <div class="img-wrapper">
                     <div class="img-main reveal-right">
-                        <img src="img/_MG_4135.jpg" alt="Dettagli di design" loading="lazy">
+                        <img src="img/_MG_4135.jpg" alt="Camera da letto Mont°6 Cefalù" loading="lazy">
                     </div>
                     <div class="img-sec reveal-up parallax-float">
-                        <img src="img/_MG_4179.jpg" alt="Atmosfera Living" loading="lazy">
+                        <img src="img/_MG_4179.jpg" alt="Living design Mont°6" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -291,40 +395,226 @@
             <div class="horizontal-scroller-mobile mt-l">
                 <div class="gallery-grid-desktop">
                     <figure class="gal-fig tall">
-                        <img src="img/_MG_4136.jpg" alt="Master Bedroom" loading="lazy">
+                        <a href="img/_MG_4136.jpg" class="glightbox-custom" data-gallery="gallery" data-desc="">
+                            <img src="img/_MG_4136.jpg" alt="Camera da letto Mont°6" loading="lazy">
+                        </a>
                         <figcaption>
                             <span class="lang-it">La Camera</span>
                             <span class="lang-en">The Bedroom</span>
                         </figcaption>
                     </figure>
                     <figure class="gal-fig wide">
-                        <img src="img/_MG_4126.jpg" alt="Dettagli arredo" loading="lazy">
+                        <a href="img/_MG_4126.jpg" class="glightbox-custom" data-gallery="gallery" data-desc="">
+                            <img src="img/_MG_4126.jpg" alt="Design interni Mont°6" loading="lazy">
+                        </a>
                         <figcaption>
                             <span class="lang-it">Estetica Pura</span>
                             <span class="lang-en">Pure Aesthetics</span>
                         </figcaption>
                     </figure>
                     <figure class="gal-fig">
-                        <img src="img/_MG_4193.jpg" alt="Cucina design" loading="lazy">
+                        <a href="img/_MG_4193.jpg" class="glightbox-custom" data-gallery="gallery" data-desc="">
+                            <img src="img/_MG_4193.jpg" alt="Cucina design Mont°6" loading="lazy">
+                        </a>
                         <figcaption>
                             <span class="lang-it">La Cucina</span>
                             <span class="lang-en">The Kitchen</span>
                         </figcaption>
                     </figure>
                     <figure class="gal-fig">
-                        <img src="img/_MG_4152.jpg" alt="Atmosfera e luci" loading="lazy">
+                        <a href="img/_MG_4152.jpg" class="glightbox-custom" data-gallery="gallery" data-desc="">
+                            <img src="img/_MG_4152.jpg" alt="Atmosfera Mont°6" loading="lazy">
+                        </a>
                         <figcaption>
                             <span class="lang-it">Atmosfere</span>
                             <span class="lang-en">Atmosphere</span>
                         </figcaption>
                     </figure>
                     <figure class="gal-fig">
-                        <img src="img/_MG_4189.jpg" alt="La zona bagno" loading="lazy">
+                        <a href="img/_MG_4189.jpg" class="glightbox-custom" data-gallery="gallery" data-desc="">
+                            <img src="img/_MG_4189.jpg" alt="Bagno Mont°6" loading="lazy">
+                        </a>
                         <figcaption>
                             <span class="lang-it">Il Bagno</span>
                             <span class="lang-en">The Bathroom</span>
                         </figcaption>
                     </figure>
+                </div>
+                <!-- Hidden gallery items (visible only in lightbox) -->
+                <div style="display:none;">
+                    <a href="img/_MG_4097.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4104.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4106.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4111.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4117.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4127.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4128-3.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4134.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4137.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4141.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4144.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4158.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4162-2.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4178.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4187.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4188.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4190.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4192.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4208.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4210.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4220.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4223.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/_MG_4225.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LOCATION SECTION -->
+    <section class="section location-section" id="location">
+        <div class="container reveal-up">
+            <h2 class="section-title text-center">
+                <span class="lang-it">Nel Cuore di Cefalù</span>
+                <span class="lang-en">In the Heart of Cefalù</span>
+            </h2>
+            <div class="accent-line center"></div>
+            <p class="lead-text text-center">
+                <span class="lang-it">Una posizione unica nel centro storico pedonale, a pochi passi da tutto ciò che conta.</span>
+                <span class="lang-en">A unique position in the pedestrian historic center, within walking distance of everything that matters.</span>
+            </p>
+            
+            <div class="location-content">
+                <div class="location-map">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3045.5!2d14.0226!3d38.0386!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzjCsDAyJzE5LjAiTiAxNMKwMDEnMjEuNCJF!5e0!3m2!1sit!2sit!4v1700000000000"
+                        width="100%" 
+                        height="400" 
+                        style="border:0; border-radius: 8px;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+                
+                <div class="location-distance-grid">
+                    <div class="dist-item">
+                        <div class="dist-icon">⛪</div>
+                        <div class="dist-info">
+                            <strong>Duomo UNESCO</strong>
+                            <span class="lang-it">2 minuti a piedi</span>
+                            <span class="lang-en">2 min walk</span>
+                        </div>
+                    </div>
+                    <div class="dist-item">
+                        <div class="dist-icon">🏖️</div>
+                        <div class="dist-info">
+                            <strong>Spiaggia</strong>
+                            <span class="lang-it">5 minuti a piedi</span>
+                            <span class="lang-en">5 min walk</span>
+                        </div>
+                    </div>
+                    <div class="dist-item">
+                        <div class="dist-icon">🍝</div>
+                        <div class="dist-info">
+                            <strong>Ristoranti</strong>
+                            <span class="lang-it">30 secondi</span>
+                            <span class="lang-en">30 seconds</span>
+                        </div>
+                    </div>
+                    <div class="dist-item">
+                        <div class="dist-icon">🏔️</div>
+                        <div class="dist-info">
+                            <strong>Rocca di Cefalù</strong>
+                            <span class="lang-it">10 minuti a piedi</span>
+                            <span class="lang-en">10 min walk</span>
+                        </div>
+                    </div>
+                    <div class="dist-item">
+                        <div class="dist-icon">🚂</div>
+                        <div class="dist-info">
+                            <strong>Stazione FS</strong>
+                            <span class="lang-it">10 minuti in auto</span>
+                            <span class="lang-en">10 min by car</span>
+                        </div>
+                    </div>
+                    <div class="dist-item">
+                        <div class="dist-icon">🛒</div>
+                        <div class="dist-info">
+                            <strong>Supermercato</strong>
+                            <span class="lang-it">3 minuti a piedi</span>
+                            <span class="lang-en">3 min walk</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EXPLORE CEFALEU SECTION -->
+    <section class="section explore-section" id="explore">
+        <div class="container reveal-up">
+            <h2 class="section-title text-center">
+                <span class="lang-it">Esplora Cefalù</span>
+                <span class="lang-en">Explore Cefalù</span>
+            </h2>
+            <div class="accent-line center"></div>
+            <p class="lead-text text-center">
+                <span class="lang-it">Scopri le meraviglie che circondano il tuo rifugio.</span>
+                <span class="lang-en">Discover the wonders surrounding your retreat.</span>
+            </p>
+            
+            <div class="explore-grid">
+                <div class="explore-card">
+                    <div class="explore-img" style="background-image: url('img/_MG_4132.jpg');"></div>
+                    <div class="explore-content">
+                        <h3>
+                            <span class="lang-it">La Rocca</span>
+                            <span class="lang-en">The Rock</span>
+                        </h3>
+                        <p>
+                            <span class="lang-it">Un sentiero tra storia e natura con panorami mozzafiato sulla Sicilia.</span>
+                            <span class="lang-en">A trail between history and nature with breathtaking views of Sicily.</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="explore-card">
+                    <div class="explore-img" style="background-image: url('img/_MG_4133.jpg');"></div>
+                    <div class="explore-content">
+                        <h3>
+                            <span class="lang-it">Il Lavatoio Medievale</span>
+                            <span class="lang-en">The Medieval Laundry</span>
+                        </h3>
+                        <p>
+                            <span class="lang-it">Un gioiello romanico del XII secolo immerso nel verde.</span>
+                            <span class="lang-en">A Romanesque jewel of the 12th century surrounded by greenery.</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="explore-card">
+                    <div class="explore-img" style="background-image: url('img/_MG_4135.jpg');"></div>
+                    <div class="explore-content">
+                        <h3>
+                            <span class="lang-it">Il Tramonto sul Tirreno</span>
+                            <span class="lang-en">Sunset on the Tyrrhenian</span>
+                        </h3>
+                        <p>
+                            <span class="lang-it">Cene all'aperto con vista mare e colori che cambiano ogni sera.</span>
+                            <span class="lang-en">Outdoor dinners with sea views and colors that change every evening.</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="explore-card">
+                    <div class="explore-img" style="background-image: url('img/_MG_4179.jpg');"></div>
+                    <div class="explore-content">
+                        <h3>
+                            <span class="lang-it">Le Madonie</span>
+                            <span class="lang-en">The Madonie Mountains</span>
+                        </h3>
+                        <p>
+                            <span class="lang-it">Parco naturale a 30 minuti: escursionismo, borghi e sapori autentici.</span>
+                            <span class="lang-en">Nature Park 30 minutes away: hiking, villages, and authentic flavors.</span>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -337,6 +627,14 @@
                 <span class="lang-it">Eccellenza Riconosciuta</span>
                 <span class="lang-en">Recognized Excellence</span>
             </h2>
+            <div class="rating-badge">
+                <span class="rating-stars">★★★★★</span>
+                <span class="rating-score">5.0</span>
+                <span class="rating-source">
+                    <span class="lang-it">su Airbnb</span>
+                    <span class="lang-en">on Airbnb</span>
+                </span>
+            </div>
             <p class="lead-text text-white opacity-70 text-center">
                 <span class="lang-it">I racconti di chi ha vissuto l'esperienza Mont°6.</span>
                 <span class="lang-en">Stories from those who experienced Mont°6.</span>
@@ -361,7 +659,7 @@
                         <p class="review-text">The most beautiful place we stayed in Sicily! Impeccably clean, extremely comfortable bed, and wonderful host. It felt like a 5-star boutique hotel.</p>
                         <div class="reviewer-box">
                             <div class="rev-stars">★★★★★</div>
-                            <div class="rev-name">Sarah <span>Regno Unito</span></div>
+                            <div class="rev-name">Sarah <span>United Kingdom</span></div>
                         </div>
                     </div>
                     
@@ -405,8 +703,8 @@
                             </button>
                             <div class="faq-answer">
                                 <p>
-                                    <span class="lang-it">Il Check-in è dalle ore 15:00. Il Check-out è richiesto entro le ore 10:00 per garantire la pulizia meticolosa. Offriamo self check-in automatizzato.</span>
-                                    <span class="lang-en">Check-in is from 3:00 PM. Check-out is required by 10:00 AM to ensure meticulous cleaning. We offer automated self check-in.</span>
+                                    <span class="lang-it">Il Check-in è dalle ore 15:00. Il Check-out è richiesto entro le ore 10:00 per garantire la pulizia meticolosa. Offriamo self check-in automatizzato tramite serratura digitale.</span>
+                                    <span class="lang-en">Check-in is from 3:00 PM. Check-out is required by 10:00 AM to ensure meticulous cleaning. We offer automated self check-in via digital lock.</span>
                                 </p>
                             </div>
                         </div>
@@ -418,8 +716,47 @@
                             </button>
                             <div class="faq-answer">
                                 <p>
-                                    <span class="lang-it">Trovandoci nel centro storico pedonale, consigliamo di parcheggiare l'auto al "Parcheggio Coco" sul lungomare, a circa 5 minuti a piedi da noi.</span>
-                                    <span class="lang-en">Being located in the pedestrian historical center, we recommend parking at "Parcheggio Coco" on the seafront, about a 5-minute walk from us.</span>
+                                    <span class="lang-it">Trovandoci nel centro storico pedonale, consigliamo di parcheggiare l'auto al "Parcheggio Coco" sul lungomare, a circa 5 minuti a piedi da noi. Esiste anche una zona ZTL per residenti.</span>
+                                    <span class="lang-en">Being located in the pedestrian historical center, we recommend parking at "Parcheggio Coco" on the seafront, about a 5-minute walk from us. There is also a ZTL zone for residents.</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">
+                                <span class="lang-it">È possibile soggiornare con animali?</span>
+                                <span class="lang-en">Are pets allowed?</span>
+                                <span class="faq-icon">+</span>
+                            </button>
+                            <div class="faq-answer">
+                                <p>
+                                    <span class="lang-it">Purtroppo non possiamo accettare animali domestici nella struttura per motivi igienici e normativi.</span>
+                                    <span class="lang-en">Unfortunately we cannot accept pets in the property for hygiene and regulatory reasons.</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">
+                                <span class="lang-it">La biancheria e gli asciugamani sono inclusi?</span>
+                                <span class="lang-en">Is bed linen and towels included?</span>
+                                <span class="faq-icon">+</span>
+                            </button>
+                            <div class="faq-answer">
+                                <p>
+                                    <span class="lang-it">Sì, forniamo biancheria da letto, asciugamani e un set base di prodotti per la colazione.</span>
+                                    <span class="lang-en">Yes, we provide bed linen, towels, and a basic breakfast product set.</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">
+                                <span class="lang-it">Qual è il soggiorno minimo?</span>
+                                <span class="lang-en">What is the minimum stay?</span>
+                                <span class="faq-icon">+</span>
+                            </button>
+                            <div class="faq-answer">
+                                <p>
+                                    <span class="lang-it">Il soggiorno minimo è di 2 notti. Durante l'alta stagione (luglio-agosto) potrebbero essere richiesti 3 notti.</span>
+                                    <span class="lang-en">The minimum stay is 2 nights. During high season (July-August) 3 nights may be required.</span>
                                 </p>
                             </div>
                         </div>
@@ -457,6 +794,26 @@
                             <option value="2" selected>2 Ospiti</option>
                         </select>
                     </div>
+
+                    <!-- Dynamic Price Display -->
+                    <div class="dynamic-price-box" id="dynamicPriceBox">
+                        <div class="price-line">
+                            <span class="lang-it">Prezzo per notte</span>
+                            <span class="lang-en">Price per night</span>
+                        </div>
+                        <div class="price-total">
+                            <span class="price-nightly" id="priceNightly">€160</span>
+                            <span class="lang-it">/notte</span>
+                            <span class="lang-en">/night</span>
+                        </div>
+                        <div class="price-total">
+                            <strong>
+                                <span class="lang-it">Totale soggiorno</span>
+                                <span class="lang-en">Total stay</span>
+                            </strong>
+                            <strong id="priceTotal">€320</strong>
+                        </div>
+                    </div>
                     
                     <button id="btn-request-whatsapp" class="btn-luxe btn-whatsapp full-width mt-4">
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
@@ -469,6 +826,13 @@
                         <span class="lang-it">Prenota e Paga Subito</span>
                         <span class="lang-en">Book & Pay Online</span>
                     </button>
+                    
+                    <!-- Trust Signal -->
+                    <p style="text-align: center; font-size: 0.75rem; color: var(--color-text-light); margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#28a745" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <span class="lang-it">Pagamento sicuro con crittografia SSL — gestito da Stripe</span>
+                        <span class="lang-en">Secure SSL encrypted payment — powered by Stripe</span>
+                    </p>
                     
                     <div class="direct-benefits-box mt-4" style="border-top: 1px solid rgba(0,0,0,0.08); padding-top: 2rem;">
                         <h4 style="font-family: var(--font-heading); font-size: 1.1rem; margin-bottom: 1rem; color: var(--color-text);">
@@ -534,6 +898,10 @@
                         <span class="lang-it">Spazi</span>
                         <span class="lang-en">Spaces</span>
                     </a>
+                    <a href="#location">
+                        <span class="lang-it">Posizione</span>
+                        <span class="lang-en">Location</span>
+                    </a>
                     <a href="mailto:mont6.home@gmail.com">
                         <span class="lang-it">Contatti</span>
                         <span class="lang-en">Contact</span>
@@ -548,9 +916,18 @@
         </div>
     </footer>
 
+    <!-- FLOATING CTA MOBILE -->
+    <div class="floating-cta" id="floatingCta">
+        <a href="#booking">
+            <span class="lang-it">Prenota Ora</span>
+            <span class="lang-en">Book Now</span>
+        </a>
+    </div>
+
     <!-- JS Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/it.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
     
     <!-- Custom JS -->
     <script src="app.js"></script>
