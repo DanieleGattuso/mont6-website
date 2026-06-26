@@ -1,0 +1,11 @@
+{
+  "files": [
+    "*.html",
+    "index.html",
+    "privacy.html",
+    "success.html"
+  ],
+  "insertBefore": "</body>",
+  "commentSyntax": "<!-- -->",
+  "cspChecked": true
+}
