@@ -1,9 +1,11 @@
 /* ==========================================================================
-   APP.JS — MONT°6 (Simplified, Robust)
-   Vanilla JS + Flatpickr + GLightbox + GSAP
+   APP.JS — MONT°6 LUXURY EDITION
+   Premium Animations with GSAP + ScrollTrigger
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
+    initGSAP();
+    initScrollReveal();
     initNavbar();
     initMobileMenu();
     initLanguageSwitcher();
@@ -13,8 +15,174 @@ document.addEventListener('DOMContentLoaded', () => {
     initLightbox();
     initFloatingCTA();
     initCookieBanner();
-    initScrollAnimations();
 });
+
+/* --------------------------------------------------------------------------
+   GSAP — Cinematic Animations
+   -------------------------------------------------------------------------- */
+function initGSAP() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Hero Ken Burns Effect
+    const heroBg = document.getElementById('hero-bg');
+    if (heroBg) {
+        gsap.fromTo(heroBg,
+            { scale: 1.15, opacity: 0.8 },
+            { scale: 1, opacity: 1, duration: 2.5, ease: 'power2.out' }
+        );
+    }
+
+    // Hero Parallax on Scroll
+    gsap.to('#hero-bg', {
+        yPercent: 25,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: '#home',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true
+        }
+    });
+
+    // Hero Content Stagger Animation
+    const heroContent = document.getElementById('hero-content');
+    if (heroContent) {
+        const revealElements = heroContent.querySelectorAll('.reveal-up');
+        gsap.fromTo(revealElements,
+            { opacity: 0, y: 60 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                stagger: 0.15,
+                ease: 'power3.out',
+                delay: 0.5
+            }
+        );
+    }
+
+    // Section Heading Animations
+    gsap.utils.toArray('.heading-section').forEach(heading => {
+        gsap.fromTo(heading,
+            { opacity: 0, y: 50 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: heading,
+                    start: 'top 85%',
+                    toggleActions: 'play none none reverse'
+                }
+            }
+        );
+    });
+
+    // Parallax Sections
+    gsap.utils.toArray('.parallax-section').forEach(section => {
+        const overlay = section.querySelector('.parallax-overlay');
+        gsap.fromTo(overlay,
+            { opacity: 0.3 },
+            {
+                opacity: 0.5,
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: true
+                }
+            }
+        );
+    });
+
+    // Image Hover Effects
+    gsap.utils.toArray('.gallery-item').forEach(item => {
+        item.addEventListener('mouseenter', () => {
+            gsap.to(item.querySelector('img'), {
+                scale: 1.08,
+                duration: 0.8,
+                ease: 'power2.out'
+            });
+        });
+        item.addEventListener('mouseleave', () => {
+            gsap.to(item.querySelector('img'), {
+                scale: 1,
+                duration: 0.8,
+                ease: 'power2.out'
+            });
+        });
+    });
+
+    // Review Cards Hover
+    gsap.utils.toArray('.review-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            gsap.to(card, {
+                y: -8,
+                duration: 0.4,
+                ease: 'power2.out'
+            });
+        });
+        card.addEventListener('mouseleave', () => {
+            gsap.to(card, {
+                y: 0,
+                duration: 0.4,
+                ease: 'power2.out'
+            });
+        });
+    });
+
+    // Location Cards Hover
+    gsap.utils.toArray('.location-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            gsap.to(card, {
+                y: -6,
+                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
+                duration: 0.4,
+                ease: 'power2.out'
+            });
+        });
+        card.addEventListener('mouseleave', () => {
+            gsap.to(card, {
+                y: 0,
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+                duration: 0.4,
+                ease: 'power2.out'
+            });
+        });
+    });
+}
+
+/* --------------------------------------------------------------------------
+   SCROLL REVEAL — Intersection Observer
+   -------------------------------------------------------------------------- */
+function initScrollReveal() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -80px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Observe all reveal elements
+    document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
+        observer.observe(el);
+    });
+
+    // Observe sections for background animations
+    document.querySelectorAll('section').forEach(section => {
+        observer.observe(section);
+    });
+}
 
 /* --------------------------------------------------------------------------
    NAVBAR — Scroll behavior
@@ -23,18 +191,19 @@ function initNavbar() {
     const navbar = document.getElementById('navbar');
     if (!navbar) return;
 
-    const updateNavbar = () => {
-        if (window.scrollY > 100) {
-            navbar.classList.add('bg-charcoal/95', 'backdrop-blur-sm', 'shadow-lg');
-            navbar.classList.remove('bg-transparent');
-        } else {
-            navbar.classList.remove('bg-charcoal/95', 'backdrop-blur-sm', 'shadow-lg');
-            navbar.classList.add('bg-transparent');
-        }
-    };
+    let lastScroll = 0;
 
-    window.addEventListener('scroll', updateNavbar, { passive: true });
-    updateNavbar();
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.scrollY;
+
+        if (currentScroll > 100) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+
+        lastScroll = currentScroll;
+    }, { passive: true });
 }
 
 /* --------------------------------------------------------------------------
@@ -43,45 +212,42 @@ function initNavbar() {
 function initMobileMenu() {
     const btn = document.getElementById('mobile-menu-btn');
     const menu = document.getElementById('mobile-menu');
+
     if (!btn || !menu) return;
 
-    const ham1 = document.getElementById('ham-1');
-    const ham2 = document.getElementById('ham-2');
-    const ham3 = document.getElementById('ham-3');
+    let isOpen = false;
 
     btn.addEventListener('click', () => {
-        const isOpen = menu.classList.contains('open');
+        isOpen = !isOpen;
+        btn.classList.toggle('active', isOpen);
 
         if (isOpen) {
-            menu.classList.add('hidden');
-            menu.classList.remove('flex');
+            menu.classList.add('open');
+            document.body.classList.add('overflow-hidden');
+        } else {
             menu.classList.remove('open');
             document.body.classList.remove('overflow-hidden');
-            // Reset hamburger
-            ham1.style.transform = '';
-            ham2.style.opacity = '1';
-            ham3.style.transform = '';
-        } else {
-            menu.classList.remove('hidden');
-            menu.classList.add('flex', 'open');
-            document.body.classList.add('overflow-hidden');
-            // X animation
-            ham1.style.transform = 'rotate(45deg) translate(5px, 5px)';
-            ham2.style.opacity = '0';
-            ham3.style.transform = 'rotate(-45deg) translate(5px, -5px)';
         }
     });
 
     // Close on link click
     menu.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
-            menu.classList.add('hidden');
-            menu.classList.remove('flex', 'open');
+            isOpen = false;
+            btn.classList.remove('active');
+            menu.classList.remove('open');
             document.body.classList.remove('overflow-hidden');
-            ham1.style.transform = '';
-            ham2.style.opacity = '1';
-            ham3.style.transform = '';
         });
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isOpen) {
+            isOpen = false;
+            btn.classList.remove('active');
+            menu.classList.remove('open');
+            document.body.classList.remove('overflow-hidden');
+        }
     });
 }
 
@@ -105,9 +271,9 @@ window.setLanguage = function(lang) {
     // Update button styles
     document.querySelectorAll('.lang-btn').forEach(btn => {
         const isActive = btn.textContent.toLowerCase().trim() === lang;
-        btn.classList.toggle('text-white', isActive);
         btn.classList.toggle('font-semibold', isActive);
-        btn.classList.toggle('text-white/60', !isActive);
+        btn.classList.toggle('text-white', isActive);
+        btn.classList.toggle('text-white/50', !isActive);
     });
 };
 
@@ -123,9 +289,13 @@ function initSmoothScroll() {
             const target = document.querySelector(href);
             if (target) {
                 e.preventDefault();
-                const offset = 80;
+                const offset = 100;
                 const position = target.getBoundingClientRect().top + window.scrollY - offset;
-                window.scrollTo({ top: position, behavior: 'smooth' });
+
+                window.scrollTo({
+                    top: position,
+                    behavior: 'smooth'
+                });
             }
         });
     });
@@ -135,25 +305,25 @@ function initSmoothScroll() {
    FAQ ACCORDION
    -------------------------------------------------------------------------- */
 function initFAQAccordion() {
-    document.querySelectorAll('.faq-question').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const item = btn.closest('.faq-item');
-            const answer = item.querySelector('.faq-answer');
-            const icon = item.querySelector('.faq-icon');
-            const isOpen = !answer.classList.contains('hidden');
+    const faqItems = document.querySelectorAll('.faq-item');
+
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        const answer = item.querySelector('.faq-answer');
+
+        question.addEventListener('click', () => {
+            const isOpen = item.classList.contains('open');
 
             // Close all others
-            document.querySelectorAll('.faq-item').forEach(other => {
-                other.querySelector('.faq-answer')?.classList.add('hidden');
-                other.querySelector('.faq-icon').textContent = '+';
-                other.querySelector('.faq-icon').style.transform = '';
+            faqItems.forEach(other => {
+                other.classList.remove('open');
+                other.querySelector('.faq-answer').style.maxHeight = '0';
             });
 
             // Toggle current
             if (!isOpen) {
-                answer.classList.remove('hidden');
-                icon.textContent = '−';
-                icon.style.transform = 'rotate(180deg)';
+                item.classList.add('open');
+                answer.style.maxHeight = answer.scrollHeight + 'px';
             }
         });
     });
@@ -172,7 +342,7 @@ function initBookingForm() {
 
     if (!dateInput) return;
 
-    // Flatpickr setup
+    // Flatpickr
     flatpickr(dateInput, {
         mode: 'range',
         minDate: 'today',
@@ -187,16 +357,8 @@ function initBookingForm() {
         }
     });
 
-    // Guest change
-    guestSelect?.addEventListener('change', () => {
-        const dates = dateInput.value;
-        if (dates.includes(' al ')) {
-            // Re-calculate would need date parsing, for now just visual feedback
-        }
-    });
-
-    // WhatsApp button
-    btnWhatsApp?.addEventListener('click', () => {
+    // WhatsApp
+    btnWhatsApp.addEventListener('click', () => {
         const dates = dateInput.value;
         const lang = document.documentElement.getAttribute('data-lang') || 'it';
 
@@ -219,21 +381,26 @@ function initBookingForm() {
     });
 
     function updatePrice(selectedDates) {
-        if (!selectedDates.length === 2) return;
+        if (selectedDates.length !== 2) return;
 
         const checkIn = selectedDates[0];
         const checkOut = selectedDates[1];
         const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
 
-        // Monthly rates
-        const month = checkIn.getMonth();
+        // Monthly rates (Jan-Dec)
         const rates = [90, 90, 90, 100, 135, 160, 190, 220, 140, 100, 90, 90];
-        const nightlyRate = rates[month] || 160;
+        const nightlyRate = rates[checkIn.getMonth()] || 160;
         const total = nightlyRate * nights;
 
         if (priceNightly) priceNightly.textContent = `€${nightlyRate}`;
         if (priceTotal) priceTotal.textContent = `€${total}`;
-        if (priceDisplay) priceDisplay.classList.remove('hidden');
+        if (priceDisplay) {
+            priceDisplay.classList.remove('hidden');
+            gsap.fromTo(priceDisplay,
+                { opacity: 0, y: 20 },
+                { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }
+            );
+        }
     }
 }
 
@@ -246,13 +413,15 @@ function initLightbox() {
         return;
     }
 
-    const lightbox = GLightbox({
-        selector: '.glightbox',
+    GLightbox({
+        selector: '.glightbox, .gallery-item[href]',
         touchNavigation: true,
         loop: true,
         autoplayVideos: false,
         zoomable: true,
-        draggable: false
+        draggable: false,
+        openEffect: 'zoom',
+        closeEffect: 'fade'
     });
 }
 
@@ -265,11 +434,9 @@ function initFloatingCTA() {
 
     window.addEventListener('scroll', () => {
         if (window.scrollY > window.innerHeight * 0.6) {
-            cta.classList.remove('-translate-y-full');
-            cta.classList.add('translate-y-0');
+            cta.classList.add('visible');
         } else {
-            cta.classList.add('-translate-y-full');
-            cta.classList.remove('translate-y-0');
+            cta.classList.remove('visible');
         }
     }, { passive: true });
 }
@@ -285,77 +452,33 @@ function initCookieBanner() {
     if (localStorage.getItem('mont6_cookie_accepted')) return;
 
     setTimeout(() => {
-        banner.classList.remove('translate-y-full');
-        banner.classList.add('translate-y-0');
+        banner.classList.add('visible');
+        gsap.fromTo(banner,
+            { y: 50, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' }
+        );
     }, 1500);
 
     acceptBtn.addEventListener('click', () => {
         localStorage.setItem('mont6_cookie_accepted', 'true');
-        banner.classList.add('translate-y-full');
-        banner.classList.remove('translate-y-0');
-    });
-}
-
-/* --------------------------------------------------------------------------
-   SCROLL ANIMATIONS — Intersection Observer
-   -------------------------------------------------------------------------- */
-function initScrollAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate-in');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-
-    // Observe sections
-    document.querySelectorAll('section').forEach(section => {
-        section.classList.add('will-animate');
-        observer.observe(section);
-    });
-
-    // Observe images with fade-in
-    document.querySelectorAll('img[loading="lazy"]').forEach(img => {
-        img.classList.add('will-animate');
-        observer.observe(img);
-    });
-}
-
-/* --------------------------------------------------------------------------
-   GSAP ANIMATIONS (if loaded)
-   -------------------------------------------------------------------------- */
-if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger);
-
-    // Hero parallax
-    gsap.to('#hero-bg', {
-        yPercent: 20,
-        ease: 'none',
-        scrollTrigger: {
-            trigger: '#home',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: true
-        }
-    });
-
-    // Section titles
-    gsap.utils.toArray('section h2').forEach(title => {
-        gsap.from(title, {
+        gsap.to(banner, {
+            y: 50,
             opacity: 0,
-            y: 30,
-            duration: 0.8,
-            ease: 'power2.out',
-            scrollTrigger: {
-                trigger: title,
-                start: 'top 85%'
-            }
+            duration: 0.3,
+            ease: 'power2.in',
+            onComplete: () => banner.classList.remove('visible')
         });
     });
 }
+
+/* --------------------------------------------------------------------------
+   Image Lazy Loading Enhancement
+   -------------------------------------------------------------------------- */
+document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+    img.addEventListener('load', () => {
+        gsap.fromTo(img,
+            { opacity: 0, scale: 1.02 },
+            { opacity: 1, scale: 1, duration: 0.6, ease: 'power2.out' }
+        );
+    });
+});

@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mont°6 — Luxury Retreat a Cefalù</title>
+    <title>Mont°6 — Luxury Retreat a Cefalù, Sicily</title>
 
-    <meta name="description" content="Scopri Mont°6, un rifugio di lusso nel cuore di Cefalù. Design ricercato e comfort esclusivi per la tua vacanza in Sicilia.">
-    <meta name="theme-color" content="#1A221E">
+    <meta name="description" content="Mont°6 è un rifugio di design nel cuore di Cefalù. Suite esclusive, vista mare, e l'autenticità della Sicilia in un'unica esperienza indimenticabile.">
+    <meta name="theme-color" content="#0F1210">
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="Mont°6 — Luxury Retreat a Cefalù">
@@ -18,341 +18,414 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 </head>
 <body>
 
-    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-gold focus:text-white focus:px-4 focus:py-2 focus:rounded">
-        Skip to content
-    </a>
-
-    <nav class="fixed top-0 left-0 w-full z-50 transition-all duration-500 px-4 lg:px-8 py-4" id="navbar">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <a href="#home" class="relative z-[1001]">
-                <img src="img/PROFILO_Tavola disegno 2.png" alt="Mont°6" class="h-16 lg:h-20 w-auto transition-all duration-500" id="nav-logo">
+    <!-- =====================================================
+         NAVIGATION
+    ====================================================== -->
+    <nav class="nav-luxury" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between">
+            <a href="#home" class="relative z-[101]">
+                <img src="img/PROFILO_Tavola disegno 2.png" alt="Mont°6" class="h-14 lg:h-16 w-auto transition-all duration-500">
             </a>
 
-            <div class="hidden lg:flex items-center gap-8">
-                <a href="#concept" class="text-xs uppercase tracking-widest text-white/80 hover:text-gold transition-colors">La Filosofia</a>
-                <a href="#gallery" class="text-xs uppercase tracking-widest text-white/80 hover:text-gold transition-colors">La Dimora</a>
-                <a href="#location" class="text-xs uppercase tracking-widest text-white/80 hover:text-gold transition-colors">La Posizione</a>
-                <a href="#reviews" class="text-xs uppercase tracking-widest text-white/80 hover:text-gold transition-colors">Esperienze</a>
-                <a href="#booking" class="bg-gold text-white px-5 py-2.5 rounded text-xs uppercase tracking-widest hover:bg-gold-dark transition-colors">Verifica Disponibilità</a>
+            <div class="hidden lg:flex items-center gap-10">
+                <a href="#philosophy" class="nav-link">Filosofia</a>
+                <a href="#spaces" class="nav-link">Spazi</a>
+                <a href="#location" class="nav-link">Posizione</a>
+                <a href="#experiences" class="nav-link">Esperienze</a>
+                <a href="#booking" class="btn-luxury ml-4">Verifica Disponibilità</a>
 
-                <div class="flex items-center gap-2 ml-4 border-l border-white/20 pl-4">
-                    <button onclick="setLang('it')" class="lang-btn text-white/60 text-sm hover:text-white transition-colors">IT</button>
-                    <span class="text-white/30">|</span>
-                    <button onclick="setLang('en')" class="lang-btn text-white/60 text-sm hover:text-white transition-colors">EN</button>
+                <div class="flex items-center gap-3 ml-6 pl-6 border-l border-white/20">
+                    <button onclick="setLanguage('it')" class="lang-btn text-white/50 text-sm hover:text-white transition-colors">IT</button>
+                    <span class="text-white/20">|</span>
+                    <button onclick="setLanguage('en')" class="lang-btn text-white/50 text-sm hover:text-white transition-colors">EN</button>
                 </div>
             </div>
 
-            <button id="mobile-menu-btn" class="lg:hidden relative z-[1001] p-2" aria-label="Menu">
-                <div class="w-6 h-4 flex flex-col justify-between">
-                    <span class="block h-0.5 w-full bg-white transition-all" id="ham-1"></span>
-                    <span class="block h-0.5 w-full bg-white transition-all" id="ham-2"></span>
-                    <span class="block h-0.5 w-full bg-white transition-all" id="ham-3"></span>
-                </div>
+            <button id="mobile-menu-btn" class="lg:hidden relative z-[101] hamburger" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
             </button>
         </div>
     </nav>
 
-    <div id="mobile-menu" class="fixed inset-0 bg-charcoal z-40 hidden flex-col items-center justify-center lg:hidden">
-        <div class="absolute top-6 left-6 flex gap-3">
-            <button onclick="setLang('it')" class="text-white/50 text-sm hover:text-gold">IT</button>
-            <span class="text-white/30">|</span>
-            <button onclick="setLang('en')" class="text-white/50 text-sm hover:text-gold">EN</button>
-        </div>
-        <div class="flex flex-col gap-4 text-center">
-            <a href="#concept" class="mobile-link text-white font-heading text-3xl">La Filosofia <span class="text-gold text-sm font-mono ml-2">01</span></a>
-            <a href="#gallery" class="mobile-link text-white font-heading text-3xl">La Dimora <span class="text-gold text-sm font-mono ml-2">02</span></a>
-            <a href="#location" class="mobile-link text-white font-heading text-3xl">La Posizione <span class="text-gold text-sm font-mono ml-2">03</span></a>
-            <a href="#explore" class="mobile-link text-white font-heading text-3xl">Esplora <span class="text-gold text-sm font-mono ml-2">04</span></a>
-            <a href="#reviews" class="mobile-link text-white font-heading text-3xl">Esperienze <span class="text-gold text-sm font-mono ml-2">05</span></a>
-            <a href="#booking" class="mobile-link text-gold font-heading text-4xl mt-8">Prenota Ora</a>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu-overlay">
+        <div class="h-full flex flex-col justify-center items-center gap-2 px-8">
+            <div class="absolute top-6 left-6 flex gap-3">
+                <button onclick="setLanguage('it')" class="text-white/50 text-sm">IT</button>
+                <span class="text-white/20">|</span>
+                <button onclick="setLanguage('en')" class="text-white/50 text-sm">EN</button>
+            </div>
+            <a href="#philosophy" class="mobile-nav-item">Filosofia</a>
+            <a href="#spaces" class="mobile-nav-item">Spazi</a>
+            <a href="#location" class="mobile-nav-item">Posizione</a>
+            <a href="#experiences" class="mobile-nav-item">Esperienze</a>
+            <a href="#reviews" class="mobile-nav-item">Recensioni</a>
+            <a href="#booking" class="mobile-nav-item text-gold">Prenota</a>
         </div>
     </div>
 
-    <main id="main">
+    <main>
 
-        <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden">
-            <div class="absolute inset-0 bg-cover bg-center" id="hero-bg" style="background-image: url('img/_MG_4132.jpg');"></div>
-            <div class="absolute inset-0 bg-gradient-to-b from-charcoal/30 via-charcoal/50 to-charcoal/80"></div>
+        <!-- =====================================================
+             HERO SECTION — Cinematic Entry
+        ====================================================== -->
+        <section id="home" class="hero-section">
+            <div class="hero-bg" id="hero-bg" style="background-image: url('img/_MG_4132.jpg');"></div>
+            <div class="hero-overlay"></div>
 
-            <div class="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-to-bl from-gold/5 to-transparent pointer-events-none"></div>
+            <!-- Decorative Elements -->
+            <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+                <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-gold/10 to-transparent rounded-full blur-3xl"></div>
+                <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-gradient-to-tl from-white/5 to-transparent rounded-full blur-2xl"></div>
+            </div>
 
-            <div class="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
-                <p class="text-xs uppercase tracking-[0.3em] mb-6 text-gold font-medium">Rifugio d'Autore • Cefalù</p>
-                <h1 class="font-heading text-white" style="font-size: clamp(3rem, 8vw, 6rem); line-height: 1.05; text-shadow: 0 4px 40px rgba(0,0,0,0.3);">
-                    <span class="italic text-gold">L'antica</span><br>Cefalù ti attende.
+            <div class="hero-content" id="hero-content">
+                <p class="text-kicker mb-8 reveal-up">Rifugio d'Autore • Cefalù, Sicilia</p>
+
+                <h1 class="heading-display text-white mb-6 reveal-up stagger-1" style="text-shadow: 0 4px 60px rgba(0,0,0,0.3);">
+                    <span class="text-gradient-italic">L'antica</span><br>
+                    Cefalù ti attende
                 </h1>
 
-                <div class="flex flex-wrap justify-center gap-4 mt-10">
-                    <span class="inline-flex items-center gap-2 text-sm text-white/85 bg-white/10 border border-white/20 px-4 py-2 rounded-full backdrop-blur-sm">
+                <p class="text-white/70 text-lg max-w-xl mx-auto mb-12 reveal-up stagger-2">
+                    Un rifugio di design nel cuore pulsante della Sicilia, dove il fascino millenario incontra il comfort contemporaneo.
+                </p>
+
+                <div class="flex flex-wrap justify-center gap-4 mb-12 reveal-up stagger-3">
+                    <span class="badge-luxury">
                         <span>👤</span> 2 Ospiti
                     </span>
-                    <span class="inline-flex items-center gap-2 text-sm text-white/85 bg-white/10 border border-white/20 px-4 py-2 rounded-full backdrop-blur-sm">
+                    <span class="badge-luxury">
                         <span>🛏️</span> 1 Camera
                     </span>
-                    <span class="inline-flex items-center gap-2 text-sm text-white/85 bg-white/10 border border-white/20 px-4 py-2 rounded-full backdrop-blur-sm">
+                    <span class="badge-luxury">
                         <span>🛁</span> 1 Bagno
                     </span>
-                    <span class="inline-flex items-center gap-2 text-sm bg-gold/20 border border-gold/40 px-4 py-2 rounded-full backdrop-blur-sm">
-                        da <strong class="text-gold text-lg">€160</strong>/notte
+                    <span class="badge-luxury badge-gold">
+                        <span>€</span>160 / notte
                     </span>
                 </div>
 
-                <a href="#booking" class="inline-flex items-center gap-3 mt-12 bg-gold text-white px-10 py-4 rounded text-sm uppercase tracking-widest font-medium hover:bg-gold-dark transition-all hover:-translate-y-0.5 shadow-gold-glow">
+                <a href="#booking" class="btn-luxury reveal-up stagger-4">
                     Verifica Disponibilità
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
                 </a>
             </div>
 
-            <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/80 text-xs uppercase tracking-widest">
-                <span>Sicilia, Italia</span>
-                <a href="#concept" class="flex flex-col items-center gap-2 hover:text-gold transition-colors">
-                    Scopri
-                    <div class="w-px h-12 bg-white/30 relative overflow-hidden">
-                        <div class="absolute top-0 w-full h-full bg-gold" style="animation: scrollDrop 2s ease-in-out infinite;"></div>
-                    </div>
-                </a>
+            <!-- Scroll Indicator -->
+            <div class="scroll-indicator">
+                <span>Scopri</span>
+                <div class="scroll-line"></div>
             </div>
         </section>
 
-        <section id="concept" class="py-20 lg:py-32 bg-ivory relative">
-            <div class="absolute top-0 left-0 text-[clamp(8rem,15vw,15rem)] font-heading text-black/[0.03] select-none pointer-events-none">Essenza</div>
-
-            <div class="max-w-7xl mx-auto px-4 lg:px-8 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center relative z-10">
-                <div>
-                    <h2 class="font-heading text-[clamp(2rem,5vw,3.5rem)] text-charcoal mb-6 leading-tight">
-                        Tra Pietra Antica<br>e Brezza di Mare
-                    </h2>
-                    <div class="w-16 h-px bg-gold my-8"></div>
-                    <p class="text-lg text-text-light leading-relaxed mb-6">
-                        Mont°6 è un rifugio di design nel cuore pulsante di Cefalù, dove il fascino millenario della Sicilia incontra il comfort contemporaneo.
-                    </p>
-                    <p class="text-base text-text-light leading-relaxed">
-                        Immerso nel centro storico pedonale, a pochi passi dal Duomo UNESCO e dal Tirreno, questo appartamento è stato progettato per chi cerca un'esperienza autentica — senza compromessi. Arredi di pregio, finiture artigianali e una luce che cambia con il sole di Sicilia.
-                    </p>
-                </div>
-                <div class="relative">
-                    <img src="img/_MG_4135.jpg" alt="Camera da letto Mont°6" class="w-full rounded-lg shadow-luxe-md" loading="lazy">
-                    <img src="img/_MG_4179.jpg" alt="Living Mont°6" class="absolute -bottom-8 -left-8 w-2/5 rounded-lg border-4 lg:border-[12px] border-ivory shadow-luxe-md hidden lg:block">
-                </div>
-            </div>
-        </section>
-
-        <section id="amenities" class="py-20 lg:py-32 bg-surface">
-            <div class="max-w-7xl mx-auto px-4 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="font-heading text-[clamp(2rem,5vw,3.5rem)] text-charcoal">Comfort Senza Compromessi</h2>
-                    <div class="w-16 h-px bg-gold my-8 mx-auto"></div>
-                    <p class="text-lg text-text-light">Dettagli pensati per farti sentire coccolato.</p>
-                </div>
-
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 border-t border-l border-black/10">
-                    <div class="border-r border-b border-black/10 p-8 lg:p-12 hover:bg-black/[0.02] transition-colors">
-                        <div class="text-gold mb-6">⭐</div>
-                        <h3 class="font-heading text-xl mb-3">Interior Design</h3>
-                        <p class="text-sm text-text-light">Materiali di pregio, finiture artigianali e un'estetica calda.</p>
+        <!-- =====================================================
+             PHILOSOPHY SECTION — Split Layout
+        ====================================================== -->
+        <section id="philosophy" class="bg-ivory py-24 lg:py-40">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+                    <div class="reveal-left">
+                        <p class="section-number mb-4">01 — Filosofia</p>
+                        <h2 class="heading-section text-charcoal mb-8">
+                            Tra Pietra Antica<br>
+                            <span class="text-gradient-italic">e Brezza di Mare</span>
+                        </h2>
+                        <div class="divider-gold mb-8"></div>
+                        <p class="text-body mb-6">
+                            Mont°6 nasce dalla passione per la bellezza siciliana. Ogni dettaglio è stato curato per creare un'esperienza che celebra l'autenticità dell'isola.
+                        </p>
+                        <p class="text-body">
+                            Arredi di pregio, finiture artigianali e una luce che cambia con il sole di Sicilia. Qui, il tempo rallenta e ogni momento diventa un ricordo prezioso.
+                        </p>
                     </div>
-                    <div class="border-r border-b border-black/10 p-8 lg:p-12 hover:bg-black/[0.02] transition-colors">
-                        <div class="text-gold mb-6">📍</div>
-                        <h3 class="font-heading text-xl mb-3">Posizione Prime</h3>
-                        <p class="text-sm text-text-light">A due passi dal Duomo UNESCO e dal mare.</p>
-                    </div>
-                    <div class="border-r border-b border-black/10 p-8 lg:p-12 hover:bg-black/[0.02] transition-colors">
-                        <div class="text-gold mb-6">❄️</div>
-                        <h3 class="font-heading text-xl mb-3">Clima Perfetto</h3>
-                        <p class="text-sm text-text-light">Aria condizionata intelligente in ogni ambiente.</p>
-                    </div>
-                    <div class="border-r border-b border-black/10 p-8 lg:p-12 hover:bg-black/[0.02] transition-colors">
-                        <div class="text-gold mb-6">📶</div>
-                        <h3 class="font-heading text-xl mb-3">Fibra Ottica</h3>
-                        <p class="text-sm text-text-light">Connessione ultra-veloce gratuita, perfetta per smart working.</p>
-                    </div>
-                    <div class="border-r border-b border-black/10 p-8 lg:p-12 hover:bg-black/[0.02] transition-colors">
-                        <div class="text-gold mb-6">☕</div>
-                        <h3 class="font-heading text-xl mb-3">Cucina Premium</h3>
-                        <p class="text-sm text-text-light">Dotazione completa di alta gamma e macchina da caffè.</p>
-                    </div>
-                    <div class="p-8 lg:p-12 hover:bg-black/[0.02] transition-colors">
-                        <div class="text-gold mb-6">💎</div>
-                        <h3 class="font-heading text-xl mb-3">Dettagli Luxury</h3>
-                        <p class="text-sm text-text-light">Biancheria pregiata, asciugamani soffici e set di cortesia.</p>
+                    <div class="image-overlap reveal-right">
+                        <img src="img/_MG_4135.jpg" alt="Interior design Mont°6" class="w-full rounded-2xl shadow-elevated" loading="lazy">
+                        <img src="img/_MG_4179.jpg" alt="Living area Mont°6" class="rounded-2xl shadow-deep" loading="lazy">
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="min-h-[70vh] relative flex items-center justify-center" style="background-image: url('img/_MG_4133.jpg'); background-size: cover; background-position: center;">
-            <div class="absolute inset-0 bg-charcoal/40"></div>
-            <h2 class="relative z-10 text-white font-heading text-center px-4" style="font-size: clamp(3rem,6vw,5rem); text-shadow: 0 4px 40px rgba(0,0,0,0.3);">
-                Riposo di Classe.
+        <!-- =====================================================
+             AMENITIES SECTION — Grid Cards
+        ====================================================== -->
+        <section class="bg-surface py-24 lg:py-40">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="text-center mb-16 reveal-up">
+                    <p class="section-number mb-4">02 — Comfort</p>
+                    <h2 class="heading-section text-charcoal">Comfort Senza Compromessi</h2>
+                    <div class="divider-gold divider-gold-center mt-8"></div>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="card-luxury p-8 lg:p-10 reveal-up stagger-1">
+                        <div class="text-3xl mb-6">⭐</div>
+                        <h3 class="heading-card text-charcoal mb-3">Interior Design</h3>
+                        <p class="text-body">Materiali di pregio, finiture artigianali e un'estetica che abbraccia la tradizione siciliana.</p>
+                    </div>
+                    <div class="card-luxury p-8 lg:p-10 reveal-up stagger-2">
+                        <div class="text-3xl mb-6">📍</div>
+                        <h3 class="heading-card text-charcoal mb-3">Posizione Prime</h3>
+                        <p class="text-body">A due passi dal Duomo UNESCO e dal mare cristallino del Tirreno.</p>
+                    </div>
+                    <div class="card-luxury p-8 lg:p-10 reveal-up stagger-3">
+                        <div class="text-3xl mb-6">❄️</div>
+                        <h3 class="heading-card text-charcoal mb-3">Clima Perfetto</h3>
+                        <p class="text-body">Aria condizionata whisper-quiet in ogni ambiente per il massimo comfort.</p>
+                    </div>
+                    <div class="card-luxury p-8 lg:p-10 reveal-up stagger-4">
+                        <div class="text-3xl mb-6">📶</div>
+                        <h3 class="heading-card text-charcoal mb-3">Fibra Ottica</h3>
+                        <p class="text-body">Connessione ultra-veloce per smart working senza interruzioni.</p>
+                    </div>
+                    <div class="card-luxury p-8 lg:p-10 reveal-up stagger-5">
+                        <div class="text-3xl mb-6">☕</div>
+                        <h3 class="heading-card text-charcoal mb-3">Cucina Premium</h3>
+                        <p class="text-body">Dotazione completa di alta gamma con macchina da caffè professionale.</p>
+                    </div>
+                    <div class="card-luxury p-8 lg:p-10 reveal-up stagger-6">
+                        <div class="text-3xl mb-6">💎</div>
+                        <h3 class="heading-card text-charcoal mb-3">Dettagli Luxury</h3>
+                        <p class="text-body">Biancheria pregiata, asciugamani soffici e set di cortesia esclusivo.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             PARALLAX BREAK — Full Width Image
+        ====================================================== -->
+        <section class="parallax-section" style="background-image: url('img/_MG_4133.jpg');">
+            <div class="parallax-overlay"></div>
+            <h2 class="relative z-10 heading-display text-white text-center px-6" style="text-shadow: 0 4px 60px rgba(0,0,0,0.4);">
+                Riposo<br><span class="text-gradient-italic">di Classe</span>
             </h2>
         </section>
 
-        <section id="gallery" class="py-20 lg:py-32 bg-surface">
-            <div class="max-w-7xl mx-auto px-4 lg:px-8">
-                <div class="text-center mb-12">
-                    <h2 class="font-heading text-[clamp(2rem,5vw,3.5rem)] text-charcoal">I Nostri Spazi</h2>
-                    <div class="w-16 h-px bg-gold my-8 mx-auto"></div>
+        <!-- =====================================================
+             SPACES SECTION — Gallery Grid
+        ====================================================== -->
+        <section id="spaces" class="bg-ivory py-24 lg:py-40">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="text-center mb-16 reveal-up">
+                    <p class="section-number mb-4">03 — Spazi</p>
+                    <h2 class="heading-section text-charcoal">I Nostri Spazi</h2>
+                    <div class="divider-gold divider-gold-center mt-8"></div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 auto-rows-[300px]">
-                    <a href="img/_MG_4136.jpg" class="glightbox block relative overflow-hidden rounded group" data-gallery="gallery">
-                        <img src="img/_MG_4136.jpg" alt="Camera" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 p-6 text-white font-heading text-xl">La Camera</div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[350px]">
+                    <a href="img/_MG_4136.jpg" class="gallery-item md:col-span-2 reveal-scale" data-gallery="gallery1">
+                        <img src="img/_MG_4136.jpg" alt="La Camera" loading="lazy">
+                        <div class="gallery-caption">La Camera</div>
                     </a>
-                    <a href="img/_MG_4126.jpg" class="glightbox block relative overflow-hidden rounded group md:col-span-2" data-gallery="gallery">
-                        <img src="img/_MG_4126.jpg" alt="Design" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 p-6 text-white font-heading text-xl">Estetica Pura</div>
+                    <a href="img/_MG_4136.jpg" class="gallery-item reveal-scale stagger-1" data-gallery="gallery1">
+                        <img src="img/_MG_4126.jpg" alt="Design" loading="lazy">
+                        <div class="gallery-caption">Estetica Pura</div>
                     </a>
-                    <a href="img/_MG_4193.jpg" class="glightbox block relative overflow-hidden rounded group" data-gallery="gallery">
-                        <img src="img/_MG_4193.jpg" alt="Cucina" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 p-6 text-white font-heading text-xl">La Cucina</div>
+                    <a href="img/_MG_4193.jpg" class="gallery-item reveal-scale stagger-2" data-gallery="gallery1">
+                        <img src="img/_MG_4193.jpg" alt="La Cucina" loading="lazy">
+                        <div class="gallery-caption">La Cucina</div>
                     </a>
-                    <a href="img/_MG_4152.jpg" class="glightbox block relative overflow-hidden rounded group" data-gallery="gallery">
-                        <img src="img/_MG_4152.jpg" alt="Atmosfera" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 p-6 text-white font-heading text-xl">Atmosfere</div>
+                    <a href="img/_MG_4152.jpg" class="gallery-item reveal-scale stagger-3" data-gallery="gallery1">
+                        <img src="img/_MG_4152.jpg" alt="Atmosfere" loading="lazy">
+                        <div class="gallery-caption">Atmosfere</div>
                     </a>
-                    <a href="img/_MG_4189.jpg" class="glightbox block relative overflow-hidden rounded group" data-gallery="gallery">
-                        <img src="img/_MG_4189.jpg" alt="Bagno" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 p-6 text-white font-heading text-xl">Il Bagno</div>
+                    <a href="img/_MG_4189.jpg" class="gallery-item md:col-span-2 reveal-scale stagger-4" data-gallery="gallery1">
+                        <img src="img/_MG_4189.jpg" alt="Il Bagno" loading="lazy">
+                        <div class="gallery-caption">Il Bagno</div>
                     </a>
                 </div>
 
+                <!-- Hidden gallery images for lightbox -->
                 <div class="hidden">
-                    <a href="img/_MG_4097.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4104.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4106.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4111.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4117.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4127.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4128-3.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4134.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4137.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4141.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4144.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4158.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4162-2.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4178.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4187.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4188.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4190.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4192.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4208.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4210.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4220.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4223.jpg" class="glightbox" data-gallery="gallery"></a>
-                    <a href="img/_MG_4225.jpg" class="glightbox" data-gallery="gallery"></a>
+                    <a href="img/_MG_4097.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4104.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4106.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4111.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4117.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4127.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4128-3.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4134.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4137.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4141.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4144.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4158.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4162-2.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4178.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4187.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4188.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4190.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4192.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4208.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4210.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4220.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4223.jpg" class="glightbox" data-gallery="gallery1"></a>
+                    <a href="img/_MG_4225.jpg" class="glightbox" data-gallery="gallery1"></a>
                 </div>
             </div>
         </section>
 
-        <section id="location" class="py-20 lg:py-32 bg-ivory">
-            <div class="max-w-7xl mx-auto px-4 lg:px-8">
-                <div class="text-center mb-12">
-                    <h2 class="font-heading text-[clamp(2rem,5vw,3.5rem)] text-charcoal">Nel Cuore di Cefalù</h2>
-                    <div class="w-16 h-px bg-gold my-8 mx-auto"></div>
-                    <p class="text-lg text-text-light max-w-xl mx-auto">Una posizione unica nel centro storico pedonale, a pochi passi da tutto ciò che conta.</p>
+        <!-- =====================================================
+             LOCATION SECTION
+        ====================================================== -->
+        <section id="location" class="bg-surface py-24 lg:py-40">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="text-center mb-16 reveal-up">
+                    <p class="section-number mb-4">04 — Posizione</p>
+                    <h2 class="heading-section text-charcoal">Nel Cuore di Cefalù</h2>
+                    <div class="divider-gold divider-gold-center mt-8"></div>
+                    <p class="text-body max-w-xl mx-auto mt-6">Una posizione unica nel centro storico pedonale, a pochi passi da tutto ciò che conta.</p>
                 </div>
 
                 <div class="grid lg:grid-cols-5 gap-8 items-start">
-                    <div class="lg:col-span-3 rounded-2xl overflow-hidden shadow-luxe-md">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3045.5!2d14.0226!3d38.0386!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzjCsDAyJzE5LjAiTiAxNMKwMDEnMjEuNCJF!5e0!3m2!1sit!2sit!4v1700000000000" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa Mont°6"></iframe>
+                    <div class="lg:col-span-3 rounded-2xl overflow-hidden shadow-elevated reveal-left">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3045.5!2d14.0226!3d38.0386!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzjCsDAyJzE5LjAiTiAxNMKwMDEnMjEuNCJF!5e0!3m2!1sit!2sit!4v1700000000000"
+                            width="100%"
+                            height="450"
+                            style="border:0;"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            title="Mappa Mont°6">
+                        </iframe>
                     </div>
                     <div class="lg:col-span-2 grid grid-cols-2 lg:grid-cols-1 gap-4">
-                        <div class="flex items-center gap-4 p-4 bg-white rounded-xl border border-black/5 hover:-translate-y-1 hover:shadow-luxe-sm transition-all">
-                            <div class="w-12 h-12 flex items-center justify-center bg-gold-light rounded-full text-lg">⛪</div>
-                            <div><strong class="text-sm">Duomo UNESCO</strong><br><span class="text-xs text-text-light">2 min a piedi</span></div>
+                        <div class="location-card reveal-up stagger-1">
+                            <div class="location-icon">⛪</div>
+                            <div>
+                                <strong class="block">Duomo UNESCO</strong>
+                                <span class="text-caption">2 min a piedi</span>
+                            </div>
                         </div>
-                        <div class="flex items-center gap-4 p-4 bg-white rounded-xl border border-black/5 hover:-translate-y-1 hover:shadow-luxe-sm transition-all">
-                            <div class="w-12 h-12 flex items-center justify-center bg-gold-light rounded-full text-lg">🏖️</div>
-                            <div><strong class="text-sm">Spiaggia</strong><br><span class="text-xs text-text-light">5 min a piedi</span></div>
+                        <div class="location-card reveal-up stagger-2">
+                            <div class="location-icon">🏖️</div>
+                            <div>
+                                <strong class="block">Spiaggia</strong>
+                                <span class="text-caption">5 min a piedi</span>
+                            </div>
                         </div>
-                        <div class="flex items-center gap-4 p-4 bg-white rounded-xl border border-black/5 hover:-translate-y-1 hover:shadow-luxe-sm transition-all">
-                            <div class="w-12 h-12 flex items-center justify-center bg-gold-light rounded-full text-lg">🍝</div>
-                            <div><strong class="text-sm">Ristoranti</strong><br><span class="text-xs text-text-light">30 secondi</span></div>
+                        <div class="location-card reveal-up stagger-3">
+                            <div class="location-icon">🍝</div>
+                            <div>
+                                <strong class="block">Ristoranti</strong>
+                                <span class="text-caption">30 secondi</span>
+                            </div>
                         </div>
-                        <div class="flex items-center gap-4 p-4 bg-white rounded-xl border border-black/5 hover:-translate-y-1 hover:shadow-luxe-sm transition-all">
-                            <div class="w-12 h-12 flex items-center justify-center bg-gold-light rounded-full text-lg">🏔️</div>
-                            <div><strong class="text-sm">Rocca</strong><br><span class="text-xs text-text-light">10 min a piedi</span></div>
+                        <div class="location-card reveal-up stagger-4">
+                            <div class="location-icon">🏔️</div>
+                            <div>
+                                <strong class="block">La Rocca</strong>
+                                <span class="text-caption">10 min a piedi</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="explore" class="py-20 lg:py-32 bg-surface">
-            <div class="max-w-7xl mx-auto px-4 lg:px-8">
-                <div class="text-center mb-12">
-                    <h2 class="font-heading text-[clamp(2rem,5vw,3.5rem)] text-charcoal">Esplora Cefalù</h2>
-                    <div class="w-16 h-px bg-gold my-8 mx-auto"></div>
+        <!-- =====================================================
+             EXPERIENCES SECTION
+        ====================================================== -->
+        <section id="experiences" class="bg-charcoal py-24 lg:py-40">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="text-center mb-16 reveal-up">
+                    <p class="section-number mb-4" style="color: var(--color-gold-light);">05 — Esperienze</p>
+                    <h2 class="heading-section text-white">Esplora Cefalù</h2>
+                    <div class="divider-gold divider-gold-center mt-8"></div>
                 </div>
 
                 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <article class="bg-white rounded-2xl overflow-hidden shadow-luxe-xs hover:-translate-y-2 hover:shadow-luxe-lg transition-all duration-300">
-                        <div class="h-48 bg-cover bg-center" style="background-image: url('img/_MG_4132.jpg');"></div>
-                        <div class="p-6"><h3 class="font-heading text-xl mb-2">La Rocca</h3><p class="text-sm text-text-light">Un sentiero tra storia e natura con panorami mozzafiato.</p></div>
+                    <article class="card-dark p-6 reveal-up stagger-1">
+                        <div class="aspect-landscape rounded-lg overflow-hidden mb-6 img-hover-zoom">
+                            <img src="img/_MG_4132.jpg" alt="La Rocca" class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <h3 class="heading-card text-white mb-2">La Rocca</h3>
+                        <p class="text-caption text-white/60">Un sentiero tra storia e natura con panorami mozzafiato.</p>
                     </article>
-                    <article class="bg-white rounded-2xl overflow-hidden shadow-luxe-xs hover:-translate-y-2 hover:shadow-luxe-lg transition-all duration-300">
-                        <div class="h-48 bg-cover bg-center" style="background-image: url('img/_MG_4133.jpg');"></div>
-                        <div class="p-6"><h3 class="font-heading text-xl mb-2">Il Lavatoio Medievale</h3><p class="text-sm text-text-light">Un gioiello romanico del XII secolo immerso nel verde.</p></div>
+                    <article class="card-dark p-6 reveal-up stagger-2">
+                        <div class="aspect-landscape rounded-lg overflow-hidden mb-6 img-hover-zoom">
+                            <img src="img/_MG_4133.jpg" alt="Il Lavatoio" class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <h3 class="heading-card text-white mb-2">Lavatoio Medievale</h3>
+                        <p class="text-caption text-white/60">Un gioiello romanico del XII secolo immerso nel verde.</p>
                     </article>
-                    <article class="bg-white rounded-2xl overflow-hidden shadow-luxe-xs hover:-translate-y-2 hover:shadow-luxe-lg transition-all duration-300">
-                        <div class="h-48 bg-cover bg-center" style="background-image: url('img/_MG_4135.jpg');"></div>
-                        <div class="p-6"><h3 class="font-heading text-xl mb-2">Il Tramonto</h3><p class="text-sm text-text-light">Cene all'aperto con vista mare e colori che cambiano ogni sera.</p></div>
+                    <article class="card-dark p-6 reveal-up stagger-3">
+                        <div class="aspect-landscape rounded-lg overflow-hidden mb-6 img-hover-zoom">
+                            <img src="img/_MG_4135.jpg" alt="Il Tramonto" class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <h3 class="heading-card text-white mb-2">Il Tramonto</h3>
+                        <p class="text-caption text-white/60">Cene all'aperto con vista mare e colori che cambiano.</p>
                     </article>
-                    <article class="bg-white rounded-2xl overflow-hidden shadow-luxe-xs hover:-translate-y-2 hover:shadow-luxe-lg transition-all duration-300">
-                        <div class="h-48 bg-cover bg-center" style="background-image: url('img/_MG_4179.jpg');"></div>
-                        <div class="p-6"><h3 class="font-heading text-xl mb-2">Le Madonie</h3><p class="text-sm text-text-light">Parco naturale a 30 minuti: escursionismo e borghi autentici.</p></div>
+                    <article class="card-dark p-6 reveal-up stagger-4">
+                        <div class="aspect-landscape rounded-lg overflow-hidden mb-6 img-hover-zoom">
+                            <img src="img/_MG_4179.jpg" alt="Le Madonie" class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <h3 class="heading-card text-white mb-2">Le Madonie</h3>
+                        <p class="text-caption text-white/60">Parco naturale a 30 minuti: escursionismo e borghi autentici.</p>
                     </article>
                 </div>
             </div>
         </section>
 
-        <section id="reviews" class="py-20 lg:py-32 bg-charcoal">
-            <div class="max-w-7xl mx-auto px-4 lg:px-8">
-                <div class="text-center mb-12">
-                    <h2 class="font-heading text-[clamp(2rem,5vw,3.5rem)] text-white">Eccellenza Riconosciuta</h2>
+        <!-- =====================================================
+             REVIEWS SECTION
+        ====================================================== -->
+        <section id="reviews" class="bg-charcoal-light py-24 lg:py-40">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="text-center mb-16 reveal-up">
+                    <p class="section-number mb-4" style="color: var(--color-gold-light);">★★★★★</p>
+                    <h2 class="heading-section text-white">Eccellenza Riconosciuta</h2>
                     <div class="flex items-center justify-center gap-4 mt-6">
-                        <span class="text-gold text-xl">★★★★★</span>
-                        <span class="text-white font-heading text-2xl">5.0</span>
+                        <span class="text-3xl text-gold">★★★★★</span>
+                        <span class="text-white font-heading text-3xl">5.0</span>
                         <span class="text-white/50">su Airbnb</span>
                     </div>
                 </div>
 
-                <div class="grid md:grid-cols-3 gap-6 lg:gap-8">
-                    <div class="bg-white/[0.03] border border-white/5 rounded-xl p-8 relative hover:bg-white/[0.05] hover:-translate-y-2 transition-all">
-                        <div class="absolute -top-4 left-6 font-heading text-8xl text-gold/10 leading-none">"</div>
-                        <p class="text-white text-lg italic leading-relaxed mb-8 relative z-10">Appartamento stupendo, curato nei minimi dettagli. La posizione è fantastica, a due passi da tutto. L'eleganza è tangibile in ogni stanza. Torneremo sicuramente!</p>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="review-card reveal-up stagger-1">
+                        <span class="review-quote">"</span>
+                        <p class="text-white text-lg italic leading-relaxed mb-8 relative z-10">
+                            Appartamento stupendo, curato nei minimi dettagli. La posizione è fantastica, a due passi da tutto. L'eleganza è tangibile in ogni stanza.
+                        </p>
                         <div class="border-t border-white/10 pt-6">
-                            <div class="text-gold tracking-widest text-lg mb-2">★★★★★</div>
+                            <div class="text-gold tracking-widest mb-2">★★★★★</div>
                             <div class="text-white font-heading">Marco <span class="text-white/50 font-body text-sm block">Italia</span></div>
                         </div>
                     </div>
-                    <div class="bg-white/[0.03] border border-white/5 rounded-xl p-8 relative hover:bg-white/[0.05] hover:-translate-y-2 transition-all">
-                        <div class="absolute -top-4 left-6 font-heading text-8xl text-gold/10 leading-none">"</div>
-                        <p class="text-white text-lg italic leading-relaxed mb-8 relative z-10">The most beautiful place we stayed in Sicily! Impeccably clean, extremely comfortable bed, and wonderful host. It felt like a 5-star boutique hotel.</p>
+                    <div class="review-card reveal-up stagger-2">
+                        <span class="review-quote">"</span>
+                        <p class="text-white text-lg italic leading-relaxed mb-8 relative z-10">
+                            The most beautiful place we stayed in Sicily! Impeccably clean, extremely comfortable bed, and wonderful host.
+                        </p>
                         <div class="border-t border-white/10 pt-6">
-                            <div class="text-gold tracking-widest text-lg mb-2">★★★★★</div>
+                            <div class="text-gold tracking-widest mb-2">★★★★★</div>
                             <div class="text-white font-heading">Sarah <span class="text-white/50 font-body text-sm block">United Kingdom</span></div>
                         </div>
                     </div>
-                    <div class="bg-white/[0.03] border border-white/5 rounded-xl p-8 relative hover:bg-white/[0.05] hover:-translate-y-2 transition-all">
-                        <div class="absolute -top-4 left-6 font-heading text-8xl text-gold/10 leading-none">"</div>
-                        <p class="text-white text-lg italic leading-relaxed mb-8 relative z-10">Un gioiello nel centro di Cefalù. L'arredamento è di un gusto squisito e la pulizia è impareggiabile. Assolutamente consigliato per coppie in cerca di relax.</p>
+                    <div class="review-card reveal-up stagger-3">
+                        <span class="review-quote">"</span>
+                        <p class="text-white text-lg italic leading-relaxed mb-8 relative z-10">
+                            Un gioiello nel centro di Cefalù. L'arredamento è di un gusto squisito e la pulizia è impareggiabile.
+                        </p>
                         <div class="border-t border-white/10 pt-6">
-                            <div class="text-gold tracking-widest text-lg mb-2">★★★★★</div>
+                            <div class="text-gold tracking-widest mb-2">★★★★★</div>
                             <div class="text-white font-heading">Elena <span class="text-white/50 font-body text-sm block">Italia</span></div>
                         </div>
                     </div>
@@ -360,99 +433,123 @@
             </div>
         </section>
 
-        <section id="booking" class="py-20 lg:py-32 bg-ivory">
-            <div class="max-w-7xl mx-auto px-4 lg:px-8 grid lg:grid-cols-2 gap-12 lg:gap-20">
-                <div>
-                    <h2 class="font-heading text-[clamp(2rem,5vw,3.5rem)] text-charcoal mb-6">Prenota il tuo<br>Soggiorno</h2>
-                    <p class="text-lg text-text-light mb-8">Verifica la disponibilità e richiedi una prenotazione diretta, garantendoti la nostra migliore tariffa riservata.</p>
+        <!-- =====================================================
+             BOOKING SECTION
+        ====================================================== -->
+        <section id="booking" class="bg-ivory py-24 lg:py-40">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="grid lg:grid-cols-2 gap-16 lg:gap-24">
+                    <div class="reveal-left">
+                        <p class="section-number mb-4">06 — Prenota</p>
+                        <h2 class="heading-section text-charcoal mb-6">
+                            Prenota il tuo<br>
+                            <span class="text-gradient-italic">Soggiorno</span>
+                        </h2>
+                        <div class="divider-gold mb-8"></div>
+                        <p class="text-body mb-12">
+                            Verifica la disponibilità e richiedi una prenotazione diretta, garantendoti la nostra migliore tariffa riservata.
+                        </p>
 
-                    <div id="faq-container">
-                        <div class="faq-item border-b border-black/10">
-                            <button class="faq-question w-full flex justify-between items-center py-5 text-left group">
-                                <span class="font-heading text-lg">Orari di Check-in e Check-out</span>
-                                <span class="faq-icon text-gold text-2xl transition-transform">+</span>
-                            </button>
-                            <div class="faq-answer hidden pb-5"><p class="text-sm text-text-light">Il Check-in è dalle ore 15:00. Il Check-out è richiesto entro le ore 10:00 per garantire la pulizia meticolosa. Offriamo self check-in automatizzato tramite serratura digitale.</p></div>
-                        </div>
-                        <div class="faq-item border-b border-black/10">
-                            <button class="faq-question w-full flex justify-between items-center py-5 text-left group">
-                                <span class="font-heading text-lg">Dove posso parcheggiare?</span>
-                                <span class="faq-icon text-gold text-2xl transition-transform">+</span>
-                            </button>
-                            <div class="faq-answer hidden pb-5"><p class="text-sm text-text-light">Trovandoci nel centro storico pedonale, consigliamo di parcheggiare l'auto al "Parcheggio Coco" sul lungomare, a circa 5 minuti a piedi.</p></div>
-                        </div>
-                        <div class="faq-item border-b border-black/10">
-                            <button class="faq-question w-full flex justify-between items-center py-5 text-left group">
-                                <span class="font-heading text-lg">È possibile soggiornare con animali?</span>
-                                <span class="faq-icon text-gold text-2xl transition-transform">+</span>
-                            </button>
-                            <div class="faq-answer hidden pb-5"><p class="text-sm text-text-light">Purtroppo non possiamo accettare animali domestici nella struttura per motivi igienici e normativi.</p></div>
-                        </div>
-                        <div class="faq-item border-b border-black/10">
-                            <button class="faq-question w-full flex justify-between items-center py-5 text-left group">
-                                <span class="font-heading text-lg">La biancheria è inclusa?</span>
-                                <span class="faq-icon text-gold text-2xl transition-transform">+</span>
-                            </button>
-                            <div class="faq-answer hidden pb-5"><p class="text-sm text-text-light">Sì, forniamo biancheria da letto, asciugamani e un set base di prodotti per la colazione.</p></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-2xl p-8 lg:p-12 shadow-luxe-xl border border-black/5">
-                    <h3 class="font-heading text-2xl mb-2">Richiesta Diretta</h3>
-                    <p class="text-sm text-text-light mb-8">Risposta istantanea via WhatsApp</p>
-
-                    <div class="space-y-6">
-                        <div>
-                            <label class="block text-xs uppercase tracking-widest text-text-light mb-3">Date del Soggiorno</label>
-                            <input type="text" id="date-range" class="w-full py-3 border-b border-gray-200 bg-transparent text-lg outline-none focus:border-gold transition-colors" placeholder="Check-in / Check-out" readonly>
-                        </div>
-                        <div>
-                            <label class="block text-xs uppercase tracking-widest text-text-light mb-3">Ospiti</label>
-                            <select id="guest-count" class="w-full py-3 border-b border-gray-200 bg-transparent text-lg outline-none focus:border-gold transition-colors">
-                                <option value="1">1 Ospite</option>
-                                <option value="2" selected>2 Ospiti</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div id="price-display" class="hidden bg-gold-light border border-gold/20 rounded-xl p-5 my-6">
-                        <div class="flex justify-between items-center text-sm mb-2">
-                            <span class="text-text-light uppercase tracking-wide">Prezzo per notte</span>
-                            <span class="font-heading text-xl text-gold" id="price-nightly">€160</span>
-                        </div>
-                        <div class="flex justify-between items-center pt-3 border-t border-gold/20">
-                            <span class="font-heading">Totale</span>
-                            <span class="font-heading text-2xl text-gold font-semibold" id="price-total">€320</span>
+                        <!-- FAQ -->
+                        <div id="faq-container">
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span>Orari di Check-in e Check-out</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="text-body">Il Check-in è dalle ore 15:00. Il Check-out è entro le ore 10:00. Offriamo self check-in automatizzato tramite serratura digitale.</p>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span>Dove posso parcheggiare?</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="text-body">Consigliamo il "Parcheggio Coco" sul lungomare, a 5 minuti a piedi dalla struttura.</p>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span>Animali ammessi?</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="text-body">Purtroppo non possiamo accettare animali domestici per motivi igienici e normativi.</p>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span>La biancheria è inclusa?</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p class="text-body">Sì, forniamo biancheria da letto, asciugamani e un set base di prodotti per la colazione.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <button id="btn-whatsapp" class="w-full bg-charcoal text-white py-4 rounded flex items-center justify-center gap-3 text-sm uppercase tracking-widest font-medium hover:bg-gold transition-all hover:-translate-y-0.5 mt-4">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-                        Richiedi su WhatsApp
-                    </button>
+                    <div class="reveal-right">
+                        <div class="bg-white rounded-2xl p-8 lg:p-12 shadow-elevated">
+                            <h3 class="heading-card text-charcoal mb-2">Richiesta Diretta</h3>
+                            <p class="text-caption mb-8">Risposta istantanea via WhatsApp</p>
 
-                    <p class="flex items-center justify-center gap-2 text-xs text-text-light mt-5">
-                        <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                        Pagamento sicuro con crittografia SSL
-                    </p>
+                            <div class="space-y-8">
+                                <div>
+                                    <label class="block text-xs uppercase tracking-widest text-text-muted mb-3">Date del Soggiorno</label>
+                                    <input type="text" id="date-range" class="input-luxury" placeholder="Check-in / Check-out" readonly>
+                                </div>
+                                <div>
+                                    <label class="block text-xs uppercase tracking-widest text-text-muted mb-3">Ospiti</label>
+                                    <select id="guest-count" class="input-luxury">
+                                        <option value="1">1 Ospite</option>
+                                        <option value="2" selected>2 Ospiti</option>
+                                    </select>
+                                </div>
+                            </div>
 
-                    <div class="mt-8 pt-8 border-t border-black/5">
-                        <h4 class="font-heading text-lg mb-4">Vantaggi della Prenotazione Diretta</h4>
-                        <ul class="space-y-3">
-                            <li class="flex items-start gap-3 text-sm text-text-light">
-                                <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                                <span><strong class="text-charcoal">Miglior Prezzo Garantito:</strong> Risparmia fino al 15% rispetto ai portali.</span>
-                            </li>
-                            <li class="flex items-start gap-3 text-sm text-text-light">
-                                <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                                <span><strong class="text-charcoal">Omaggio di Benvenuto:</strong> Una bottiglia di vino locale.</span>
-                            </li>
-                            <li class="flex items-start gap-3 text-sm text-text-light">
-                                <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                                <span><strong class="text-charcoal">Flessibilità:</strong> Check-in/check-out flessibili ove possibile.</span>
-                            </li>
-                        </ul>
+                            <div id="price-display" class="hidden mt-8 p-6 rounded-xl" style="background: rgba(184, 150, 92, 0.08); border: 1px solid rgba(184, 150, 92, 0.2);">
+                                <div class="flex justify-between items-center mb-3">
+                                    <span class="text-caption uppercase tracking-wide">Prezzo per notte</span>
+                                    <span class="heading-card text-gold" id="price-nightly">€160</span>
+                                </div>
+                                <div class="flex justify-between items-center pt-3 border-t border-gold/20">
+                                    <span class="heading-card text-charcoal">Totale</span>
+                                    <span class="text-3xl text-gold font-semibold" id="price-total">€320</span>
+                                </div>
+                            </div>
+
+                            <button id="btn-whatsapp" class="w-full mt-8 py-4 rounded-lg font-semibold text-sm uppercase tracking-widest transition-all flex items-center justify-center gap-3" style="background: #0F1210; color: white;">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                                Richiedi su WhatsApp
+                            </button>
+
+                            <p class="flex items-center justify-center gap-2 text-caption mt-6">
+                                <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                Pagamento sicuro con crittografia SSL
+                            </p>
+
+                            <!-- Benefits -->
+                            <div class="mt-10 pt-8 border-t border-black/5">
+                                <h4 class="heading-card text-charcoal mb-6">Vantaggi Diretta</h4>
+                                <ul class="space-y-4">
+                                    <li class="flex items-start gap-4">
+                                        <svg class="w-5 h-5 text-gold flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                        <span class="text-body"><strong>Miglior Prezzo:</strong> Risparmia fino al 15% rispetto ai portali.</span>
+                                    </li>
+                                    <li class="flex items-start gap-4">
+                                        <svg class="w-5 h-5 text-gold flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                        <span class="text-body"><strong>Omaggio:</strong> Una bottiglia di vino locale.</span>
+                                    </li>
+                                    <li class="flex items-start gap-4">
+                                        <svg class="w-5 h-5 text-gold flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                        <span class="text-body"><strong>Flessibilità:</strong> Check-in/out flessibili ove possibile.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -460,33 +557,47 @@
 
     </main>
 
-    <footer class="bg-charcoal text-white py-16">
-        <div class="max-w-7xl mx-auto px-4 lg:px-8 text-center">
-            <img src="img/PROFILO_Tavola disegno 2.png" alt="Mont°6" class="h-32 mx-auto mb-12 opacity-90">
-            <p class="text-sm text-white/80 mb-2">Un rifugio di charme a Cefalù, Sicilia.</p>
-            <p class="text-xs text-white/40 mb-8">CIR: 19082027C206522 • CIN: IT082027C2YCA7QI4V</p>
-            <div class="flex flex-wrap justify-center gap-6 mb-8">
-                <a href="#concept" class="text-xs uppercase tracking-widest text-white/60 hover:text-gold transition-colors">Filosofia</a>
-                <a href="#gallery" class="text-xs uppercase tracking-widest text-white/60 hover:text-gold transition-colors">Spazi</a>
-                <a href="#location" class="text-xs uppercase tracking-widest text-white/60 hover:text-gold transition-colors">Posizione</a>
-                <a href="mailto:mont6.home@gmail.com" class="text-xs uppercase tracking-widest text-white/60 hover:text-gold transition-colors">Contatti</a>
-                <a href="privacy.html" class="text-xs uppercase tracking-widest text-white/60 hover:text-gold transition-colors">Privacy</a>
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+    <footer class="footer-luxury">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="text-center mb-16">
+                <img src="img/PROFILO_Tavola disegno 2.png" alt="Mont°6" class="h-32 mx-auto mb-8 opacity-90">
+                <p class="text-white/70 mb-2">Un rifugio di charme a Cefalù, Sicilia.</p>
+                <p class="text-white/30 text-sm mb-8">CIR: 19082027C206522 • CIN: IT082027C2YCA7QI4V</p>
+                <div class="flex flex-wrap justify-center gap-8">
+                    <a href="#philosophy" class="footer-link">Filosofia</a>
+                    <a href="#spaces" class="footer-link">Spazi</a>
+                    <a href="#location" class="footer-link">Posizione</a>
+                    <a href="mailto:mont6.home@gmail.com" class="footer-link">Contatti</a>
+                    <a href="privacy.html" class="footer-link">Privacy</a>
+                </div>
             </div>
-            <p class="text-xs text-white/30">© 2026 Mont°6 Vacation Home.</p>
+            <div class="text-center pt-8 border-t border-white/10">
+                <p class="text-white/30 text-sm">© 2026 Mont°6 Vacation Home.</p>
+            </div>
         </div>
     </footer>
 
-    <div id="floating-cta" class="fixed bottom-0 left-0 w-full p-4 lg:hidden bg-charcoal/95 backdrop-blur-sm z-40 -translate-y-full transition-transform duration-500">
-        <a href="#booking" class="block text-center bg-gold text-white py-3 rounded-lg text-sm uppercase tracking-widest font-semibold shadow-lg">Prenota Ora</a>
+    <!-- =====================================================
+         FLOATING CTA (Mobile)
+    ====================================================== -->
+    <div id="floating-cta" class="floating-cta lg:hidden">
+        <a href="#booking">Prenota Ora</a>
     </div>
 
-    <div id="cookie-banner" class="fixed bottom-0 left-0 w-full bg-charcoal text-white p-6 z-[10001] translate-y-full transition-transform duration-500">
+    <!-- =====================================================
+         COOKIE BANNER
+    ====================================================== -->
+    <div id="cookie-banner" class="cookie-banner">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <p class="text-sm text-white/80">Questo sito utilizza cookie tecnici per migliorare la tua esperienza. <a href="privacy.html" class="text-gold hover:underline">Privacy Policy</a>.</p>
-            <button id="cookie-accept" class="bg-gold text-white px-6 py-2 rounded text-xs uppercase tracking-widest font-medium hover:bg-gold-dark transition-colors flex-shrink-0">Accetta</button>
+            <p class="text-white/80 text-sm">Questo sito utilizza cookie tecnici. <a href="privacy.html" class="text-gold hover:underline">Privacy Policy</a>.</p>
+            <button id="cookie-accept" class="cookie-btn">Accetta</button>
         </div>
     </div>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/it.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
