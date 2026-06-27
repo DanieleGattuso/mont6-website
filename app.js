@@ -228,7 +228,7 @@ function initBookingForm() {
         }
     };
 
-    fetch('/.netlify/functions/get-booked-dates')
+    fetch('/api/get-booked-dates')
         .then(response => {
             if (!response.ok) throw new Error("Serverless API non attiva");
             return response.json();
@@ -237,7 +237,7 @@ function initBookingForm() {
             updateCalendarDisabledDates(bookedDates);
         })
         .catch(err => {
-            console.warn("Funzione Netlify non disponibile. Fallback locale:", err.message);
+            console.warn("Funzione serverless non disponibile. Fallback locale:", err.message);
             fetch('/blocked-dates.json')
                 .then(res => {
                     if (!res.ok) throw new Error("File locale non trovato");
@@ -330,7 +330,7 @@ function initBookingForm() {
             btnStripe.innerHTML = currentLang === 'en' ? 'Redirecting...' : 'Elaborazione...';
 
             try {
-                const response = await fetch('/.netlify/functions/create-checkout-session', {
+                const response = await fetch('/api/create-checkout-session', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
