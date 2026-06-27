@@ -16,7 +16,7 @@ git push
 echo.
 echo =======================================================
 echo   COMPLETATO CON SUCCESSO!
-echo   Netlify ha rilevato le modifiche e sta aggiornando
+echo   Cloudflare ha rilevato le modifiche e sta aggiornando
 echo   il sito online. Tra circa 30 secondi sarà tutto live!
 echo =======================================================
 echo.

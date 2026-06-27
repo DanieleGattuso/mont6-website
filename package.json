@@ -5,8 +5,5 @@
   "main": "app.js",
   "scripts": {
     "build": "echo 'No build step required'"
-  },
-  "dependencies": {
-    "stripe": "^14.0.0"
   }
 }
