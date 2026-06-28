@@ -64,5 +64,21 @@ export async function onRequestGet({ request, env }) {
         }
     }
 
+    // 3. Prenotazioni dirette pagate (database D1) — bloccate automaticamente dopo il pagamento
+    if (env.DB) {
+        try {
+            const { results } = await env.DB.prepare(
+                `SELECT check_in, check_out FROM bookings WHERE status = 'confirmed'`
+            ).all();
+            for (const row of results || []) {
+                if (row.check_in && row.check_out) {
+                    bookedDates.push({ from: row.check_in, to: row.check_out });
+                }
+            }
+        } catch (e) {
+            console.error('Errore lettura prenotazioni D1:', e);
+        }
+    }
+
     return new Response(JSON.stringify(bookedDates), { headers: JSON_HEADERS });
 }
