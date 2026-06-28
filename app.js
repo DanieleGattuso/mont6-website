@@ -555,41 +555,41 @@ function initMap() {
     const lang = document.documentElement.getAttribute('data-lang') || 'it';
     const t = (it, en) => (lang === 'en' ? en : it);
 
-    // Icone di default servite dal CDN (altrimenti i marker non comparirebbero)
-    delete L.Icon.Default.prototype._getIconUrl;
-    L.Icon.Default.mergeOptions({
-        iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-    });
-
     const property = [38.0386, 14.0226]; // posizione approssimata, centro storico
-    const map = L.map(el, { scrollWheelZoom: false }).setView(property, 16);
+    const map = L.map(el, { scrollWheelZoom: false, zoomControl: true }).setView(property, 16);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; OpenStreetMap',
+    // Basemap minimal ed elegante (CARTO Positron) — niente API key
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        subdomains: 'abcd',
+        maxZoom: 20,
+        attribution: '&copy; OpenStreetMap &copy; CARTO',
     }).addTo(map);
 
-    // Marker brandizzato per la dimora
+    // Marker brandizzato per la dimora (pin a goccia dorato con etichetta)
     const goldIcon = L.divIcon({
-        className: '', html: '<div class="mont6-pin"></div>',
-        iconSize: [18, 18], iconAnchor: [9, 18], popupAnchor: [0, -18],
+        className: 'mont6-marker',
+        html: '<div class="mont6-pin"></div><span class="mont6-pin-label">Mont°6</span>',
+        iconSize: [22, 22], iconAnchor: [11, 22], popupAnchor: [0, -24],
     });
-    L.marker(property, { icon: goldIcon }).addTo(map)
+    L.marker(property, { icon: goldIcon, zIndexOffset: 1000 }).addTo(map)
         .bindPopup(`<strong>Mont°6</strong><br>${t('Il tuo rifugio nel centro storico', 'Your retreat in the historic center')}`)
         .openPopup();
 
-    // Punti di interesse (coordinate approssimate)
+    // Punti di interesse (coordinate approssimate) con marker a pallino raffinato
     const pois = [
-        { c: [38.0394, 14.0227], it: 'Duomo di Cefalù', en: 'Cefalù Cathedral', dit: '2 min a piedi', den: '2 min walk' },
-        { c: [38.0372, 14.0193], it: 'Spiaggia', en: 'Beach', dit: '5 min a piedi', den: '5 min walk' },
-        { c: [38.0364, 14.0283], it: 'Rocca di Cefalù', en: 'La Rocca', dit: '10 min a piedi', den: '10 min walk' },
-        { c: [38.0388, 14.0216], it: 'Lavatoio Medievale', en: 'Medieval Laundry', dit: '2 min a piedi', den: '2 min walk' },
-        { c: [38.0431, 14.0146], it: 'Stazione FS', en: 'Train Station', dit: '10 min in auto', den: '10 min by car' },
+        { c: [38.0394, 14.0227], icon: '⛪', it: 'Duomo di Cefalù', en: 'Cefalù Cathedral', dit: '2 min a piedi', den: '2 min walk' },
+        { c: [38.0372, 14.0193], icon: '🏖️', it: 'Spiaggia', en: 'Beach', dit: '5 min a piedi', den: '5 min walk' },
+        { c: [38.0364, 14.0283], icon: '🏔️', it: 'Rocca di Cefalù', en: 'La Rocca', dit: '10 min a piedi', den: '10 min walk' },
+        { c: [38.0388, 14.0216], icon: '🏛️', it: 'Lavatoio Medievale', en: 'Medieval Laundry', dit: '2 min a piedi', den: '2 min walk' },
+        { c: [38.0431, 14.0146], icon: '🚉', it: 'Stazione FS', en: 'Train Station', dit: '10 min in auto', den: '10 min by car' },
     ];
     pois.forEach((p) => {
-        L.marker(p.c).addTo(map)
+        const dot = L.divIcon({
+            className: 'poi-marker',
+            html: `<span class="poi-dot">${p.icon}</span>`,
+            iconSize: [30, 30], iconAnchor: [15, 15], popupAnchor: [0, -16],
+        });
+        L.marker(p.c, { icon: dot }).addTo(map)
             .bindPopup(`<strong>${t(p.it, p.en)}</strong><br>${t(p.dit, p.den)}`);
     });
 
