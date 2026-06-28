@@ -44,7 +44,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="style.css?v=7">
+    <link rel="stylesheet" href="style.css?v=8">
     
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
@@ -635,17 +635,50 @@
                 <span class="lang-en">Excellence verified, stay after stay, by our guests on Airbnb.</span>
             </p>
 
-            <!-- Recensioni verificate su Airbnb -->
-            <div class="airbnb-verify reveal-up mt-l">
-                <p class="airbnb-verify-label">
-                    <span class="lang-it">Recensioni verificate su Airbnb</span>
-                    <span class="lang-en">Verified reviews on Airbnb</span>
-                </p>
-                <div class="airbnb-embed-frame" data-id="48284780" data-view="home" data-hide-price="true" style="width: 450px; height: 300px; margin: auto; max-width: 100%;"><a href="https://www.airbnb.it/rooms/48284780?guests=1&amp;adults=1&amp;s=66&amp;source=embed_widget">Visto su Airbnb</a><a href="https://www.airbnb.it/rooms/48284780?guests=1&amp;adults=1&amp;s=66&amp;source=embed_widget" rel="nofollow">Alloggio in affitto · Cefalù · ★4,99 · 1 camera da letto · 1 letto · 1 bagno</a></div>
-                <a href="https://www.airbnb.it/rooms/48284780" target="_blank" rel="noopener" class="airbnb-reviews-link">
-                    <span class="lang-it">Leggi tutte le recensioni su Airbnb →</span>
-                    <span class="lang-en">Read all reviews on Airbnb →</span>
-                </a>
+            <!-- Recensioni: widget verificato (sinistra) + recensioni reali (destra) -->
+            <div class="reviews-layout reveal-up mt-l">
+
+                <div class="reviews-airbnb">
+                    <p class="airbnb-verify-label">
+                        <span class="lang-it">Recensioni verificate su Airbnb</span>
+                        <span class="lang-en">Verified reviews on Airbnb</span>
+                    </p>
+                    <div class="airbnb-card-frame">
+                        <div class="airbnb-embed-frame" data-id="48284780" data-view="home" data-hide-price="true" style="width: 450px; height: 300px; margin: auto; max-width: 100%;"><a href="https://www.airbnb.it/rooms/48284780?guests=1&amp;adults=1&amp;s=66&amp;source=embed_widget">Visto su Airbnb</a><a href="https://www.airbnb.it/rooms/48284780?guests=1&amp;adults=1&amp;s=66&amp;source=embed_widget" rel="nofollow">Alloggio in affitto · Cefalù · ★4,99 · 1 camera da letto · 1 letto · 1 bagno</a></div>
+                    </div>
+                    <a href="https://www.airbnb.it/rooms/48284780" target="_blank" rel="noopener" class="airbnb-reviews-link">
+                        <span class="lang-it">Leggi tutte le recensioni su Airbnb →</span>
+                        <span class="lang-en">Read all reviews on Airbnb →</span>
+                    </a>
+                </div>
+
+                <div class="reviews-real">
+                    <article class="review-card-luxe">
+                        <div class="quote-mark">"</div>
+                        <p class="review-text">Our stay at Daniele's was wonderful! The location is perfect, very central to everything. The patio has a beautiful view of La Rocca di Cefalù and it's a quick 6-minute walk to the water. Daniele made us feel at home with special touches — coffee, snacks and wine. Thank you Daniele!</p>
+                        <div class="reviewer-box">
+                            <div class="rev-stars">★★★★★</div>
+                            <div class="rev-name">Lindsay <span>Petaluma, California · Ottobre 2025</span></div>
+                        </div>
+                    </article>
+                    <article class="review-card-luxe">
+                        <div class="quote-mark">"</div>
+                        <p class="review-text">We had an excellent stay. Daniele was a fantastic host and very communicative throughout. Check-in was easy and the property is beautiful, in such a great location — you really are in the heart of Cefalù, yet not spoiled by any noise. We would definitely come back.</p>
+                        <div class="reviewer-box">
+                            <div class="rev-stars">★★★★★</div>
+                            <div class="rev-name">Anthony <span>Airbnb · Luglio 2025</span></div>
+                        </div>
+                    </article>
+                    <article class="review-card-luxe">
+                        <div class="quote-mark">"</div>
+                        <p class="review-text">Great location — central to the beach and the best shops and restaurants, but tucked away on a quiet side street. The apartment is just steps from the entrance to the Cefalù rock hike, with amazing views. Daniele left a well-stocked kitchen and gave us great restaurant recommendations. Would recommend to anyone!</p>
+                        <div class="reviewer-box">
+                            <div class="rev-stars">★★★★★</div>
+                            <div class="rev-name">Megan <span>Grosse Pointe Park, Michigan · Ottobre 2025</span></div>
+                        </div>
+                    </article>
+                </div>
+
             </div>
         </div>
     </section>
@@ -903,6 +936,6 @@
     <script async src="https://www.airbnb.it/embeddable/airbnb_jssdk"></script>
 
     <!-- Custom JS -->
-    <script src="app.js?v=7"></script>
+    <script src="app.js?v=8"></script>
 </body>
 </html>
