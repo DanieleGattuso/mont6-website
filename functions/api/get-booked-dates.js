@@ -33,11 +33,16 @@ export async function onRequestGet({ request, env }) {
         console.error('Errore nella lettura di blocked-dates.json:', e);
     }
 
-    // 2. Calendario Airbnb opzionale (iCal) — attivo solo se AIRBNB_ICAL_URL è impostata
-    const icalUrl = env.AIRBNB_ICAL_URL;
-    if (icalUrl) {
+    // 2. Calendari esterni opzionali (iCal): Airbnb + Booking.com.
+    //    Attivi solo se le rispettive variabili d'ambiente sono impostate.
+    const icalFeeds = [
+        { name: 'Airbnb', url: env.AIRBNB_ICAL_URL },
+        { name: 'Booking', url: env.BOOKING_ICAL_URL },
+    ].filter((f) => f.url);
+
+    for (const feed of icalFeeds) {
         try {
-            const response = await fetch(icalUrl);
+            const response = await fetch(feed.url);
             if (response.ok) {
                 const icsText = await response.text();
                 const events = icsText.split('BEGIN:VEVENT');
@@ -57,10 +62,26 @@ export async function onRequestGet({ request, env }) {
                     }
                 }
             } else {
-                console.error(`Errore caricamento calendario Airbnb. Status: ${response.status}`);
+                console.error(`Errore caricamento calendario ${feed.name}. Status: ${response.status}`);
             }
         } catch (err) {
-            console.error('Errore durante il recupero del calendario Airbnb:', err);
+            console.error(`Errore durante il recupero del calendario ${feed.name}:`, err);
+        }
+    }
+
+    // 3. Prenotazioni dirette pagate (database D1) — bloccate automaticamente dopo il pagamento
+    if (env.DB) {
+        try {
+            const { results } = await env.DB.prepare(
+                `SELECT check_in, check_out FROM bookings WHERE status = 'confirmed'`
+            ).all();
+            for (const row of results || []) {
+                if (row.check_in && row.check_out) {
+                    bookedDates.push({ from: row.check_in, to: row.check_out });
+                }
+            }
+        } catch (e) {
+            console.error('Errore lettura prenotazioni D1:', e);
         }
     }
 
