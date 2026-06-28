@@ -1,0 +1,23 @@
+# Configurazione del Worker email automatiche di Mont°6.
+# Deploy da terminale:  cd worker-emails && wrangler deploy
+# (in alternativa si può creare il Worker dalla dashboard — vedi EMAIL-AUTOMATION-SETUP.md)
+
+name = "mont6-email-cron"
+main = "worker.js"
+compatibility_date = "2024-11-01"
+
+# Esegue ogni giorno alle 09:07 UTC
+[triggers]
+crons = ["7 9 * * *"]
+
+# Stesso database D1 del sito. Inserisci il database_id (lo ottieni con: wrangler d1 list)
+[[d1_databases]]
+binding = "DB"
+database_name = "mont6-bookings"
+database_id = "INSERISCI_QUI_IL_DATABASE_ID"
+
+# I segreti (RESEND_API_KEY) si impostano con:  wrangler secret put RESEND_API_KEY
+# Le variabili in chiaro si possono mettere qui sotto:
+[vars]
+BOOKING_FROM_EMAIL = "prenotazioni@mont6cefalu.it"
+# REVIEW_URL = "https://www.airbnb.it/rooms/48284780"   # opzionale: link recensione
