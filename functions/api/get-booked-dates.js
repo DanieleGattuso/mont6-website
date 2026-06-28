@@ -33,11 +33,16 @@ export async function onRequestGet({ request, env }) {
         console.error('Errore nella lettura di blocked-dates.json:', e);
     }
 
-    // 2. Calendario Airbnb opzionale (iCal) — attivo solo se AIRBNB_ICAL_URL è impostata
-    const icalUrl = env.AIRBNB_ICAL_URL;
-    if (icalUrl) {
+    // 2. Calendari esterni opzionali (iCal): Airbnb + Booking.com.
+    //    Attivi solo se le rispettive variabili d'ambiente sono impostate.
+    const icalFeeds = [
+        { name: 'Airbnb', url: env.AIRBNB_ICAL_URL },
+        { name: 'Booking', url: env.BOOKING_ICAL_URL },
+    ].filter((f) => f.url);
+
+    for (const feed of icalFeeds) {
         try {
-            const response = await fetch(icalUrl);
+            const response = await fetch(feed.url);
             if (response.ok) {
                 const icsText = await response.text();
                 const events = icsText.split('BEGIN:VEVENT');
@@ -57,10 +62,10 @@ export async function onRequestGet({ request, env }) {
                     }
                 }
             } else {
-                console.error(`Errore caricamento calendario Airbnb. Status: ${response.status}`);
+                console.error(`Errore caricamento calendario ${feed.name}. Status: ${response.status}`);
             }
         } catch (err) {
-            console.error('Errore durante il recupero del calendario Airbnb:', err);
+            console.error(`Errore durante il recupero del calendario ${feed.name}:`, err);
         }
     }
 
