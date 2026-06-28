@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initGalleryLightbox();
     initCookieBanner();
     initFloatingCTA();
+    initMap();
 });
 
 /**
@@ -542,4 +543,58 @@ function initFloatingCTA() {
             floatingCta.classList.remove('visible');
         }
     });
+}
+
+/**
+ * Interactive map (Leaflet + OpenStreetMap). Approximate position (historic center).
+ */
+function initMap() {
+    const el = document.getElementById('mont6-map');
+    if (!el || typeof L === 'undefined') return;
+
+    const lang = document.documentElement.getAttribute('data-lang') || 'it';
+    const t = (it, en) => (lang === 'en' ? en : it);
+
+    // Icone di default servite dal CDN (altrimenti i marker non comparirebbero)
+    delete L.Icon.Default.prototype._getIconUrl;
+    L.Icon.Default.mergeOptions({
+        iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+    });
+
+    const property = [38.0386, 14.0226]; // posizione approssimata, centro storico
+    const map = L.map(el, { scrollWheelZoom: false }).setView(property, 16);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap',
+    }).addTo(map);
+
+    // Marker brandizzato per la dimora
+    const goldIcon = L.divIcon({
+        className: '', html: '<div class="mont6-pin"></div>',
+        iconSize: [18, 18], iconAnchor: [9, 18], popupAnchor: [0, -18],
+    });
+    L.marker(property, { icon: goldIcon }).addTo(map)
+        .bindPopup(`<strong>Mont°6</strong><br>${t('Il tuo rifugio nel centro storico', 'Your retreat in the historic center')}`)
+        .openPopup();
+
+    // Punti di interesse (coordinate approssimate)
+    const pois = [
+        { c: [38.0394, 14.0227], it: 'Duomo di Cefalù', en: 'Cefalù Cathedral', dit: '2 min a piedi', den: '2 min walk' },
+        { c: [38.0372, 14.0193], it: 'Spiaggia', en: 'Beach', dit: '5 min a piedi', den: '5 min walk' },
+        { c: [38.0364, 14.0283], it: 'Rocca di Cefalù', en: 'La Rocca', dit: '10 min a piedi', den: '10 min walk' },
+        { c: [38.0388, 14.0216], it: 'Lavatoio Medievale', en: 'Medieval Laundry', dit: '2 min a piedi', den: '2 min walk' },
+        { c: [38.0431, 14.0146], it: 'Stazione FS', en: 'Train Station', dit: '10 min in auto', den: '10 min by car' },
+    ];
+    pois.forEach((p) => {
+        L.marker(p.c).addTo(map)
+            .bindPopup(`<strong>${t(p.it, p.en)}</strong><br>${t(p.dit, p.den)}`);
+    });
+
+    // Abilita lo zoom con rotella solo dopo un click (evita di "rubare" lo scroll della pagina)
+    map.on('click', () => map.scrollWheelZoom.enable());
+    // Corregge il dimensionamento dopo eventuali animazioni di reveal
+    setTimeout(() => map.invalidateSize(), 300);
 }
