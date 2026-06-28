@@ -146,7 +146,7 @@ const PREZZI = {
     8: 140,  // Settembre
     9: 100,  // Ottobre
     10: 90,  // Novembre
-    11: 2    // Dicembre (TEST)
+    11: 90   // Dicembre
 };
 
 /**
