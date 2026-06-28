@@ -450,11 +450,42 @@ p { font-weight: 300; }
 }
 .location-map { border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-medium); }
 .location-map iframe { display: block; filter: grayscale(0.2) contrast(1.02); }
-#mont6-map { width: 100%; height: 440px; background: var(--color-bg-soft); z-index: 0; }
-.leaflet-popup-content-wrapper { border-radius: var(--radius-sm); }
-.leaflet-popup-content { font-family: var(--font-body); font-size: 0.9rem; }
-.leaflet-popup-content strong { font-family: var(--font-heading); font-size: 1.05rem; font-weight: 600; color: var(--color-text); }
-.mont6-pin { background: var(--color-accent); width: 18px; height: 18px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+#mont6-map { width: 100%; height: 460px; background: var(--color-bg-soft); z-index: 0; }
+/* Tono caldo "pietra/limestone" sulle tile minimal CARTO per coerenza col brand */
+#mont6-map .leaflet-tile { filter: sepia(0.18) saturate(0.85) brightness(1.03) contrast(0.95); }
+
+/* Popup raffinato */
+.leaflet-popup-content-wrapper { border-radius: var(--radius-md); box-shadow: var(--shadow-medium); border: 1px solid rgba(40,33,22,0.06); }
+.leaflet-popup-content { font-family: var(--font-body); font-size: 0.88rem; color: var(--color-text-light); margin: 0.9rem 1.1rem; line-height: 1.5; }
+.leaflet-popup-content strong { font-family: var(--font-heading); font-size: 1.15rem; font-weight: 600; color: var(--color-text); display: block; margin-bottom: 0.15rem; }
+.leaflet-popup-tip { box-shadow: var(--shadow-soft); }
+.leaflet-container a.leaflet-popup-close-button { color: var(--color-text-light); }
+
+/* Marker dimora: pin a goccia dorato con etichetta */
+.mont6-pin {
+    position: absolute; left: 0; top: 0;
+    background: var(--color-accent); width: 22px; height: 22px;
+    border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
+    border: 3px solid #fff; box-shadow: 0 4px 10px rgba(40,33,22,0.35);
+}
+.mont6-pin::after { content: ''; position: absolute; top: 50%; left: 50%; width: 6px; height: 6px; background: #fff; border-radius: 50%; transform: translate(-50%, -50%); }
+.mont6-pin-label {
+    position: absolute; left: 28px; top: 1px; white-space: nowrap;
+    font-family: var(--font-heading); font-weight: 600; font-size: 0.95rem; color: var(--color-accent);
+    text-shadow: 0 0 3px #fff, 0 0 6px #fff, 0 1px 2px rgba(255,255,255,0.9);
+    pointer-events: none;
+}
+
+/* Marker punti d'interesse: chip circolare elegante con icona */
+.poi-dot {
+    display: flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--color-bg-card); border: 1.5px solid var(--color-accent-line);
+    box-shadow: 0 3px 8px rgba(40,33,22,0.18); font-size: 15px; line-height: 1;
+    transition: transform 0.25s var(--ease-out), box-shadow 0.25s;
+}
+.poi-marker:hover .poi-dot { transform: scale(1.18); box-shadow: 0 6px 14px rgba(40,33,22,0.28); border-color: var(--color-accent); }
+.leaflet-control-zoom a { color: var(--color-text) !important; }
 .location-distance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.3rem; }
 .dist-item {
     display: flex; align-items: center; gap: 1rem; padding: 1.3rem;
