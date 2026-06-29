@@ -5,14 +5,14 @@
  */
 
 const JSON_HEADERS = {
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': 'https://mont6cefalu.it',
     'Content-Type': 'application/json',
 };
 
 export function onRequestOptions() {
     return new Response('', {
         headers: {
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': 'https://mont6cefalu.it',
             'Access-Control-Allow-Headers': 'Content-Type',
             'Access-Control-Allow-Methods': 'GET, OPTIONS',
         },

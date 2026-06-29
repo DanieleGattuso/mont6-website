@@ -19,14 +19,14 @@ function getPriceForDate(date, prezzi) {
 function json(status, obj) {
     return new Response(JSON.stringify(obj), {
         status,
-        headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+        headers: { 'Access-Control-Allow-Origin': 'https://mont6cefalu.it', 'Content-Type': 'application/json' },
     });
 }
 
 export function onRequestOptions() {
     return new Response('', {
         headers: {
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': 'https://mont6cefalu.it',
             'Access-Control-Allow-Headers': 'Content-Type',
             'Access-Control-Allow-Methods': 'POST, OPTIONS',
         },
