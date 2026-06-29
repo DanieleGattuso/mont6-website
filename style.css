@@ -821,3 +821,19 @@ p { font-weight: 300; }
 .flatpickr-months .flatpickr-month,
 .flatpickr-current-month .flatpickr-monthDropdown-months { color: var(--color-text); }
 span.flatpickr-weekday { color: var(--color-accent) !important; font-weight: 600; }
+
+/* ==========================================================================
+   ACCESSIBILITÀ — Riduzione del movimento
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+    /* Garantisce che i contenuti animati restino sempre visibili */
+    .reveal-up, .reveal-right, .reveal-left { opacity: 1 !important; transform: none !important; }
+    .parallax-img { transform: none !important; }
+    .line-down::after { animation: none !important; }
+}
