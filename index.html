@@ -40,13 +40,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <!-- Flatpickr (Calendar UI) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="vendor/flatpickr/flatpickr.min.css">
     
     <!-- GLightbox -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/css/glightbox.min.css">
+    <link rel="stylesheet" href="vendor/glightbox/glightbox.min.css">
 
     <!-- Leaflet (Interactive Map) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
 
     <!-- CSS -->
     <link rel="stylesheet" href="style.css?v=12">
@@ -85,6 +85,12 @@
         "checkoutTime": "10:00",
         "petsAllowed": false,
         "childrenAllowed": true,
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.99",
+            "bestRating": "5",
+            "reviewCount": "124"
+        },
         "review": [
             {
                 "@type": "Review",
@@ -937,10 +943,10 @@
     </div>
 
     <!-- JS Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/it.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/js/glightbox.min.js"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="vendor/flatpickr/flatpickr.min.js"></script>
+    <script src="vendor/flatpickr/l10n/it.js"></script>
+    <script src="vendor/glightbox/glightbox.min.js"></script>
+    <script src="vendor/leaflet/leaflet.js"></script>
 
     <!-- Custom JS -->
     <script src="app.js?v=12"></script>
