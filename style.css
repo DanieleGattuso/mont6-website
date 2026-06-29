@@ -559,8 +559,14 @@ p { font-weight: 300; }
 /* Recensioni verificate Airbnb */
 .airbnb-verify { margin-top: var(--space-l); display: flex; flex-direction: column; align-items: center; gap: 1.4rem; text-align: center; }
 .airbnb-verify-label { text-transform: uppercase; letter-spacing: 2.5px; font-size: 0.74rem; color: rgba(255,255,255,0.45); }
-.airbnb-embed-frame { max-width: 100%; }
-.airbnb-card-frame { background: var(--color-bg-card); padding: 0.6rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-strong); max-width: 100%; overflow: hidden; }
+.airbnb-rating-card {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-lg); padding: 2.6rem 3rem; text-align: center;
+    width: 100%; max-width: 360px;
+}
+.rating-stars-lg { color: var(--color-accent-hover); font-size: 1.5rem; letter-spacing: 4px; }
+.rating-number-lg { font-family: var(--font-heading); font-size: 4.2rem; font-weight: 600; color: #fff; line-height: 1.05; margin-top: 0.6rem; }
+.rating-sub { color: rgba(255,255,255,0.5); font-size: 0.82rem; letter-spacing: 0.5px; margin-top: 0.4rem; }
 
 /* Layout recensioni: widget verificato a sinistra, recensioni reali a destra */
 .reviews-layout { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 3.5rem; align-items: center; }
