@@ -28,8 +28,9 @@ function initLang() {
 
 window.setLang = function(lang) {
     document.documentElement.setAttribute('data-lang', lang);
+    document.documentElement.setAttribute('lang', lang); // a11y/SEO: aggiorna l'attributo lang reale
     localStorage.setItem('mont6_lang', lang);
-    
+
     document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.classList.remove('active');
         if(btn.textContent.toLowerCase() === lang) {
@@ -372,15 +373,23 @@ function initFAQ() {
     
     faqItems.forEach(item => {
         const questionBtn = item.querySelector('.faq-question');
+        // Stato ARIA iniziale (accessibilità)
+        questionBtn.setAttribute('aria-expanded', item.classList.contains('active') ? 'true' : 'false');
+
         questionBtn.addEventListener('click', () => {
             const isActive = item.classList.contains('active');
-            
+
             // Close all
-            faqItems.forEach(faq => faq.classList.remove('active'));
-            
+            faqItems.forEach(faq => {
+                faq.classList.remove('active');
+                const btn = faq.querySelector('.faq-question');
+                if (btn) btn.setAttribute('aria-expanded', 'false');
+            });
+
             // Toggle current
             if (!isActive) {
                 item.classList.add('active');
+                questionBtn.setAttribute('aria-expanded', 'true');
             }
         });
     });
@@ -492,8 +501,7 @@ function initGalleryLightbox() {
         loop: true,
         autoplayVideos: false,
         openEffect: 'zoom',
-        closeEffect: 'fade',
-        cssEf498: 'fade'
+        closeEffect: 'fade'
     });
 }
 

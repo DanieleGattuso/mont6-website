@@ -9,9 +9,14 @@
     <meta name="description" content="Scopri Mont°6, un rifugio di lusso nel cuore di Cefalù. Un design ricercato e comfort esclusivi per la tua vacanza indimenticabile in Sicilia.">
     <meta name="theme-color" content="#1C2420">
     <meta name="robots" content="index, follow">
-    
+    <link rel="canonical" href="https://mont6cefalu.it/">
+
+    <!-- Preload LCP hero image -->
+    <link rel="preload" as="image" href="img/_MG_4132.jpg" fetchpriority="high">
+
     <!-- Open Graph / Social -->
     <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Mont°6">
     <meta property="og:title" content="Mont°6 — Luxury Retreat a Cefalù">
     <meta property="og:description" content="Un rifugio di design nel cuore di Cefalù. Design, comfort e la bellezza della Sicilia.">
     <meta property="og:image" content="https://mont6cefalu.it/img/_MG_4132.jpg">
@@ -35,16 +40,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <!-- Flatpickr (Calendar UI) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
     
     <!-- GLightbox -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/css/glightbox.min.css">
 
     <!-- Leaflet (Interactive Map) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="style.css?v=10">
+    <link rel="stylesheet" href="style.css?v=11">
     
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
@@ -79,7 +84,21 @@
         "checkinTime": "15:00",
         "checkoutTime": "10:00",
         "petsAllowed": false,
-        "childrenAllowed": true
+        "childrenAllowed": true,
+        "review": [
+            {
+                "@type": "Review",
+                "author": {"@type": "Person", "name": "Lindsay"},
+                "reviewRating": {"@type": "Rating", "ratingValue": "5", "bestRating": "5"},
+                "reviewBody": "Our stay at Daniele's was wonderful! The location is perfect, very central to everything. The patio has a beautiful view of La Rocca di Cefalù and it's a quick 6-minute walk to the water. Daniele made us feel at home with special touches."
+            },
+            {
+                "@type": "Review",
+                "author": {"@type": "Person", "name": "Anthony"},
+                "reviewRating": {"@type": "Rating", "ratingValue": "5", "bestRating": "5"},
+                "reviewBody": "We had an excellent stay. Daniele was a fantastic host and very communicative throughout. Check-in was easy and the property is beautiful, in such a great location — you really are in the heart of Cefalù, yet not spoiled by any noise."
+            }
+        ]
     }
     </script>
 </head>
@@ -107,7 +126,7 @@
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <a href="#home">
-                <img src="img/PROFILO_Tavola disegno 2.png" alt="Mont°6 Logo" class="brand-logo">
+                <img src="img/PROFILO_Tavola disegno 2.png" alt="Mont°6 Logo" width="1000" height="1000" class="brand-logo">
             </a>
             <div class="nav-links">
                 <a href="#concept">
@@ -278,10 +297,10 @@
                 <!-- Images Block -->
                 <div class="img-wrapper">
                     <div class="img-main reveal-right">
-                        <img src="img/_MG_4135.jpg" alt="Camera da letto Mont°6 Cefalù" loading="lazy">
+                        <img src="img/_MG_4135.jpg" alt="Camera da letto Mont°6 Cefalù" width="2400" height="1600" loading="lazy">
                     </div>
                     <div class="img-sec reveal-up parallax-float">
-                        <img src="img/_MG_4179.jpg" alt="Living design Mont°6" loading="lazy">
+                        <img src="img/_MG_4179.jpg" alt="Living design Mont°6" width="2400" height="1600" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -399,7 +418,7 @@
                 <div class="gallery-grid-desktop">
                     <figure class="gal-fig tall">
                         <a href="img/_MG_4136.jpg" class="glightbox-custom" data-gallery="gallery" data-desc="">
-                            <img src="img/_MG_4136.jpg" alt="Camera da letto Mont°6" loading="lazy">
+                            <img src="img/_MG_4136.jpg" alt="Camera da letto Mont°6" width="2400" height="1600" loading="lazy">
                         </a>
                         <figcaption>
                             <span class="lang-it">La Camera</span>
@@ -408,7 +427,7 @@
                     </figure>
                     <figure class="gal-fig wide">
                         <a href="img/_MG_4126.jpg" class="glightbox-custom" data-gallery="gallery" data-desc="">
-                            <img src="img/_MG_4126.jpg" alt="Design interni Mont°6" loading="lazy">
+                            <img src="img/_MG_4126.jpg" alt="Design interni Mont°6" width="2400" height="1600" loading="lazy">
                         </a>
                         <figcaption>
                             <span class="lang-it">Estetica Pura</span>
@@ -417,7 +436,7 @@
                     </figure>
                     <figure class="gal-fig">
                         <a href="img/_MG_4193.jpg" class="glightbox-custom" data-gallery="gallery" data-desc="">
-                            <img src="img/_MG_4193.jpg" alt="Cucina design Mont°6" loading="lazy">
+                            <img src="img/_MG_4193.jpg" alt="Cucina design Mont°6" width="2400" height="1600" loading="lazy">
                         </a>
                         <figcaption>
                             <span class="lang-it">La Cucina</span>
@@ -426,7 +445,7 @@
                     </figure>
                     <figure class="gal-fig">
                         <a href="img/_MG_4152.jpg" class="glightbox-custom" data-gallery="gallery" data-desc="">
-                            <img src="img/_MG_4152.jpg" alt="Atmosfera Mont°6" loading="lazy">
+                            <img src="img/_MG_4152.jpg" alt="Atmosfera Mont°6" width="2400" height="1600" loading="lazy">
                         </a>
                         <figcaption>
                             <span class="lang-it">Atmosfere</span>
@@ -435,7 +454,7 @@
                     </figure>
                     <figure class="gal-fig">
                         <a href="img/_MG_4189.jpg" class="glightbox-custom" data-gallery="gallery" data-desc="">
-                            <img src="img/_MG_4189.jpg" alt="Bagno Mont°6" loading="lazy">
+                            <img src="img/_MG_4189.jpg" alt="Bagno Mont°6" width="2400" height="1600" loading="lazy">
                         </a>
                         <figcaption>
                             <span class="lang-it">Il Bagno</span>
@@ -770,7 +789,7 @@
                     </p>
                     
                     <div class="form-group mt-3">
-                        <label>
+                        <label for="date-range">
                             <span class="lang-it">Date del Soggiorno</span>
                             <span class="lang-en">Stay Dates</span>
                         </label>
@@ -781,7 +800,7 @@
                         </p>
                     </div>
                     <div class="form-group mt-3">
-                        <label>
+                        <label for="guest-count">
                             <span class="lang-it">Ospiti</span>
                             <span class="lang-en">Guests</span>
                         </label>
@@ -874,7 +893,7 @@
     <footer class="footer-editorial">
         <div class="container">
             <div class="footer-logo-box">
-                <img src="img/PROFILO_Tavola disegno 2.png" alt="Mont°6" class="footer-logo">
+                <img src="img/PROFILO_Tavola disegno 2.png" alt="Mont°6" width="1000" height="1000" class="footer-logo">
             </div>
             <div class="footer-bottom">
                 <p>
@@ -921,13 +940,13 @@
     </div>
 
     <!-- JS Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://npmcdn.com/flatpickr/dist/l10n/it.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/it.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/js/glightbox.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script async src="https://www.airbnb.it/embeddable/airbnb_jssdk"></script>
 
     <!-- Custom JS -->
-    <script src="app.js?v=10"></script>
+    <script src="app.js?v=11"></script>
 </body>
 </html>

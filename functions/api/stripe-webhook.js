@@ -16,6 +16,13 @@
 
 const enc = new TextEncoder();
 
+/** Escape dei caratteri HTML per prevenire injection nelle email (nome/email da Stripe). */
+function esc(s) {
+    return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
 /** Verifica la firma Stripe-Signature con Web Crypto (nessuna dipendenza npm). */
 async function verifyStripeSignature(payload, sigHeader, secret, toleranceSec = 300) {
     if (!sigHeader) return false;
@@ -68,7 +75,7 @@ function guestEmailHtml({ name, checkIn, checkOut, guests, total }) {
     return `
     <div style="font-family:Inter,Arial,sans-serif;max-width:560px;margin:auto;color:#26231F">
       <h1 style="font-family:Georgia,serif;color:#A8854C">Mont°6 — Prenotazione confermata</h1>
-      <p>Ciao ${name || ''}, grazie! La tua prenotazione è confermata.</p>
+      <p>Ciao ${esc(name)}, grazie! La tua prenotazione è confermata.</p>
       <table style="width:100%;border-collapse:collapse;margin:16px 0">
         <tr><td style="padding:8px 0;border-bottom:1px solid #eee">Check-in</td><td style="text-align:right">${checkIn}</td></tr>
         <tr><td style="padding:8px 0;border-bottom:1px solid #eee">Check-out</td><td style="text-align:right">${checkOut}</td></tr>
@@ -85,7 +92,7 @@ function hostEmailHtml({ name, email, checkIn, checkOut, guests, total }) {
     <div style="font-family:Inter,Arial,sans-serif">
       <h2>Nuova prenotazione diretta 🎉</h2>
       <ul>
-        <li><strong>Ospite:</strong> ${name || '—'} (${email || '—'})</li>
+        <li><strong>Ospite:</strong> ${esc(name) || '—'} (${esc(email) || '—'})</li>
         <li><strong>Check-in:</strong> ${checkIn}</li>
         <li><strong>Check-out:</strong> ${checkOut}</li>
         <li><strong>Ospiti:</strong> ${guests}</li>
