@@ -310,6 +310,19 @@ p { font-weight: 300; }
 }
 .hero-price .price-value { color: var(--color-accent-hover); font-weight: 600; font-size: 1.1rem; }
 
+/* Social proof sotto la CTA dell'hero */
+.hero-proof {
+    margin-top: 1.25rem;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+.hero-proof .proof-stars { color: var(--color-accent-hover); letter-spacing: 2px; }
+
 /* Hero CTA */
 .btn-hero {
     background: var(--color-accent); border: none; color: #fff;

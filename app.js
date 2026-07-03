@@ -24,6 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
 function initLang() {
     const savedLang = localStorage.getItem('mont6_lang') || 'it';
     setLang(savedLang);
+
+    // Listener sui bottoni lingua (niente onclick inline: consente una CSP senza 'unsafe-inline')
+    document.querySelectorAll('[data-set-lang]').forEach(btn => {
+        btn.addEventListener('click', () => setLang(btn.getAttribute('data-set-lang')));
+    });
 }
 
 window.setLang = function(lang) {
@@ -36,6 +41,12 @@ window.setLang = function(lang) {
         if(btn.textContent.toLowerCase() === lang) {
             btn.classList.add('active');
         }
+    });
+
+    // Le <option> non possono contenere gli span .lang-it/.lang-en: testo via data-attribute
+    document.querySelectorAll('#guest-count option').forEach(opt => {
+        const label = opt.getAttribute(lang === 'en' ? 'data-en' : 'data-it');
+        if (label) opt.textContent = label;
     });
 };
 
@@ -199,10 +210,25 @@ function initBookingForm() {
                 const start = selectedDates[0];
                 const end = selectedDates[1];
                 const { total, nightCount, avgNightly } = calculatePrice(start, end);
-                
+
                 if (nightCount > 0) {
                     priceNightly.textContent = `€${avgNightly}`;
                     priceTotal.textContent = `€${total}`;
+
+                    // Numero notti nell'etichetta + risparmio stimato vs portali (~15% di commissioni)
+                    const lang = document.documentElement.getAttribute('data-lang') || 'it';
+                    const nightsLabel = document.getElementById('priceNights');
+                    if (nightsLabel) {
+                        nightsLabel.textContent = lang === 'en'
+                            ? `${nightCount} nights × average per night`
+                            : `${nightCount} notti × prezzo medio a notte`;
+                    }
+                    const savings = Math.round(total * 0.15);
+                    const savingsIt = document.getElementById('savingsAmount');
+                    const savingsEn = document.getElementById('savingsAmountEn');
+                    if (savingsIt) savingsIt.textContent = `€${savings}`;
+                    if (savingsEn) savingsEn.textContent = `€${savings}`;
+
                     priceBox.classList.add('visible');
                 }
             } else if (priceBox) {

@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mont°6 — Luxury Retreat a Cefalù</title>
-    
+    <title>Mont°6 — Luxury Apartment nel Centro Storico di Cefalù | Prenotazione Diretta</title>
+
     <!-- Meta SEO -->
-    <meta name="description" content="Scopri Mont°6, un rifugio di lusso nel cuore di Cefalù. Un design ricercato e comfort esclusivi per la tua vacanza indimenticabile in Sicilia.">
+    <meta name="description" content="Mont°6 è un appartamento di design nel centro storico di Cefalù, a 2 minuti dal Duomo UNESCO e 5 dal mare. Da €90/notte. Prenota direttamente: miglior prezzo garantito, senza commissioni.">
     <meta name="theme-color" content="#1C2420">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://mont6cefalu.it/">
 
-    <!-- Preload LCP hero image -->
-    <link rel="preload" as="image" href="img/_MG_4132.jpg" fetchpriority="high">
+    <!-- Preload LCP hero image (WebP ottimizzata) -->
+    <link rel="preload" as="image" href="img/opt/_MG_4132-1600.webp" fetchpriority="high">
 
     <!-- Open Graph / Social -->
     <meta property="og:type" content="website">
@@ -20,6 +20,9 @@
     <meta property="og:title" content="Mont°6 — Luxury Retreat a Cefalù">
     <meta property="og:description" content="Un rifugio di design nel cuore di Cefalù. Design, comfort e la bellezza della Sicilia.">
     <meta property="og:image" content="https://mont6cefalu.it/img/_MG_4132.jpg">
+    <meta property="og:image:width" content="2400">
+    <meta property="og:image:height" content="1600">
+    <meta property="og:image:alt" content="Il soggiorno di Mont°6: travi a vista, maioliche siciliane e luce calda">
     <meta property="og:url" content="https://mont6cefalu.it">
     <meta property="og:locale" content="it_IT">
     <meta property="og:locale:alternate" content="en_GB">
@@ -72,6 +75,14 @@
             "latitude": "38.0386",
             "longitude": "14.0226"
         },
+        "priceRange": "€90 - €220 a notte",
+        "numberOfRooms": 1,
+        "containsPlace": {
+            "@type": "Accommodation",
+            "occupancy": { "@type": "QuantitativeValue", "maxValue": 2 },
+            "numberOfBedrooms": 1,
+            "numberOfBathroomsTotal": 1
+        },
         "starRating": {
             "@type": "Rating",
             "ratingValue": "5"
@@ -103,6 +114,64 @@
                 "author": {"@type": "Person", "name": "Anthony"},
                 "reviewRating": {"@type": "Rating", "ratingValue": "5", "bestRating": "5"},
                 "reviewBody": "We had an excellent stay. Daniele was a fantastic host and very communicative throughout. Check-in was easy and the property is beautiful, in such a great location — you really are in the heart of Cefalù, yet not spoiled by any noise."
+            }
+        ]
+    }
+    </script>
+
+    <!-- FAQ Schema — rich results su Google e risposte dirette nei motori AI -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Quali sono gli orari di check-in e check-out di Mont°6 a Cefalù?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Il check-in è dalle ore 15:00, il check-out entro le ore 10:00. Mont°6 offre self check-in automatizzato tramite serratura digitale, quindi puoi arrivare in autonomia a qualsiasi ora dalle 15:00 in poi."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Dove si parcheggia vicino a Mont°6 nel centro storico di Cefalù?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "L'appartamento si trova nel centro storico pedonale. Consigliamo il Parcheggio Coco sul lungomare, a circa 5 minuti a piedi."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Mont°6 accetta animali domestici?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No, per motivi igienici e normativi non è possibile soggiornare con animali domestici."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Biancheria e asciugamani sono inclusi nel soggiorno?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Sì: biancheria da letto, asciugamani e un set base di prodotti per la colazione sono sempre inclusi nel prezzo."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Qual è il soggiorno minimo a Mont°6?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Il soggiorno minimo è di 2 notti. In alta stagione (luglio-agosto) possono essere richieste 3 notti. I prezzi vanno da €90 a €220 a notte in base al mese."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Conviene prenotare Mont°6 direttamente dal sito?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Sì: prenotando direttamente su mont6cefalu.it risparmi fino al 15% rispetto ai portali (nessuna commissione), ricevi una bottiglia di vino locale in omaggio e hai flessibilità sugli orari di check-in e check-out."
+                }
             }
         ]
     }
@@ -160,9 +229,9 @@
             <div class="nav-right-actions">
                 <!-- Language Selector Desktop -->
                 <div class="lang-selector desktop-only">
-                    <button class="lang-btn active" onclick="setLang('it')">IT</button>
+                    <button class="lang-btn active" data-set-lang="it">IT</button>
                     <span class="lang-divider">|</span>
-                    <button class="lang-btn" onclick="setLang('en')">EN</button>
+                    <button class="lang-btn" data-set-lang="en">EN</button>
                 </div>
                 
                 <!-- Mobile Menu Toggle -->
@@ -178,9 +247,9 @@
         <div class="mobile-nav-fullscreen" id="mobile-nav">
             <!-- Language Selector Mobile -->
             <div class="lang-selector mobile-lang">
-                <button class="lang-btn active" onclick="setLang('it')">IT</button>
+                <button class="lang-btn active" data-set-lang="it">IT</button>
                 <span class="lang-divider">|</span>
-                <button class="lang-btn" onclick="setLang('en')">EN</button>
+                <button class="lang-btn" data-set-lang="en">EN</button>
             </div>
             
             <div class="mobile-nav-content">
@@ -220,7 +289,7 @@
     <!-- HERO SECTION -->
     <header class="hero" id="home">
         <!-- Parallax Background Image -->
-        <div class="hero-bg parallax-img" style="background-image: url('img/_MG_4132.jpg');"></div>
+        <div class="hero-bg parallax-img" style="background-image: url('img/opt/_MG_4132-1600.webp');"></div>
         <div class="hero-overlay-gradient"></div>
         
         <div class="hero-content reveal-up">
@@ -249,8 +318,8 @@
                     <span class="lang-en">1 Bathroom</span>
                 </span>
                 <span class="hero-price">
-                    <span class="lang-it">da <strong class="price-value">€160</strong>/notte</span>
-                    <span class="lang-en">from <strong class="price-value">€160</strong>/night</span>
+                    <span class="lang-it">da <strong class="price-value">€90</strong>/notte</span>
+                    <span class="lang-en">from <strong class="price-value">€90</strong>/night</span>
                 </span>
             </div>
             <div class="hero-cta-wrapper mt-4">
@@ -258,6 +327,11 @@
                     <span class="lang-it">Verifica Disponibilità</span>
                     <span class="lang-en">Check Availability</span>
                 </a>
+                <p class="hero-proof">
+                    <span class="proof-stars" aria-hidden="true">★★★★★</span>
+                    <span class="lang-it">4,99 su Airbnb · oltre 120 recensioni — qui al miglior prezzo</span>
+                    <span class="lang-en">4.99 on Airbnb · 120+ reviews — best rate only here</span>
+                </p>
             </div>
         </div>
         
@@ -303,10 +377,10 @@
                 <!-- Images Block -->
                 <div class="img-wrapper">
                     <div class="img-main reveal-right">
-                        <img src="img/_MG_4135.jpg" alt="Camera da letto Mont°6 Cefalù" width="2400" height="1600" loading="lazy">
+                        <img src="img/opt/_MG_4135-1024.webp" srcset="img/opt/_MG_4135-480.webp 480w, img/opt/_MG_4135-1024.webp 1024w, img/opt/_MG_4135-1600.webp 1600w" sizes="(max-width: 768px) 100vw, 50vw" alt="Camera da letto Mont°6 Cefalù" width="2400" height="1600" loading="lazy">
                     </div>
                     <div class="img-sec reveal-up parallax-float">
-                        <img src="img/_MG_4179.jpg" alt="Living design Mont°6" width="2400" height="1600" loading="lazy">
+                        <img src="img/opt/_MG_4179-1024.webp" srcset="img/opt/_MG_4179-480.webp 480w, img/opt/_MG_4179-1024.webp 1024w, img/opt/_MG_4179-1600.webp 1600w" sizes="(max-width: 768px) 100vw, 50vw" alt="Living design Mont°6" width="2400" height="1600" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -402,7 +476,7 @@
     </section>
 
     <!-- FULL WIDTH PARALLAX BREAK -->
-    <section class="parallax-break" style="background-image: url('img/_MG_4133.jpg');">
+    <section class="parallax-break" style="background-image: url('img/opt/_MG_4133-1600.webp');">
         <div class="parallax-overlay">
             <h2 class="break-title reveal-up">
                 <span class="lang-it">Riposo di Classe.</span>
@@ -423,8 +497,8 @@
             <div class="horizontal-scroller-mobile mt-l">
                 <div class="gallery-grid-desktop">
                     <figure class="gal-fig tall">
-                        <a href="img/_MG_4136.jpg" class="glightbox-custom" data-gallery="gallery" data-desc="">
-                            <img src="img/_MG_4136.jpg" alt="Camera da letto Mont°6" width="2400" height="1600" loading="lazy">
+                        <a href="img/opt/_MG_4136-1600.webp" class="glightbox-custom" data-gallery="gallery" data-desc="">
+                            <img src="img/opt/_MG_4136-1024.webp" srcset="img/opt/_MG_4136-480.webp 480w, img/opt/_MG_4136-1024.webp 1024w, img/opt/_MG_4136-1600.webp 1600w" sizes="(max-width: 768px) 100vw, 50vw" alt="Camera da letto Mont°6" width="2400" height="1600" loading="lazy">
                         </a>
                         <figcaption>
                             <span class="lang-it">La Camera</span>
@@ -432,8 +506,8 @@
                         </figcaption>
                     </figure>
                     <figure class="gal-fig wide">
-                        <a href="img/_MG_4126.jpg" class="glightbox-custom" data-gallery="gallery" data-desc="">
-                            <img src="img/_MG_4126.jpg" alt="Design interni Mont°6" width="2400" height="1600" loading="lazy">
+                        <a href="img/opt/_MG_4126-1600.webp" class="glightbox-custom" data-gallery="gallery" data-desc="">
+                            <img src="img/opt/_MG_4126-1024.webp" srcset="img/opt/_MG_4126-480.webp 480w, img/opt/_MG_4126-1024.webp 1024w, img/opt/_MG_4126-1600.webp 1600w" sizes="(max-width: 768px) 100vw, 50vw" alt="Design interni Mont°6" width="2400" height="1600" loading="lazy">
                         </a>
                         <figcaption>
                             <span class="lang-it">Estetica Pura</span>
@@ -441,8 +515,8 @@
                         </figcaption>
                     </figure>
                     <figure class="gal-fig">
-                        <a href="img/_MG_4193.jpg" class="glightbox-custom" data-gallery="gallery" data-desc="">
-                            <img src="img/_MG_4193.jpg" alt="Cucina design Mont°6" width="2400" height="1600" loading="lazy">
+                        <a href="img/opt/_MG_4193-1600.webp" class="glightbox-custom" data-gallery="gallery" data-desc="">
+                            <img src="img/opt/_MG_4193-1024.webp" srcset="img/opt/_MG_4193-480.webp 480w, img/opt/_MG_4193-1024.webp 1024w, img/opt/_MG_4193-1600.webp 1600w" sizes="(max-width: 768px) 100vw, 50vw" alt="Cucina design Mont°6" width="2400" height="1600" loading="lazy">
                         </a>
                         <figcaption>
                             <span class="lang-it">La Cucina</span>
@@ -450,8 +524,8 @@
                         </figcaption>
                     </figure>
                     <figure class="gal-fig">
-                        <a href="img/_MG_4152.jpg" class="glightbox-custom" data-gallery="gallery" data-desc="">
-                            <img src="img/_MG_4152.jpg" alt="Atmosfera Mont°6" width="2400" height="1600" loading="lazy">
+                        <a href="img/opt/_MG_4152-1600.webp" class="glightbox-custom" data-gallery="gallery" data-desc="">
+                            <img src="img/opt/_MG_4152-1024.webp" srcset="img/opt/_MG_4152-480.webp 480w, img/opt/_MG_4152-1024.webp 1024w, img/opt/_MG_4152-1600.webp 1600w" sizes="(max-width: 768px) 100vw, 50vw" alt="Atmosfera Mont°6" width="2400" height="1600" loading="lazy">
                         </a>
                         <figcaption>
                             <span class="lang-it">Atmosfere</span>
@@ -459,8 +533,8 @@
                         </figcaption>
                     </figure>
                     <figure class="gal-fig">
-                        <a href="img/_MG_4189.jpg" class="glightbox-custom" data-gallery="gallery" data-desc="">
-                            <img src="img/_MG_4189.jpg" alt="Bagno Mont°6" width="2400" height="1600" loading="lazy">
+                        <a href="img/opt/_MG_4189-1600.webp" class="glightbox-custom" data-gallery="gallery" data-desc="">
+                            <img src="img/opt/_MG_4189-1024.webp" srcset="img/opt/_MG_4189-480.webp 480w, img/opt/_MG_4189-1024.webp 1024w, img/opt/_MG_4189-1600.webp 1600w" sizes="(max-width: 768px) 100vw, 50vw" alt="Bagno Mont°6" width="2400" height="1600" loading="lazy">
                         </a>
                         <figcaption>
                             <span class="lang-it">Il Bagno</span>
@@ -470,29 +544,29 @@
                 </div>
                 <!-- Hidden gallery items (visible only in lightbox) -->
                 <div style="display:none;">
-                    <a href="img/_MG_4097.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4104.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4106.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4111.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4117.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4127.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4128-3.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4134.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4137.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4141.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4144.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4158.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4162-2.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4178.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4187.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4188.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4190.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4192.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4208.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4210.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4220.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4223.jpg" class="glightbox-custom" data-gallery="gallery"></a>
-                    <a href="img/_MG_4225.jpg" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4097-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4104-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4106-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4111-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4117-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4127-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4128-3-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4134-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4137-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4141-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4144-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4158-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4162-2-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4178-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4187-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4188-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4190-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4192-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4208-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4210-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4220-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4223-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
+                    <a href="img/opt/_MG_4225-1600.webp" class="glightbox-custom" data-gallery="gallery"></a>
                 </div>
             </div>
         </div>
@@ -518,7 +592,7 @@
                 
                 <div class="location-distance-grid">
                     <div class="dist-item">
-                        <div class="dist-icon">⛪</div>
+                        <div class="dist-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--color-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 22h18M6 22V11l6-4 6 4v11M10 22v-5a2 2 0 0 1 4 0v5M12 7V3M10 4h4"/></svg></div>
                         <div class="dist-info">
                             <strong>Duomo UNESCO</strong>
                             <span class="lang-it">2 minuti a piedi</span>
@@ -526,7 +600,7 @@
                         </div>
                     </div>
                     <div class="dist-item">
-                        <div class="dist-icon">🏖️</div>
+                        <div class="dist-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--color-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12a10 10 0 0 0-20 0Z"/><path d="M12 2v10M12 12v7a2 2 0 0 0 4 0"/></svg></div>
                         <div class="dist-info">
                             <strong>Spiaggia</strong>
                             <span class="lang-it">5 minuti a piedi</span>
@@ -534,7 +608,7 @@
                         </div>
                     </div>
                     <div class="dist-item">
-                        <div class="dist-icon">🍝</div>
+                        <div class="dist-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--color-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 2v7a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V2M7 2v20M20 15V2a5 5 0 0 0-4 5v6a2 2 0 0 0 2 2h2zM20 15v7"/></svg></div>
                         <div class="dist-info">
                             <strong>Ristoranti</strong>
                             <span class="lang-it">30 secondi</span>
@@ -542,7 +616,7 @@
                         </div>
                     </div>
                     <div class="dist-item">
-                        <div class="dist-icon">🏔️</div>
+                        <div class="dist-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--color-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 4 4.5 9L16 8l6 13H2z"/></svg></div>
                         <div class="dist-info">
                             <strong>Rocca di Cefalù</strong>
                             <span class="lang-it">10 minuti a piedi</span>
@@ -550,7 +624,7 @@
                         </div>
                     </div>
                     <div class="dist-item">
-                        <div class="dist-icon">🚂</div>
+                        <div class="dist-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--color-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="13" rx="2"/><path d="M4 11h16M12 3v8M8 19l-2 3M16 19l2 3M8.5 16v3M15.5 16v3"/><circle cx="8.5" cy="13.5" r="0.5"/><circle cx="15.5" cy="13.5" r="0.5"/></svg></div>
                         <div class="dist-info">
                             <strong>Stazione FS</strong>
                             <span class="lang-it">10 minuti in auto</span>
@@ -558,7 +632,7 @@
                         </div>
                     </div>
                     <div class="dist-item">
-                        <div class="dist-icon">🛒</div>
+                        <div class="dist-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--color-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57L23 6H6"/></svg></div>
                         <div class="dist-info">
                             <strong>Supermercato</strong>
                             <span class="lang-it">3 minuti a piedi</span>
@@ -585,7 +659,7 @@
             
             <div class="explore-grid">
                 <div class="explore-card">
-                    <div class="explore-img" style="background-image: url('img/cefalu-rocca.jpg');"></div>
+                    <div class="explore-img" style="background-image: url('img/opt/cefalu-rocca-1024.webp');"></div>
                     <div class="explore-content">
                         <h3>
                             <span class="lang-it">La Rocca</span>
@@ -598,7 +672,7 @@
                     </div>
                 </div>
                 <div class="explore-card">
-                    <div class="explore-img" style="background-image: url('img/cefalu-lavatoio.jpg');"></div>
+                    <div class="explore-img" style="background-image: url('img/opt/cefalu-lavatoio-1024.webp');"></div>
                     <div class="explore-content">
                         <h3>
                             <span class="lang-it">Il Lavatoio Medievale</span>
@@ -611,7 +685,7 @@
                     </div>
                 </div>
                 <div class="explore-card">
-                    <div class="explore-img" style="background-image: url('img/cefalu-tramonto.jpg');"></div>
+                    <div class="explore-img" style="background-image: url('img/opt/cefalu-tramonto-1024.webp');"></div>
                     <div class="explore-content">
                         <h3>
                             <span class="lang-it">Il Tramonto sul Tirreno</span>
@@ -624,7 +698,7 @@
                     </div>
                 </div>
                 <div class="explore-card">
-                    <div class="explore-img" style="background-image: url('img/cefalu-duomo.jpg');"></div>
+                    <div class="explore-img" style="background-image: url('img/opt/cefalu-duomo-1024.webp');"></div>
                     <div class="explore-content">
                         <h3>
                             <span class="lang-it">Il Duomo</span>
@@ -808,16 +882,18 @@
                             <span class="lang-en">Guests</span>
                         </label>
                         <select id="guest-count" class="luxe-input">
-                            <option value="1">1 Ospite</option>
-                            <option value="2" selected>2 Ospiti</option>
+                            <option value="1" data-it="1 Ospite" data-en="1 Guest">1 Ospite</option>
+                            <option value="2" selected data-it="2 Ospiti" data-en="2 Guests">2 Ospiti</option>
                         </select>
                     </div>
 
                     <!-- Dynamic Price Display -->
                     <div class="dynamic-price-box" id="dynamicPriceBox">
                         <div class="price-line">
-                            <span class="lang-it">Prezzo per notte</span>
-                            <span class="lang-en">Price per night</span>
+                            <span id="priceNights">
+                                <span class="lang-it">Prezzo medio per notte</span>
+                                <span class="lang-en">Average price per night</span>
+                            </span>
                         </div>
                         <div class="price-total">
                             <span class="price-nightly" id="priceNightly">€160</span>
@@ -831,6 +907,13 @@
                             </strong>
                             <strong id="priceTotal">€320</strong>
                         </div>
+                        <p class="price-savings" id="priceSavings" style="display:flex; align-items:center; gap:6px; margin-top:0.75rem; font-size:0.85rem; color:#4a7040;">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>
+                                <span class="lang-it">Prenotando qui risparmi circa <strong id="savingsAmount">€48</strong> di commissioni</span>
+                                <span class="lang-en">Booking direct saves you about <strong id="savingsAmountEn">€48</strong> in fees</span>
+                            </span>
+                        </p>
                     </div>
                     
                     <button id="btn-request-whatsapp" class="btn-luxe btn-whatsapp full-width mt-4">

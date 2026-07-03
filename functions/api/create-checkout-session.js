@@ -5,6 +5,8 @@
  * Richiede la variabile d'ambiente STRIPE_SECRET_KEY impostata su Cloudflare.
  */
 
+import { getBookedRanges, overlapsBooked } from '../_lib/booked.js';
+
 const MONTHS = [
     'Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
     'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre',
@@ -65,6 +67,22 @@ export async function onRequestPost({ request, env }) {
         const guestNum = parseInt(guests, 10);
         if (isNaN(guestNum) || guestNum < 1 || guestNum > 2) {
             return json(400, { error: 'Il numero massimo di ospiti consentito è 2.' });
+        }
+
+        // Anti doppia-prenotazione: rifiuta il pagamento se il soggiorno
+        // si sovrappone a date già occupate (manuali, iCal o prenotazioni dirette).
+        const toISO = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        try {
+            const booked = await getBookedRanges({ request, env });
+            if (overlapsBooked(toISO(startDate), toISO(endDate), booked)) {
+                return json(409, {
+                    error: 'Le date selezionate non sono più disponibili. Aggiorna il calendario e scegli altre date. / The selected dates are no longer available — please refresh the calendar and pick different dates.',
+                });
+            }
+        } catch (e) {
+            console.error('Errore controllo disponibilità:', e);
+            // In caso di errore nel controllo non blocchiamo il pagamento,
+            // ma lo registriamo: meglio una verifica manuale che una vendita persa.
         }
 
         // Tariffe per mese (file statico servito da Cloudflare Pages)
