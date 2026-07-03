@@ -841,6 +841,28 @@ p { font-weight: 300; }
 .flatpickr-current-month .flatpickr-monthDropdown-months { color: var(--color-text); }
 span.flatpickr-weekday { color: var(--color-accent) !important; font-weight: 600; }
 
+/* Skip link — visibile solo al focus da tastiera */
+.skip-link {
+    position: absolute;
+    top: -100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-accent);
+    color: #fff;
+    padding: 0.75rem 2rem;
+    z-index: 10000;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: 0 0 8px 8px;
+    transition: top 0.3s;
+}
+.skip-link:focus {
+    top: 0;
+    outline: 2px solid #fff;
+    outline-offset: -4px;
+}
+
 /* ==========================================================================
    ACCESSIBILITÀ — Riduzione del movimento
    ========================================================================== */
