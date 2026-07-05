@@ -2,6 +2,24 @@
    APP.JS - INTERACTIVE FUNCTIONS FOR MONT°6 EDITORIAL THEME
    ========================================================================== */
 
+/**
+ * CSS non critici caricati in async: non bloccano il primo paint.
+ * (flatpickr = calendario, glightbox = galleria: servono solo all'interazione)
+ */
+function loadCss(href) {
+    return new Promise((resolve) => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = href;
+        link.onload = resolve;
+        link.onerror = resolve;
+        document.head.appendChild(link);
+    });
+}
+
+loadCss('vendor/flatpickr/flatpickr.min.css');
+loadCss('vendor/glightbox/glightbox.min.css');
+
 document.addEventListener('DOMContentLoaded', () => {
     initLang();
     initNavbar();
@@ -13,8 +31,43 @@ document.addEventListener('DOMContentLoaded', () => {
     initGalleryLightbox();
     initCookieBanner();
     initFloatingCTA();
-    initMap();
+    initMapLazy();
 });
+
+/**
+ * Leaflet (~180KB tra JS/CSS/tile) caricato solo quando la mappa
+ * si avvicina al viewport: non pesa sul caricamento iniziale.
+ */
+function initMapLazy() {
+    const el = document.getElementById('mont6-map');
+    if (!el) return;
+
+    let started = false;
+    const start = () => {
+        if (started) return;
+        started = true;
+        Promise.all([
+            loadCss('vendor/leaflet/leaflet.css'),
+            new Promise((resolve) => {
+                const s = document.createElement('script');
+                s.src = 'vendor/leaflet/leaflet.js';
+                s.onload = resolve;
+                s.onerror = resolve;
+                document.head.appendChild(s);
+            }),
+        ]).then(() => initMap());
+    };
+
+    if (!('IntersectionObserver' in window)) { start(); return; }
+
+    const obs = new IntersectionObserver((entries) => {
+        if (entries.some(e => e.isIntersecting)) {
+            obs.disconnect();
+            start();
+        }
+    }, { rootMargin: '600px 0px' });
+    obs.observe(el);
+}
 
 /**
  * Handle Bilingual logic

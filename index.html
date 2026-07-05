@@ -12,7 +12,8 @@
     <link rel="canonical" href="https://mont6cefalu.it/">
 
     <!-- Preload LCP hero image (WebP ottimizzata) -->
-    <link rel="preload" as="image" href="img/opt/_MG_4132-1600.webp" fetchpriority="high">
+    <link rel="preload" as="image" href="img/opt/_MG_4132-1024.webp" media="(max-width: 768px)" fetchpriority="high">
+    <link rel="preload" as="image" href="img/opt/_MG_4132-1600.webp" media="(min-width: 769px)" fetchpriority="high">
 
     <!-- Open Graph / Social -->
     <meta property="og:type" content="website">
@@ -37,22 +38,12 @@
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon.png">
     <link rel="apple-touch-icon" href="img/favicon.png">
     
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Font self-hosted: preload dei due critici (titolo hero + body) -->
+    <link rel="preload" as="font" type="font/woff2" href="vendor/fonts/CormorantGaramond-500.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="vendor/fonts/Inter-400.woff2" crossorigin>
     
-    <!-- Flatpickr (Calendar UI) -->
-    <link rel="stylesheet" href="vendor/flatpickr/flatpickr.min.css">
-    
-    <!-- GLightbox -->
-    <link rel="stylesheet" href="vendor/glightbox/glightbox.min.css">
-
-    <!-- Leaflet (Interactive Map) -->
-    <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="style.css?v=13">
+    <!-- CSS (flatpickr/glightbox/leaflet caricati async da app.js) -->
+    <link rel="stylesheet" href="style.css?v=14">
     
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
@@ -312,7 +303,7 @@
         <div class="hero-bg parallax-img" style="background-image: url('img/opt/_MG_4132-1600.webp');"></div>
         <div class="hero-overlay-gradient"></div>
         
-        <div class="hero-content reveal-up">
+        <div class="hero-content hero-enter">
             <p class="hero-kicker">
                 <span class="lang-it">Rifugio d'Autore • Cefalù</span>
                 <span class="lang-en">Designer Retreat • Cefalù</span>
@@ -1044,9 +1035,8 @@
     <script src="vendor/flatpickr/flatpickr.min.js"></script>
     <script src="vendor/flatpickr/l10n/it.js"></script>
     <script src="vendor/glightbox/glightbox.min.js"></script>
-    <script src="vendor/leaflet/leaflet.js"></script>
 
     <!-- Custom JS -->
-    <script src="app.js?v=13"></script>
+    <script src="app.js?v=14"></script>
 </body>
 </html>

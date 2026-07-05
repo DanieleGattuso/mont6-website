@@ -1,3 +1,75 @@
+/* Font self-hosted (subset latin) — niente round-trip verso Google Fonts */
+@font-face {
+    font-family: 'Cormorant Garamond';
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url('vendor/fonts/CormorantGaramond-400i.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Cormorant Garamond';
+    font-style: italic;
+    font-weight: 500;
+    font-display: swap;
+    src: url('vendor/fonts/CormorantGaramond-500i.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Cormorant Garamond';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('vendor/fonts/CormorantGaramond-400.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Cormorant Garamond';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('vendor/fonts/CormorantGaramond-500.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Cormorant Garamond';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('vendor/fonts/CormorantGaramond-600.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Cormorant Garamond';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('vendor/fonts/CormorantGaramond-700.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url('vendor/fonts/Inter-300.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('vendor/fonts/Inter-400.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('vendor/fonts/Inter-500.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('vendor/fonts/Inter-600.woff2') format('woff2');
+}
+
 /* ==========================================================================
    STYLE.CSS — MONT°6 · "MEDITERRANEAN MODERNISM" REDESIGN
    Bilingual · Mobile-refined · Boutique-hospitality editorial
@@ -283,6 +355,20 @@ p { font-weight: 300; }
     z-index: -1;
 }
 .hero-content { text-align: center; color: #fff; z-index: 1; width: 90%; max-width: 1000px; }
+
+/* Entrata hero senza JavaScript: solo transform, il testo è visibile dal primo paint */
+.hero-content.hero-enter {
+    opacity: 1;
+    transform: none;
+    animation: heroRise 0.9s var(--ease-out) both;
+}
+@keyframes heroRise {
+    from { transform: translateY(26px); }
+    to   { transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hero-content.hero-enter { animation: none; }
+}
 .hero-kicker {
     text-transform: uppercase; letter-spacing: 4px; font-size: 0.82rem;
     font-weight: 500; margin-bottom: 1.8rem; color: var(--color-accent-hover);
@@ -841,4 +927,13 @@ span.flatpickr-weekday { color: var(--color-accent) !important; font-weight: 600
     .reveal-up, .reveal-right, .reveal-left { opacity: 1 !important; transform: none !important; }
     .parallax-img { transform: none !important; }
     .line-down::after { animation: none !important; }
+}
+
+
+/* ==========================================================================
+   MOBILE — sfondi a risoluzione adeguata (override degli inline style)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .hero-bg { background-image: url('img/opt/_MG_4132-1024.webp') !important; }
+    .parallax-break { background-image: url('img/opt/_MG_4133-1024.webp') !important; }
 }
