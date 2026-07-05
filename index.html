@@ -59,15 +59,30 @@
     {
         "@context": "https://schema.org",
         "@type": "VacationRental",
+        "additionalType": "Apartment",
         "name": "Mont°6 Luxury Retreat",
+        "identifier": "IT082027C2YCA7QI4V",
         "description": "Un rifugio di design nel cuore di Cefalù, Sicilia",
         "url": "https://mont6cefalu.it",
         "telephone": "+39-388-190-8816",
         "email": "mont6.home@gmail.com",
+        "image": [
+            "https://mont6cefalu.it/img/_MG_4132.jpg",
+            "https://mont6cefalu.it/img/_MG_4136.jpg",
+            "https://mont6cefalu.it/img/_MG_4126.jpg",
+            "https://mont6cefalu.it/img/_MG_4193.jpg",
+            "https://mont6cefalu.it/img/_MG_4152.jpg",
+            "https://mont6cefalu.it/img/_MG_4189.jpg",
+            "https://mont6cefalu.it/img/_MG_4135.jpg",
+            "https://mont6cefalu.it/img/_MG_4179.jpg"
+        ],
+        "latitude": 38.0386,
+        "longitude": 14.0226,
         "address": {
             "@type": "PostalAddress",
             "addressLocality": "Cefalù",
             "addressRegion": "Palermo",
+            "postalCode": "90015",
             "addressCountry": "IT"
         },
         "geo": {
@@ -77,23 +92,28 @@
         },
         "priceRange": "€90 - €220 a notte",
         "numberOfRooms": 1,
+        "knowsLanguage": ["it-IT", "en-GB"],
         "containsPlace": {
             "@type": "Accommodation",
+            "additionalType": "EntirePlace",
             "occupancy": { "@type": "QuantitativeValue", "maxValue": 2 },
             "numberOfBedrooms": 1,
-            "numberOfBathroomsTotal": 1
+            "numberOfBathroomsTotal": 1,
+            "bed": {
+                "@type": "BedDetails",
+                "numberOfBeds": 1,
+                "typeOfBed": "Double"
+            },
+            "amenityFeature": [
+                {"@type": "LocationFeatureSpecification", "name": "ac", "value": true},
+                {"@type": "LocationFeatureSpecification", "name": "wifi", "value": true},
+                {"@type": "LocationFeatureSpecification", "name": "kitchen", "value": true},
+                {"@type": "LocationFeatureSpecification", "name": "airportShuttle", "value": false},
+                {"@type": "LocationFeatureSpecification", "name": "petsAllowed", "value": false}
+            ]
         },
-        "starRating": {
-            "@type": "Rating",
-            "ratingValue": "5"
-        },
-        "amenityFeature": [
-            {"@type": "LocationFeatureSpecification", "name": "Wi-Fi", "value": "High-speed"},
-            {"@type": "LocationFeatureSpecification", "name": "Kitchen"},
-            {"@type": "LocationFeatureSpecification", "name": "Air Conditioning"}
-        ],
-        "checkinTime": "15:00",
-        "checkoutTime": "10:00",
+        "checkinTime": "15:00:00+02:00",
+        "checkoutTime": "10:00:00+02:00",
         "petsAllowed": false,
         "childrenAllowed": true,
         "aggregateRating": {
