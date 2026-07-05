@@ -1,3 +1,9 @@
+# Early Hints (103): Cloudflare li serve prima dell'HTML — il browser
+# inizia a scaricare le risorse critiche durante il tempo di risposta
+/
+  Link: </style.css?v=15>; rel=preload; as=style
+  Link: </vendor/fonts/CormorantGaramond-500.woff2>; rel=preload; as=font; crossorigin
+
 /*
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   X-Content-Type-Options: nosniff
