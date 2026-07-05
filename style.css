@@ -1,71 +1,29 @@
-/* Font self-hosted (subset latin) — niente round-trip verso Google Fonts */
-@font-face {
-    font-family: 'Cormorant Garamond';
-    font-style: italic;
-    font-weight: 400;
-    font-display: swap;
-    src: url('vendor/fonts/CormorantGaramond-400i.woff2') format('woff2');
-}
-@font-face {
-    font-family: 'Cormorant Garamond';
-    font-style: italic;
-    font-weight: 500;
-    font-display: swap;
-    src: url('vendor/fonts/CormorantGaramond-500i.woff2') format('woff2');
-}
+/* Font self-hosted (subset latin) — 4 file, i range di peso coprono i vicini */
 @font-face {
     font-family: 'Cormorant Garamond';
     font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url('vendor/fonts/CormorantGaramond-400.woff2') format('woff2');
-}
-@font-face {
-    font-family: 'Cormorant Garamond';
-    font-style: normal;
-    font-weight: 500;
+    font-weight: 400 700;
     font-display: swap;
     src: url('vendor/fonts/CormorantGaramond-500.woff2') format('woff2');
 }
 @font-face {
     font-family: 'Cormorant Garamond';
-    font-style: normal;
-    font-weight: 600;
+    font-style: italic;
+    font-weight: 400 700;
     font-display: swap;
-    src: url('vendor/fonts/CormorantGaramond-600.woff2') format('woff2');
-}
-@font-face {
-    font-family: 'Cormorant Garamond';
-    font-style: normal;
-    font-weight: 700;
-    font-display: swap;
-    src: url('vendor/fonts/CormorantGaramond-700.woff2') format('woff2');
+    src: url('vendor/fonts/CormorantGaramond-500i.woff2') format('woff2');
 }
 @font-face {
     font-family: 'Inter';
     font-style: normal;
-    font-weight: 300;
-    font-display: swap;
-    src: url('vendor/fonts/Inter-300.woff2') format('woff2');
-}
-@font-face {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 400;
+    font-weight: 300 449;
     font-display: swap;
     src: url('vendor/fonts/Inter-400.woff2') format('woff2');
 }
 @font-face {
     font-family: 'Inter';
     font-style: normal;
-    font-weight: 500;
-    font-display: swap;
-    src: url('vendor/fonts/Inter-500.woff2') format('woff2');
-}
-@font-face {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 600;
+    font-weight: 450 700;
     font-display: swap;
     src: url('vendor/fonts/Inter-600.woff2') format('woff2');
 }

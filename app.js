@@ -17,8 +17,10 @@ function loadCss(href) {
     });
 }
 
-loadCss('vendor/flatpickr/flatpickr.min.css');
-loadCss('vendor/glightbox/glightbox.min.css');
+window.addEventListener('load', () => {
+    loadCss('vendor/flatpickr/flatpickr.min.css');
+    loadCss('vendor/glightbox/glightbox.min.css');
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     initLang();
