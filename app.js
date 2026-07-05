@@ -10,8 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initBookingForm();
     initFAQ();
     initParallax();
-    initCustomCursor();
-    initMagneticButtons();
     initGalleryLightbox();
     initCookieBanner();
     initFloatingCTA();
@@ -322,9 +320,9 @@ function initBookingForm() {
 
             let message = '';
             if (currentLang === 'en') {
-                message = `Hi! I'd like to check availability for Mont°6.%0A%0A🗓 Check-in: ${checkIn.trim()}%0A🗓 Check-out: ${checkOut.trim()}%0A👥 Guests: ${guestVal}%0A%0AThank you!`;
+                message = `Hi! I'd like to check availability for Mont°6.%0A%0ACheck-in: ${checkIn.trim()}%0ACheck-out: ${checkOut.trim()}%0AGuests: ${guestVal}%0A%0AThank you!`;
             } else {
-                message = `Salve! Vorrei verificare la disponibilità per soggiornare a Mont°6.%0A%0A🗓 Check-in: ${checkIn.trim()}%0A🗓 Check-out: ${checkOut.trim()}%0A👥 Ospiti: ${guestVal}%0A%0AIn attesa di riscontro, grazie.`;
+                message = `Salve! Vorrei verificare la disponibilità per soggiornare a Mont°6.%0A%0ACheck-in: ${checkIn.trim()}%0ACheck-out: ${checkOut.trim()}%0AOspiti: ${guestVal}%0A%0AIn attesa di riscontro, grazie.`;
             }
             
             const whatsappUrl = `https://wa.me/${hostPhone}?text=${message}`;
@@ -437,85 +435,6 @@ function initParallax() {
 }
 
 /**
- * Custom Cursor (Pure JS, lightweight requestAnimationFrame)
- */
-function initCustomCursor() {
-    if (window.innerWidth <= 1024) return;
-
-    const cursor = document.querySelector('.custom-cursor');
-    const follower = document.querySelector('.custom-cursor-follower');
-    if (!cursor || !follower) return;
-
-    document.body.classList.add('custom-cursor-active');
-
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let cursorX = mouseX;
-    let cursorY = mouseY;
-    let followerX = mouseX;
-    let followerY = mouseY;
-
-    window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
-
-    function render() {
-        cursorX += (mouseX - cursorX) * 0.5;
-        cursorY += (mouseY - cursorY) * 0.5;
-        
-        followerX += (mouseX - followerX) * 0.15;
-        followerY += (mouseY - followerY) * 0.15;
-
-        cursor.style.left = `${cursorX}px`;
-        cursor.style.top = `${cursorY}px`;
-        follower.style.left = `${followerX}px`;
-        follower.style.top = `${followerY}px`;
-
-        requestAnimationFrame(render);
-    }
-    requestAnimationFrame(render);
-
-    // Hover states
-    const hoverElements = document.querySelectorAll('a, button, .luxe-input, .lang-btn, .am-elegant-item');
-    hoverElements.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            cursor.classList.add('hover');
-            follower.classList.add('hover');
-        });
-        el.addEventListener('mouseleave', () => {
-            cursor.classList.remove('hover');
-            follower.classList.remove('hover');
-        });
-    });
-}
-
-/**
- * Magnetic Buttons Logic (Pure JS)
- */
-function initMagneticButtons() {
-    if (window.innerWidth <= 1024) return;
-
-    const magnets = document.querySelectorAll('.btn-luxe');
-    
-    magnets.forEach(magnet => {
-        magnet.addEventListener('mousemove', function(e) {
-            const position = magnet.getBoundingClientRect();
-            const x = e.clientX - position.left - position.width / 2;
-            const y = e.clientY - position.top - position.height / 2;
-            
-            magnet.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
-            magnet.style.transition = 'transform 0.1s ease-out';
-        });
-
-        magnet.addEventListener('mouseleave', function() {
-            magnet.style.transform = `translate(0px, 0px)`;
-            magnet.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-        });
-    });
-}
-
-/**
  * GLightbox Gallery Initialization
  */
 function initGalleryLightbox() {
@@ -609,13 +528,16 @@ function initMap() {
         .bindPopup(`<strong>Mont°6</strong><br>${t('Il tuo rifugio nel centro storico', 'Your retreat in the historic center')}`)
         .openPopup();
 
-    // Punti di interesse (coordinate approssimate) con marker a pallino raffinato
+    // Punti di interesse (coordinate approssimate) con marker a pallino raffinato.
+    // Icone SVG inline (stroke oro) coerenti con le card delle distanze — niente emoji.
+    const poiSvg = (paths) =>
+        `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#A8854C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
     const pois = [
-        { c: [38.0394, 14.0227], icon: '⛪', it: 'Duomo di Cefalù', en: 'Cefalù Cathedral', dit: '2 min a piedi', den: '2 min walk' },
-        { c: [38.0372, 14.0193], icon: '🏖️', it: 'Spiaggia', en: 'Beach', dit: '5 min a piedi', den: '5 min walk' },
-        { c: [38.0364, 14.0283], icon: '🏔️', it: 'Rocca di Cefalù', en: 'La Rocca', dit: '10 min a piedi', den: '10 min walk' },
-        { c: [38.0388, 14.0216], icon: '🏛️', it: 'Lavatoio Medievale', en: 'Medieval Laundry', dit: '2 min a piedi', den: '2 min walk' },
-        { c: [38.0431, 14.0146], icon: '🚉', it: 'Stazione FS', en: 'Train Station', dit: '10 min in auto', den: '10 min by car' },
+        { c: [38.0394, 14.0227], icon: poiSvg('<path d="M3 22h18M6 22V11l6-4 6 4v11M12 7V3M10 4h4"/>'), it: 'Duomo di Cefalù', en: 'Cefalù Cathedral', dit: '2 min a piedi', den: '2 min walk' },
+        { c: [38.0372, 14.0193], icon: poiSvg('<path d="M22 12a10 10 0 0 0-20 0ZM12 2v10M12 12v7a2 2 0 0 0 4 0"/>'), it: 'Spiaggia', en: 'Beach', dit: '5 min a piedi', den: '5 min walk' },
+        { c: [38.0364, 14.0283], icon: poiSvg('<path d="m8 4 4.5 9L16 8l6 13H2z"/>'), it: 'Rocca di Cefalù', en: 'La Rocca', dit: '10 min a piedi', den: '10 min walk' },
+        { c: [38.0388, 14.0216], icon: poiSvg('<path d="M3 22h18M5 22V10M19 22V10M9 22v-8M15 22v-8M2 10h20L12 3z"/>'), it: 'Lavatoio Medievale', en: 'Medieval Laundry', dit: '2 min a piedi', den: '2 min walk' },
+        { c: [38.0431, 14.0146], icon: poiSvg('<rect x="4" y="3" width="16" height="13" rx="2"/><path d="M4 11h16M12 3v8M8 19l-2 3M16 19l2 3"/>'), it: 'Stazione FS', en: 'Train Station', dit: '10 min in auto', den: '10 min by car' },
     ];
     pois.forEach((p) => {
         const dot = L.divIcon({

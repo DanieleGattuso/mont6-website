@@ -258,10 +258,6 @@ p { font-weight: 300; }
     transform: translateY(24px); opacity: 0; transition: var(--transition-smooth);
 }
 .mobile-nav-fullscreen.open .mobile-link { transform: translateY(0); opacity: 1; }
-.mobile-link .num {
-    font-family: var(--font-body); font-size: 0.85rem; color: var(--color-accent);
-    position: absolute; top: 12px; right: -30px;
-}
 .mobile-lang { position: absolute; top: 2.5rem; left: 5%; }
 .mobile-lang .lang-btn { font-size: 1rem; color: rgba(255,255,255,0.5); }
 .mobile-lang .lang-btn.active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
@@ -352,12 +348,6 @@ p { font-weight: 300; }
    CONCEPT (2-COLUMN EDITORIAL)
    ========================================================================== */
 .concept-editorial { padding: var(--space-xl) 0; position: relative; }
-.bg-text-watermark {
-    position: absolute; top: 2%; left: -2%;
-    font-family: var(--font-heading); font-style: italic; font-weight: 500;
-    font-size: clamp(8rem, 16vw, 17rem); color: rgba(40, 33, 22, 0.035);
-    z-index: 0; pointer-events: none; white-space: nowrap;
-}
 .editorial-grid {
     display: grid; grid-template-columns: 1fr 1fr; gap: 4.5rem;
     align-items: center; position: relative; z-index: 1;
@@ -714,7 +704,6 @@ p { font-weight: 300; }
     .location-content { grid-template-columns: 1fr; }
     .explore-grid { grid-template-columns: repeat(2, 1fr); }
 
-    .bg-text-watermark { display: none; } /* watermark decorativo: sborda su schermi piccoli */
 }
 
 @media (max-width: 768px) {
@@ -777,35 +766,6 @@ p { font-weight: 300; }
     .mobile-link { font-size: 2.1rem; }
 
     body.editorial-theme { padding-bottom: 80px; }
-}
-
-/* ==========================================================================
-   CUSTOM CURSOR
-   ========================================================================== */
-@media (min-width: 1025px) {
-    body.custom-cursor-active,
-    body.custom-cursor-active a,
-    body.custom-cursor-active button,
-    body.custom-cursor-active input,
-    body.custom-cursor-active select { cursor: none !important; }
-
-    .custom-cursor {
-        position: fixed; top: 0; left: 0; width: 6px; height: 6px;
-        background-color: var(--color-accent); border-radius: 50%;
-        transform: translate(-50%, -50%); pointer-events: none; z-index: 10000;
-        transition: width 0.25s, height 0.25s, background-color 0.25s;
-    }
-    .custom-cursor-follower {
-        position: fixed; top: 0; left: 0; width: 38px; height: 38px;
-        border: 1px solid rgba(168, 133, 76, 0.6); border-radius: 50%;
-        transform: translate(-50%, -50%); pointer-events: none; z-index: 9999;
-        transition: width 0.35s, height 0.35s, border-color 0.35s, background-color 0.35s;
-    }
-    .custom-cursor.hover { width: 0; height: 0; }
-    .custom-cursor-follower.hover {
-        width: 52px; height: 52px; border-color: var(--color-accent);
-        background-color: rgba(168, 133, 76, 0.1);
-    }
 }
 
 /* ==========================================================================
