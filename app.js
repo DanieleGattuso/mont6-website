@@ -17,8 +17,9 @@ function loadCss(href) {
     });
 }
 
+// flatpickr.min.css è nel <head> (serve prima dell'init del calendario).
+// glightbox serve solo all'apertura della galleria: caricato dopo il load.
 window.addEventListener('load', () => {
-    loadCss('vendor/flatpickr/flatpickr.min.css');
     loadCss('vendor/glightbox/glightbox.min.css');
 });
 

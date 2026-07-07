@@ -41,8 +41,12 @@
     <!-- Font self-hosted: preload dei due critici (titolo hero + body) -->
     <link rel="preload" as="font" type="font/woff2" href="vendor/fonts/CormorantGaramond-500.woff2" crossorigin>
     
-    <!-- CSS (flatpickr/glightbox/leaflet caricati async da app.js) -->
-    <link rel="stylesheet" href="style.css?v=15">
+    <!-- Flatpickr CSS: nel head, deve esserci prima che flatpickr inizializzi
+         il calendario (altrimenti calcola larghezze sbagliate e si apre gigante) -->
+    <link rel="stylesheet" href="vendor/flatpickr/flatpickr.min.css">
+
+    <!-- CSS (glightbox/leaflet caricati async da app.js) -->
+    <link rel="stylesheet" href="style.css?v=16">
     
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
@@ -1036,6 +1040,6 @@
     <script src="vendor/glightbox/glightbox.min.js"></script>
 
     <!-- Custom JS -->
-    <script src="app.js?v=15"></script>
+    <script src="app.js?v=16"></script>
 </body>
 </html>
