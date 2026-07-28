@@ -12,12 +12,18 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const OUT_DIR = path.join(ROOT, 'en');
 
-/** I percorsi relativi non valgono dentro /en/: diventano assoluti dalla root. */
+/**
+ * I percorsi relativi non valgono dentro /en/: diventano assoluti dalla root.
+ * Attenzione a srcset/imagesrcset: contengono PIÙ percorsi separati da virgola,
+ * non basta sistemare il primo. Se sfuggono, /en/img/... restituisce l'HTML di
+ * fallback al posto del file e le immagini spariscono.
+ */
 function absolutePaths(html) {
     return html
         .replace(/(href|src)="(img\/|vendor\/|style\.css|app\.js|lang-init\.js|privacy\.html|success\.html)/g, '$1="/$2')
         .replace(/url\('img\//g, "url('/img/")
-        .replace(/imagesrcset="img\//g, 'imagesrcset="/img/');
+        .replace(/(srcset|imagesrcset)="([^"]+)"/g, (_, attr, value) =>
+            `${attr}="${value.replace(/(^|,\s*)(img\/|vendor\/)/g, '$1/$2')}"`);
 }
 
 const EN_FAQ = {
@@ -123,7 +129,8 @@ const checks = [
     ['lang inglese', out.includes('<html lang="en" data-lang="en">')],
     ['canonical /en/', out.includes('href="https://mont6cefalu.it/en/"')],
     ['hreflang presenti', (out.match(/rel="alternate" hreflang/g) || []).length === 3],
-    ['nessun percorso relativo', !/(href|src)="(img\/|vendor\/|style\.css|app\.js)/.test(out)],
+    // Ogni "img/" e "vendor/" deve essere preceduto da "/": copre anche srcset
+    ['nessun percorso relativo', !/[^/]img\//.test(out) && !/[^/]vendor\//.test(out)],
     ['FAQ in inglese', out.includes('What are the check-in and check-out times')],
     ['switcher EN attivo', out.includes('class="lang-btn active" href="/en/"')],
 ];
