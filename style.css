@@ -64,8 +64,8 @@
     --transition-smooth: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
     --shadow-soft:   0 4px 30px rgba(40, 33, 22, 0.05);
-    --shadow-medium: 0 18px 50px rgba(40, 33, 22, 0.09);
-    --shadow-strong: 0 34px 80px rgba(40, 33, 22, 0.14);
+    --shadow-medium: 0 12px 32px rgba(40, 33, 22, 0.06);
+    --shadow-strong: 0 20px 48px rgba(40, 33, 22, 0.09);
 
     --radius-sm: 4px;
     --radius-md: 10px;
@@ -371,11 +371,11 @@ p { font-weight: 300; }
 .btn-hero {
     background: var(--color-accent); border: none; color: #fff;
     padding: 1.25rem 3.2rem; font-size: 0.82rem;
-    box-shadow: 0 14px 40px rgba(168, 133, 76, 0.35);
+    box-shadow: none;
 }
 .btn-hero:hover {
     background: var(--color-accent-hover); color: #fff;
-    transform: translateY(-3px); box-shadow: 0 18px 48px rgba(168, 133, 76, 0.45);
+    background: var(--color-accent-hover);
 }
 
 .hero-bottom-bar {
@@ -544,7 +544,7 @@ p { font-weight: 300; }
     border: 1px solid rgba(40, 33, 22, 0.06);
     transition: transform 0.4s var(--ease-out), box-shadow 0.4s, border-color 0.4s;
 }
-.dist-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-soft); border-color: var(--color-accent-line); }
+.dist-item:hover { border-color: var(--color-accent-line); }
 .dist-icon {
     font-size: 1.5rem; width: 46px; height: 46px;
     display: flex; align-items: center; justify-content: center;
@@ -596,7 +596,7 @@ p { font-weight: 300; }
     padding: 3rem 2.6rem; border-radius: var(--radius-md); position: relative;
     transition: transform 0.45s var(--ease-out), background 0.45s, border-color 0.45s;
 }
-.review-card-luxe:hover { transform: translateY(-6px); background: rgba(255,255,255,0.045); border-color: rgba(168, 133, 76, 0.35); }
+.review-card-luxe:hover { background: rgba(255,255,255,0.045); border-color: rgba(168, 133, 76, 0.35); }
 .quote-mark {
     position: absolute; top: 0.5rem; left: 1.4rem;
     font-family: var(--font-heading); font-size: 7rem; color: rgba(168, 133, 76, 0.2); line-height: 1;
@@ -690,9 +690,9 @@ p { font-weight: 300; }
     transition: var(--transition-smooth); text-decoration: none;
 }
 .btn-whatsapp { background: var(--color-bg-dark); color: #fff; }
-.btn-whatsapp:hover { background: var(--color-accent); transform: translateY(-3px); box-shadow: 0 12px 26px rgba(168, 133, 76, 0.32); }
-.btn-stripe { background: #635bff; color: #fff; }
-.btn-stripe:hover { background: #5247e5; transform: translateY(-3px); box-shadow: 0 12px 26px rgba(99, 91, 255, 0.32); }
+.btn-whatsapp:hover { background: #2A3630; }
+.btn-stripe { background: var(--color-accent); color: #fff; }
+.btn-stripe:hover { background: var(--color-accent-hover); }
 .btn-outline { background: transparent; border: 1px solid var(--color-bg-dark); color: var(--color-bg-dark); }
 .btn-outline:hover { background: var(--color-bg-dark); color: #fff; }
 .full-width { width: 100%; }
@@ -895,3 +895,8 @@ span.flatpickr-weekday { color: var(--color-accent) !important; font-weight: 600
     .hero-bg { background-image: url('img/opt/_MG_4132-1024.webp') !important; }
     .parallax-break { background-image: url('img/opt/_MG_4133-1024.webp') !important; }
 }
+
+
+/* Messaggio del form di prenotazione (sostituisce alert()) */
+.form-msg { display: none; margin-top: 1rem; font-size: 0.88rem; line-height: 1.5; color: #8C3B2E; }
+.form-msg.visible { display: block; }

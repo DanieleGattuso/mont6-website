@@ -331,113 +331,94 @@ function initBookingForm() {
                 .catch(localErr => console.error("Impossibile caricare date bloccate:", localErr.message));
         });
 
-    // Min stay validation helper
-    const checkMinStay = (checkInStr, checkOutStr, currentLang) => {
-        const parseDate = (dStr) => {
-            const [d, m, y] = dStr.trim().split('/');
-            return new Date(y, m - 1, d);
-        };
-        const start = parseDate(checkInStr);
-        const end = parseDate(checkOutStr);
-        const nights = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
-        
-        if (nights < 2) {
-            const minStayMsg = currentLang === 'en' 
-                ? "Minimum stay is 2 nights." 
-                : "Il soggiorno minimo è di 2 notti.";
-            alert(minStayMsg);
-            return false;
-        }
-        return true;
+    const isEn = () => document.documentElement.getAttribute('data-lang') === 'en';
+    const guests = () => guestSelect.value;
+
+    // Messaggi nel form invece di alert() del browser
+    const formMsg = document.getElementById('form-msg');
+    const say = (msgIt, msgEn) => {
+        if (!formMsg) return;
+        formMsg.textContent = isEn() ? msgEn : msgIt;
+        formMsg.classList.add('visible');
     };
 
-    // Handle WhatsApp Submission
+    // ponytail: una sola validazione per entrambi i CTA (era duplicata in tutti e due)
+    // Ritorna [checkIn, checkOut] oppure null, spiegando il perché nel form.
+    const validDates = () => {
+        if (formMsg) formMsg.classList.remove('visible');
+
+        const dates = dateInput.value;
+        if (!dates || !dates.includes(' al ')) {
+            say('Scegli le date di arrivo e partenza dal calendario.',
+                'Pick your arrival and departure dates from the calendar.');
+            dateInput.focus(); // apre il calendario
+            return null;
+        }
+
+        const [checkIn, checkOut] = dates.split(' al ').map(d => d.trim());
+        const toDate = (str) => { const [d, m, y] = str.split('/'); return new Date(y, m - 1, d); };
+        if ((toDate(checkOut) - toDate(checkIn)) / 86400000 < 2) {
+            say('Il soggiorno minimo è di 2 notti.', 'The minimum stay is 2 nights.');
+            return null;
+        }
+        return [checkIn, checkOut];
+    };
+
+    // Se si torna indietro da Stripe, le date scelte sono ancora lì
+    const SEL_KEY = 'mont6_sel';
+    const localISO = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    try {
+        const saved = JSON.parse(sessionStorage.getItem(SEL_KEY) || 'null');
+        if (saved && saved.dates && saved.dates.length === 2) {
+            fp.setDate(saved.dates, true, 'Y-m-d');
+            if (saved.guests) guestSelect.value = saved.guests;
+        }
+    } catch (e) { /* selezione non ripristinabile: si riparte dal calendario vuoto */ }
+
     if (btnRequest) {
         btnRequest.addEventListener('click', () => {
-            const dates = dateInput.value;
-            const guestVal = guestSelect.options[guestSelect.selectedIndex].value;
-            const currentLang = document.documentElement.getAttribute('data-lang') || 'it';
-            
-            if (!dates || !dates.includes(' al ')) {
-                const errorMsg = currentLang === 'en' 
-                    ? "Please select a Check-in and Check-out date from the calendar." 
-                    : "Per favore, seleziona una data di Check-in e una di Check-out dal calendario.";
-                alert(errorMsg);
-                return;
-            }
+            const range = validDates();
+            if (!range) return;
+            const [checkIn, checkOut] = range;
 
-            const [checkIn, checkOut] = dates.split(' al ');
+            const message = isEn()
+                ? `Hi! I'd like to book Mont°6.%0A%0ACheck-in: ${checkIn}%0ACheck-out: ${checkOut}%0AGuests: ${guests()}%0A%0AThank you!`
+                : `Salve! Vorrei prenotare Mont°6.%0A%0ACheck-in: ${checkIn}%0ACheck-out: ${checkOut}%0AOspiti: ${guests()}%0A%0AGrazie.`;
 
-            if (!checkMinStay(checkIn, checkOut, currentLang)) {
-                return;
-            }
-
-            const hostPhone = "393881908816";
-
-            let message = '';
-            if (currentLang === 'en') {
-                message = `Hi! I'd like to check availability for Mont°6.%0A%0ACheck-in: ${checkIn.trim()}%0ACheck-out: ${checkOut.trim()}%0AGuests: ${guestVal}%0A%0AThank you!`;
-            } else {
-                message = `Salve! Vorrei verificare la disponibilità per soggiornare a Mont°6.%0A%0ACheck-in: ${checkIn.trim()}%0ACheck-out: ${checkOut.trim()}%0AOspiti: ${guestVal}%0A%0AIn attesa di riscontro, grazie.`;
-            }
-            
-            const whatsappUrl = `https://wa.me/${hostPhone}?text=${message}`;
-            window.open(whatsappUrl, '_blank');
+            window.open(`https://wa.me/393881908816?text=${message}`, '_blank', 'noopener');
         });
     }
 
-    // Handle Stripe Submission
     if (btnStripe) {
         btnStripe.addEventListener('click', async () => {
-            const dates = dateInput.value;
-            const guestVal = guestSelect.options[guestSelect.selectedIndex].value;
-            const currentLang = document.documentElement.getAttribute('data-lang') || 'it';
-            
-            if (!dates || !dates.includes(' al ')) {
-                const errorMsg = currentLang === 'en' 
-                    ? "Please select a Check-in and Check-out date from the calendar." 
-                    : "Per favore, seleziona una data di Check-in e una di Check-out dal calendario.";
-                alert(errorMsg);
-                return;
-            }
-
-            const [checkIn, checkOut] = dates.split(' al ');
-
-            if (!checkMinStay(checkIn, checkOut, currentLang)) {
-                return;
-            }
+            const range = validDates();
+            if (!range) return;
+            const [checkIn, checkOut] = range;
 
             btnStripe.disabled = true;
             const originalText = btnStripe.innerHTML;
-            btnStripe.innerHTML = currentLang === 'en' ? 'Redirecting...' : 'Elaborazione...';
+            btnStripe.innerHTML = isEn() ? 'Taking you to payment…' : 'Ti porto al pagamento…';
+
+            try {
+                sessionStorage.setItem(SEL_KEY, JSON.stringify({ dates: fp.selectedDates.map(localISO), guests: guests() }));
+            } catch (e) { /* niente ripristino, il pagamento prosegue comunque */ }
 
             try {
                 const response = await fetch('/api/create-checkout-session', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        checkIn: checkIn.trim(),
-                        checkOut: checkOut.trim(),
-                        guests: guestVal
-                    }),
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ checkIn, checkOut, guests: guests() })
                 });
+                const data = await response.json().catch(() => ({}));
 
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.error || (currentLang === 'en' ? 'Server error' : 'Errore del server'));
+                if (!response.ok || !data.url) {
+                    throw new Error(data.error || (isEn()
+                        ? 'The payment did not start. Try again, or message me on WhatsApp.'
+                        : 'Il pagamento non è partito. Riprova, oppure scrivimi su WhatsApp.'));
                 }
-
-                const data = await response.json();
-                
-                if (data.url) {
-                    window.location.href = data.url;
-                } else {
-                    throw new Error(currentLang === 'en' ? 'Unable to create checkout session' : 'Impossibile avviare la sessione di pagamento.');
-                }
+                window.location.href = data.url;
             } catch (err) {
-                alert(err.message);
+                say(err.message, err.message);
                 btnStripe.disabled = false;
                 btnStripe.innerHTML = originalText;
             }
