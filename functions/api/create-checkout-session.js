@@ -41,7 +41,7 @@ export async function onRequestPost({ request, env }) {
             return json(500, { error: 'Pagamento non configurato: chiave Stripe mancante sul server.' });
         }
 
-        const { checkIn, checkOut, guests } = await request.json();
+        const { checkIn, checkOut, guests, lang } = await request.json();
 
         if (!checkIn || !checkOut) {
             return json(400, { error: 'Date di Check-in e Check-out obbligatorie.' });
@@ -108,8 +108,10 @@ export async function onRequestPost({ request, env }) {
         // Corpo form-encoded per l'API Stripe
         const params = new URLSearchParams();
         params.set('mode', 'payment');
-        params.set('success_url', `${origin}/success.html?session_id={CHECKOUT_SESSION_ID}`);
-        params.set('cancel_url', `${origin}/#booking`);
+        // Ritorno dal checkout nella stessa lingua da cui si e partiti
+        const isEn = lang === 'en';
+        params.set('success_url', `${origin}/success.html?session_id={CHECKOUT_SESSION_ID}${isEn ? '&lang=en' : ''}`);
+        params.set('cancel_url', `${origin}/${isEn ? 'en/' : ''}#booking`);
         params.set('line_items[0][quantity]', '1');
         params.set('line_items[0][price_data][currency]', 'eur');
         params.set('line_items[0][price_data][unit_amount]', String(totalAmountCent));

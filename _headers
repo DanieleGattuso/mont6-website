@@ -4,6 +4,10 @@
   Link: </style.css?v=17>; rel=preload; as=style
   Link: </vendor/fonts/CormorantGaramond-500.woff2>; rel=preload; as=font; crossorigin
 
+/en/
+  Link: </style.css?v=17>; rel=preload; as=style
+  Link: </vendor/fonts/CormorantGaramond-500.woff2>; rel=preload; as=font; crossorigin
+
 /*
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   X-Content-Type-Options: nosniff

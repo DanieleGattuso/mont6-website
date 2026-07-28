@@ -75,34 +75,16 @@ function initMapLazy() {
 /**
  * Handle Bilingual logic
  */
+// La lingua ora è decisa dall'URL (/ = italiano, /en/ = inglese), non più da
+// un toggle JS: due pagine indicizzabili separatamente. Qui resta solo quello
+// che il CSS non può fare da solo, cioè il testo delle <option>.
 function initLang() {
-    const savedLang = localStorage.getItem('mont6_lang') || 'it';
-    setLang(savedLang);
-
-    // Listener sui bottoni lingua (niente onclick inline: consente una CSP senza 'unsafe-inline')
-    document.querySelectorAll('[data-set-lang]').forEach(btn => {
-        btn.addEventListener('click', () => setLang(btn.getAttribute('data-set-lang')));
-    });
-}
-
-window.setLang = function(lang) {
-    document.documentElement.setAttribute('data-lang', lang);
-    document.documentElement.setAttribute('lang', lang); // a11y/SEO: aggiorna l'attributo lang reale
-    localStorage.setItem('mont6_lang', lang);
-
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if(btn.textContent.toLowerCase() === lang) {
-            btn.classList.add('active');
-        }
-    });
-
-    // Le <option> non possono contenere gli span .lang-it/.lang-en: testo via data-attribute
+    const lang = document.documentElement.getAttribute('data-lang') || 'it';
     document.querySelectorAll('#guest-count option').forEach(opt => {
         const label = opt.getAttribute(lang === 'en' ? 'data-en' : 'data-it');
         if (label) opt.textContent = label;
     });
-};
+}
 
 /**
  * Handles the sticky navbar state and the FULL-SCREEN mobile menu toggle
@@ -250,14 +232,17 @@ function initBookingForm() {
 
     if (!dateInput || (!btnRequest && !btnStripe)) return;
 
-    // Setup Flatpickr
+    // Il calendario segue la lingua della pagina: su /en/ mesi e separatore in inglese
+    const EN_PAGE = document.documentElement.getAttribute('data-lang') === 'en';
+    const SEP = EN_PAGE ? ' to ' : ' al ';
+
     const fp = flatpickr(dateInput, {
         mode: "range",
         minDate: "today",
         dateFormat: "d/m/Y",
-        locale: "it",
+        locale: EN_PAGE ? 'default' : 'it',
         showMonths: window.innerWidth > 768 ? 2 : 1,
-        rangeSeparator: " al ",
+        rangeSeparator: SEP,
         onChange: function(selectedDates) {
             // Dynamic price calculation when both dates are selected
             if (selectedDates.length === 2 && priceBox) {
@@ -348,14 +333,14 @@ function initBookingForm() {
         if (formMsg) formMsg.classList.remove('visible');
 
         const dates = dateInput.value;
-        if (!dates || !dates.includes(' al ')) {
+        if (!dates || !dates.includes(SEP)) {
             say('Scegli le date di arrivo e partenza dal calendario.',
                 'Pick your arrival and departure dates from the calendar.');
             dateInput.focus(); // apre il calendario
             return null;
         }
 
-        const [checkIn, checkOut] = dates.split(' al ').map(d => d.trim());
+        const [checkIn, checkOut] = dates.split(SEP).map(d => d.trim());
         const toDate = (str) => { const [d, m, y] = str.split('/'); return new Date(y, m - 1, d); };
         if ((toDate(checkOut) - toDate(checkIn)) / 86400000 < 2) {
             say('Il soggiorno minimo è di 2 notti.', 'The minimum stay is 2 nights.');
@@ -407,7 +392,7 @@ function initBookingForm() {
                 const response = await fetch('/api/create-checkout-session', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ checkIn, checkOut, guests: guests() })
+                    body: JSON.stringify({ checkIn, checkOut, guests: guests(), lang: isEn() ? 'en' : 'it' })
                 });
                 const data = await response.json().catch(() => ({}));
 

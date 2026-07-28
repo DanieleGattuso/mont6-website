@@ -1,8 +1,8 @@
-// Sincronizza la lingua preferita salvata (usato da privacy.html e success.html).
-// File esterno: consente una CSP senza 'unsafe-inline' per gli script.
+// Lingua delle pagine secondarie (privacy, conferma pagamento).
+// Ordine: ?lang= nell'URL (lo passa Stripe al ritorno dal checkout), poi italiano.
 (function () {
-    var savedLang = 'it';
-    try { savedLang = localStorage.getItem('mont6_lang') || 'it'; } catch (e) {}
-    document.documentElement.setAttribute('data-lang', savedLang);
-    document.documentElement.setAttribute('lang', savedLang);
+    var q = new URLSearchParams(location.search).get('lang');
+    var lang = q === 'en' || (!q && document.documentElement.getAttribute('data-lang') === 'en') ? 'en' : 'it';
+    document.documentElement.setAttribute('data-lang', lang);
+    document.documentElement.setAttribute('lang', lang);
 })();
