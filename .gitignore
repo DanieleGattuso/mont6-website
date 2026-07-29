@@ -1,3 +1,7 @@
 node_modules/
 .DS_Store
 *.log
+
+# Strumenti di sviluppo, non fanno parte del sito
+.claude/
+ponytail/
