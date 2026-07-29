@@ -200,6 +200,11 @@ const PREZZI = {
     11: 90   // Dicembre
 };
 
+// Imposta di soggiorno del Comune di Cefalù: si paga all'arrivo, non passa
+// da Stripe. Il tetto e' sulle notti, non sull'importo.
+const TOURIST_TAX_PER_NIGHT = 2;
+const TOURIST_TAX_MAX_NIGHTS = 5;
+
 /**
  * Calculate total price for a date range
  */
@@ -273,6 +278,14 @@ function initBookingForm() {
                     const savingsEn = document.getElementById('savingsAmountEn');
                     if (savingsIt) savingsIt.textContent = `€${savings}`;
                     if (savingsEn) savingsEn.textContent = `€${savings}`;
+
+                    // Imposta di soggiorno: €2 a persona per notte, si paga in Comune
+                    // solo per le prime 5 notti. Non entra nel pagamento Stripe.
+                    const tax = TOURIST_TAX_PER_NIGHT * Math.min(nightCount, TOURIST_TAX_MAX_NIGHTS) * Number(guests());
+                    ['taxAmount', 'taxAmountEn'].forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.textContent = `€${tax}`;
+                    });
 
                     priceBox.classList.add('visible');
                 }

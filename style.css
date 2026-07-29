@@ -680,6 +680,8 @@ p { font-weight: 400; }
 .price-line { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--color-text-light); margin-bottom: 0.5rem; }
 .price-total { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; font-size: 1rem; }
 .price-nightly { font-family: var(--font-heading); font-size: 1.5rem; font-weight: 600; color: var(--color-accent); }
+.price-tax { margin-top: 0.75rem; font-size: 0.85rem; line-height: 1.5; color: var(--color-text-light); }
+.price-tax strong { color: var(--color-text); }
 .price-total strong { font-size: 1.15rem; }
 
 /* Buttons */

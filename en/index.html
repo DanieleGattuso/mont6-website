@@ -50,7 +50,7 @@
     <link rel="stylesheet" href="/vendor/flatpickr/flatpickr.min.css">
 
     <!-- CSS (glightbox/leaflet caricati async da app.js) -->
-    <link rel="stylesheet" href="/style.css?v=18">
+    <link rel="stylesheet" href="/style.css?v=19">
     
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
@@ -120,7 +120,7 @@
             "@type": "AggregateRating",
             "ratingValue": "4.99",
             "bestRating": "5",
-            "reviewCount": "124"
+            "reviewCount": "120"
         },
         "review": [
             {
@@ -193,6 +193,22 @@
             "acceptedAnswer": {
                 "@type": "Answer",
                 "text": "Yes. Booking direct on mont6cefalu.it saves up to 15% against the portals, which add booking and service fees. You also get a bottle of Sicilian wine on arrival and flexible check-in and check-out times when the apartment is free."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I cancel my booking at Mont°6, and how do refunds work?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Cancel up to 14 days before arrival and you get a full refund. Between 14 and 7 days before arrival the refund is 50%. From 7 days before, and in case of no-show, there is no refund. Refunds go back to the card used for the payment, usually within 5 to 10 working days."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is the city tax included in the price at Mont°6?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. The Cefalù council charges a city tax of €2 per person per night, capped at 5 nights, paid in cash on arrival. Everything else is included in the total shown on the site."
             }
         }
     ]
@@ -866,6 +882,45 @@
                                 </p>
                             </div>
                         </div>
+                        <div class="faq-item">
+                            <button class="faq-question">
+                                <span class="lang-it">Posso annullare? Come funziona il rimborso?</span>
+                                <span class="lang-en">Can I cancel? How do refunds work?</span>
+                                <span class="faq-icon">+</span>
+                            </button>
+                            <div class="faq-answer">
+                                <p>
+                                    <span class="lang-it">Fino a 14 giorni prima dell'arrivo la cancellazione è gratuita: rimborso del 100%. Fra 14 e 7 giorni prima il rimborso è del 50%. Da 7 giorni prima in poi, e in caso di mancato arrivo, non è previsto rimborso. Il rimborso torna sulla stessa carta con cui hai pagato, in genere entro 5-10 giorni lavorativi. Per annullare basta scrivermi su WhatsApp o via email.</span>
+                                    <span class="lang-en">Cancel up to 14 days before arrival and you get a full refund. Between 14 and 7 days before, the refund is 50%. From 7 days before, and in case of no-show, there is no refund. Refunds go back to the card you paid with, usually within 5-10 working days. To cancel, just message me on WhatsApp or send an email.</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">
+                                <span class="lang-it">L'imposta di soggiorno è inclusa?</span>
+                                <span class="lang-en">Is the city tax included?</span>
+                                <span class="faq-icon">+</span>
+                            </button>
+                            <div class="faq-answer">
+                                <p>
+                                    <span class="lang-it">No, è l'unica cosa che non è inclusa nel totale che vedi qui. Il Comune di Cefalù chiede 2 € a persona per notte, per un massimo di 5 notti: si paga all'arrivo, in contanti. Per due persone e tre notti sono 12 €.</span>
+                                    <span class="lang-en">No — it is the one thing not included in the total you see here. The Cefalù council charges €2 per person per night, capped at 5 nights, paid in cash on arrival. For two people and three nights that is €12.</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">
+                                <span class="lang-it">Conviene prenotare qui invece che sui portali?</span>
+                                <span class="lang-en">Is it cheaper to book here than on the portals?</span>
+                                <span class="faq-icon">+</span>
+                            </button>
+                            <div class="faq-answer">
+                                <p>
+                                    <span class="lang-it">Sì. Sui portali la stessa casa costa fino al 15% in più, perché aggiungono commissioni e spese di servizio. Prenotando qui paghi solo il soggiorno, trovi una bottiglia di vino siciliano ad aspettarti e gli orari di arrivo e partenza sono flessibili quando la casa è libera.</span>
+                                    <span class="lang-en">Yes. The same place costs up to 15% more on the portals, once their booking and service fees are added. Here you pay for the stay only, you will find a bottle of Sicilian wine waiting for you, and arrival and departure times are flexible whenever the apartment is free.</span>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -921,6 +976,10 @@
                             </strong>
                             <strong id="priceTotal">€320</strong>
                         </div>
+                        <p class="price-tax" id="priceTax">
+                            <span class="lang-it">Più <strong id="taxAmount">€12</strong> di imposta di soggiorno (€2 a persona per notte, massimo 5 notti), da pagare all'arrivo.</span>
+                            <span class="lang-en">Plus <strong id="taxAmountEn">€12</strong> city tax (€2 per person per night, capped at 5 nights), paid on arrival.</span>
+                        </p>
                         <p class="price-savings" id="priceSavings" style="display:flex; align-items:center; gap:6px; margin-top:0.75rem; font-size:0.85rem; color:#4a7040;">
                             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg>
                             <span>
@@ -1047,6 +1106,6 @@
     <script src="/vendor/glightbox/glightbox.min.js"></script>
 
     <!-- Custom JS -->
-    <script src="/app.js?v=18"></script>
+    <script src="/app.js?v=19"></script>
 </body>
 </html>

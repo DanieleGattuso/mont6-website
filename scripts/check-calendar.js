@@ -110,9 +110,16 @@ async function clickDay(page, isoDate) {
             value: document.getElementById('date-range').value,
             price: document.getElementById('priceTotal').textContent,
             priceVisible: document.getElementById('dynamicPriceBox').classList.contains('visible'),
+            tax: document.getElementById(document.documentElement.dataset.lang === 'en' ? 'taxAmountEn' : 'taxAmount').textContent,
+            guests: document.getElementById('guest-count').value,
         }));
         check(`[${lang}] buco di 2 notti prenotabile`, state.n === 2 && state.priceVisible,
             `${state.value} = ${state.price}`);
+
+        // imposta di soggiorno: 2 euro a persona per notte, 2 notti x 2 ospiti = 8 euro
+        const attesa = `€${2 * 2 * Number(state.guests)}`;
+        check(`[${lang}] imposta di soggiorno calcolata`, state.tax === attesa,
+            `${state.tax} (attesi ${attesa} per ${state.guests} ospiti)`);
 
         // 4. non si deve poter scavalcare una prenotazione
         await page.evaluate(() => document.getElementById('date-range')._flatpickr.clear());

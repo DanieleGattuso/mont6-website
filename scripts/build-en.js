@@ -42,6 +42,10 @@ const EN_FAQ = {
             'Two nights. In high season (July and August) three nights may be required. Rates run from €90 to €220 a night depending on the month.'],
         ['Is it cheaper to book Mont°6 directly?',
             'Yes. Booking direct on mont6cefalu.it saves up to 15% against the portals, which add booking and service fees. You also get a bottle of Sicilian wine on arrival and flexible check-in and check-out times when the apartment is free.'],
+        ['Can I cancel my booking at Mont°6, and how do refunds work?',
+            'Cancel up to 14 days before arrival and you get a full refund. Between 14 and 7 days before arrival the refund is 50%. From 7 days before, and in case of no-show, there is no refund. Refunds go back to the card used for the payment, usually within 5 to 10 working days.'],
+        ['Is the city tax included in the price at Mont°6?',
+            'No. The Cefalù council charges a city tax of €2 per person per night, capped at 5 nights, paid in cash on arrival. Everything else is included in the total shown on the site.'],
     ].map(([q, a]) => ({
         '@type': 'Question',
         name: q,
