@@ -23,6 +23,7 @@ export function onRequestOptions() {
 }
 
 export async function onRequestGet({ request, env }) {
-    const bookedDates = await getBookedRanges({ request, env });
-    return new Response(JSON.stringify(bookedDates), { headers: JSON_HEADERS });
+    const { ranges, partial } = await getBookedRanges({ request, env });
+    // partial = una fonte non ha risposto: il client lo dice all'ospite
+    return new Response(JSON.stringify({ ranges, partial }), { headers: JSON_HEADERS });
 }

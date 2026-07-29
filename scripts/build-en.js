@@ -107,8 +107,6 @@ function buildIndex() {
     html = html.replace(/href="\/privacy\.html"/g, 'href="/en/privacy.html"');
     html = html.replace('<head>', '<head>\n    <!-- Generato da scripts/build-en.js: non modificare a mano, si scrive in /index.html -->');
 
-    fs.mkdirSync(OUT_DIR, { recursive: true });
-    fs.writeFileSync(path.join(OUT_DIR, 'index.html'), html);
     return html;
 }
 
@@ -116,25 +114,56 @@ function buildPrivacy() {
     let html = fs.readFileSync(path.join(ROOT, 'privacy.html'), 'utf8');
     html = html
         .replace('<html lang="it" data-lang="it">', '<html lang="en" data-lang="en">')
-        .replace(/<title>[^<]*<\/title>/, '<title>Mont°6 — Privacy Policy</title>');
-    html = absolutePaths(html);
-    fs.writeFileSync(path.join(OUT_DIR, 'privacy.html'), html);
+        .replace(/<title>[^<]*<\/title>/, '<title>Mont°6 — Privacy Policy</title>')
+        // "Torna alla home" da /en/privacy.html deve portare alla home inglese
+        .replace('href="index.html"', 'href="/en/"');
+    return absolutePaths(html);
+}
+
+/**
+ * Da /en/ ogni percorso relativo punta dentro /en/, dove non c'è nulla:
+ * Cloudflare risponde 200 con l'HTML di fallback e il browser si trova una
+ * pagina al posto di un'immagine o di un foglio di stile. Qui elenchiamo
+ * ogni riferimento che non parte da "/" o da un protocollo.
+ */
+function relativeRefs(html) {
+    const bad = [];
+    const push = (v) => {
+        const t = v.trim();
+        if (t && !/^(\/|https?:|#|data:|mailto:|tel:|whatsapp:)/.test(t)) bad.push(t);
+    };
+    for (const m of html.matchAll(/(?:href|src)="([^"]+)"/g)) push(m[1]);
+    for (const m of html.matchAll(/(?:srcset|imagesrcset)="([^"]+)"/g)) {
+        m[1].split(',').forEach((part) => push(part.trim().split(/\s+/)[0]));
+    }
+    for (const m of html.matchAll(/url\(['"]?([^'")]+)['"]?\)/g)) push(m[1]);
+    return [...new Set(bad)];
 }
 
 const out = buildIndex();
-buildPrivacy();
+const outPrivacy = buildPrivacy();
 
-// Controlli minimi: se saltano, la pagina inglese è rotta e non va pubblicata
+// I controlli girano PRIMA di scrivere: una build fallita non deve lasciare
+// su disco file rotti pronti per il "git add ." di pubblica.bat.
+const relIndex = relativeRefs(out);
+const relPrivacy = relativeRefs(outPrivacy);
 const checks = [
     ['lang inglese', out.includes('<html lang="en" data-lang="en">')],
     ['canonical /en/', out.includes('href="https://mont6cefalu.it/en/"')],
     ['hreflang presenti', (out.match(/rel="alternate" hreflang/g) || []).length === 3],
-    // Ogni "img/" e "vendor/" deve essere preceduto da "/": copre anche srcset
-    ['nessun percorso relativo', !/[^/]img\//.test(out) && !/[^/]vendor\//.test(out)],
+    ['nessun percorso relativo (index)', relIndex.length === 0, relIndex.join(', ')],
+    ['nessun percorso relativo (privacy)', relPrivacy.length === 0, relPrivacy.join(', ')],
     ['FAQ in inglese', out.includes('What are the check-in and check-out times')],
     ['switcher EN attivo', out.includes('class="lang-btn active" href="/en/"')],
 ];
 const failed = checks.filter(([, ok]) => !ok);
-failed.forEach(([name]) => console.error('FALLITO: ' + name));
-if (failed.length) process.exit(1);
+failed.forEach(([name, , detail]) => console.error('FALLITO: ' + name + (detail ? ' -> ' + detail : '')));
+if (failed.length) {
+    console.error('Build interrotta: en/ non e stato toccato.');
+    process.exit(1);
+}
+
+fs.mkdirSync(OUT_DIR, { recursive: true });
+fs.writeFileSync(path.join(OUT_DIR, 'index.html'), out);
+fs.writeFileSync(path.join(OUT_DIR, 'privacy.html'), outPrivacy);
 console.log('en/index.html + en/privacy.html generati (' + checks.length + ' controlli ok)');

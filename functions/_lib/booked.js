@@ -17,6 +17,9 @@ function shiftISO(iso, days) {
 
 export async function getBookedRanges({ request, env }) {
     const ranges = [];
+    // Se una fonte non risponde, la disponibilita' che restituiamo e' INCOMPLETA:
+    // dire "libero" quando non lo sappiamo porta a doppie prenotazioni.
+    let partial = false;
 
     // 1. Date bloccate manualmente (file statico, estremi già inclusivi)
     try {
@@ -30,6 +33,7 @@ export async function getBookedRanges({ request, env }) {
             }
         }
     } catch (e) {
+        partial = true;
         console.error('Errore nella lettura di blocked-dates.json:', e);
     }
 
@@ -61,9 +65,11 @@ export async function getBookedRanges({ request, env }) {
                     }
                 }
             } else {
+                partial = true;
                 console.error(`Errore caricamento calendario ${feed.name}. Status: ${response.status}`);
             }
         } catch (err) {
+            partial = true;
             console.error(`Errore durante il recupero del calendario ${feed.name}:`, err);
         }
     }
@@ -81,11 +87,12 @@ export async function getBookedRanges({ request, env }) {
                 }
             }
         } catch (e) {
+            partial = true;
             console.error('Errore lettura prenotazioni D1:', e);
         }
     }
 
-    return ranges;
+    return { ranges, partial };
 }
 
 /**

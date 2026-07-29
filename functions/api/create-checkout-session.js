@@ -73,7 +73,13 @@ export async function onRequestPost({ request, env }) {
         // si sovrappone a date già occupate (manuali, iCal o prenotazioni dirette).
         const toISO = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         try {
-            const booked = await getBookedRanges({ request, env });
+            const { ranges: booked, partial } = await getBookedRanges({ request, env });
+            if (partial) {
+                // Meglio una prenotazione rimandata che una casa venduta due volte
+                return json(409, {
+                    error: 'In questo momento non riesco a verificare la disponibilità. Scrivimi su WhatsApp e confermo io. / I cannot verify availability right now — message me on WhatsApp and I will confirm.',
+                });
+            }
             if (overlapsBooked(toISO(startDate), toISO(endDate), booked)) {
                 return json(409, {
                     error: 'Le date selezionate non sono più disponibili. Aggiorna il calendario e scegli altre date. / The selected dates are no longer available — please refresh the calendar and pick different dates.',

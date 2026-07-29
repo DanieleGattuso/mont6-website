@@ -246,6 +246,10 @@ function initBookingForm() {
         showMonths: window.innerWidth > 768 ? 2 : 1,
         rangeSeparator: SEP,
         onChange: function(selectedDates) {
+            // Scelto l'arrivo, il giorno in cui inizia la prenotazione successiva
+            // torna selezionabile: quella mattina e' una partenza valida.
+            applyDisabled(selectedDates.length === 1 ? selectedDates[0] : null);
+
             // Dynamic price calculation when both dates are selected
             if (selectedDates.length === 2 && priceBox) {
                 const start = selectedDates[0];
@@ -278,22 +282,53 @@ function initBookingForm() {
         }
     });
 
+    // Notti occupate: estremi INCLUSI (from e to sono entrambe notti gia' vendute)
+    let bookedRanges = [];
+    const addDays = (date, n) => {
+        const d = new Date(date);
+        d.setDate(d.getDate() + n);
+        return d;
+    };
+
+    /**
+     * Il giorno in cui inizia la prenotazione di qualcun altro e' comunque una
+     * PARTENZA valida: chi e' arrivato prima esce quella mattina. Tenendolo
+     * disabilitato, un buco di due notti fra due prenotazioni diventa
+     * invendibile dal sito (il server invece lo accetta: booked.js usa
+     * lastNight = checkOut - 1). Quindi, quando l'arrivo e' gia' scelto,
+     * liberiamo il primo giorno del soggiorno successivo.
+     * Le notti restanti di quel soggiorno restano disabilitate, e flatpickr
+     * non consente intervalli che scavalcano giorni disabilitati.
+     */
+    const applyDisabled = (checkIn) => {
+        const next = checkIn
+            ? bookedRanges.filter(r => r.from > checkIn).sort((a, b) => a.from - b.from)[0]
+            : null;
+        const list = bookedRanges
+            .map(r => (r === next ? { from: addDays(r.from, 1), to: r.to } : r))
+            .filter(r => r.from <= r.to);
+
+        // Oltre la prenotazione successiva non si va: senza questo sbarramento
+        // si potrebbe selezionare una partenza al di la' di essa, scavalcando
+        // notti gia' vendute (flatpickr da solo lo impedisce al passaggio del
+        // mouse, che sul telefono non esiste).
+        if (next) list.push({ from: addDays(next.from, 1), to: new Date(2100, 0, 1) });
+
+        fp.set('disable', list);
+        fp.redraw();
+    };
+
     // Load blocked dates from server
     const updateCalendarDisabledDates = (bookedDates) => {
         if (Array.isArray(bookedDates)) {
-            const formattedDates = bookedDates.map(range => {
-                if (range.from && range.to) {
-                    const [fY, fM, fD] = range.from.split('-');
-                    const [tY, tM, tD] = range.to.split('-');
-                    return {
-                        from: new Date(fY, fM - 1, fD),
-                        to: new Date(tY, tM - 1, tD)
-                    };
-                }
-                return range;
-            });
-            fp.set('disable', formattedDates);
-            fp.redraw();
+            bookedRanges = bookedDates
+                .filter(r => r && r.from && r.to)
+                .map(r => {
+                    const [fY, fM, fD] = r.from.split('-');
+                    const [tY, tM, tD] = r.to.split('-');
+                    return { from: new Date(fY, fM - 1, fD), to: new Date(tY, tM - 1, tD) };
+                });
+            applyDisabled(fp.selectedDates.length === 1 ? fp.selectedDates[0] : null);
         }
     };
 
@@ -302,8 +337,16 @@ function initBookingForm() {
             if (!response.ok) throw new Error("Serverless API non attiva");
             return response.json();
         })
-        .then(bookedDates => {
-            updateCalendarDisabledDates(bookedDates);
+        .then(data => {
+            // L'API risponde { ranges, partial }; accetta anche il vecchio array
+            // per non rompere nulla nei minuti del deploy.
+            updateCalendarDisabledDates(Array.isArray(data) ? data : (data && data.ranges) || []);
+            if (data && data.partial) {
+                // Una fonte non ha risposto: il calendario potrebbe mostrare
+                // libere delle date che non lo sono. Meglio dirlo.
+                say('Sto ancora aggiornando la disponibilità: se le date che vuoi risultano libere, confermale su WhatsApp prima di pagare.',
+                    'Availability is still syncing: if your dates look free, confirm them on WhatsApp before paying.');
+            }
         })
         .catch(err => {
             console.warn("Funzione serverless non disponibile. Fallback locale:", err.message);
