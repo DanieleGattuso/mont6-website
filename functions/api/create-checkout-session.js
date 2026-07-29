@@ -38,13 +38,15 @@ export function onRequestOptions() {
 export async function onRequestPost({ request, env }) {
     try {
         if (!env.STRIPE_SECRET_KEY) {
-            return json(500, { error: 'Pagamento non configurato: chiave Stripe mancante sul server.' });
+            return json(500, { error: 'Pagamento non configurato: chiave Stripe mancante sul server. / Payment is not configured on the server.' });
         }
 
         const { checkIn, checkOut, guests, lang } = await request.json();
+        const isEn = lang === 'en';
+        const t = (it, en) => (isEn ? en : it);
 
         if (!checkIn || !checkOut) {
-            return json(400, { error: 'Date di Check-in e Check-out obbligatorie.' });
+            return json(400, { error: t('Date di check-in e check-out obbligatorie.', 'Check-in and check-out dates are required.') });
         }
 
         // Converte "dd/mm/yyyy" in oggetto Date
@@ -58,15 +60,15 @@ export async function onRequestPost({ request, env }) {
         const totalNights = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
 
         if (!(totalNights > 0)) {
-            return json(400, { error: 'La data di check-out deve essere successiva al check-in.' });
+            return json(400, { error: t('La data di check-out deve essere successiva al check-in.', 'The check-out date must be after the check-in date.') });
         }
         if (totalNights < 2) {
-            return json(400, { error: 'Il soggiorno minimo per Mont°6 è di 2 notti.' });
+            return json(400, { error: t('Il soggiorno minimo per Mont°6 è di 2 notti.', 'The minimum stay at Mont°6 is 2 nights.') });
         }
 
         const guestNum = parseInt(guests, 10);
         if (isNaN(guestNum) || guestNum < 1 || guestNum > 2) {
-            return json(400, { error: 'Il numero massimo di ospiti consentito è 2.' });
+            return json(400, { error: t('Il numero massimo di ospiti consentito è 2.', 'Mont°6 sleeps a maximum of 2 guests.') });
         }
 
         // Anti doppia-prenotazione: rifiuta il pagamento se il soggiorno
@@ -77,12 +79,12 @@ export async function onRequestPost({ request, env }) {
             if (partial) {
                 // Meglio una prenotazione rimandata che una casa venduta due volte
                 return json(409, {
-                    error: 'In questo momento non riesco a verificare la disponibilità. Scrivimi su WhatsApp e confermo io. / I cannot verify availability right now — message me on WhatsApp and I will confirm.',
+                    error: t('In questo momento non riesco a verificare la disponibilità. Scrivimi su WhatsApp e confermo io.', 'I cannot verify availability right now — message me on WhatsApp and I will confirm.'),
                 });
             }
             if (overlapsBooked(toISO(startDate), toISO(endDate), booked)) {
                 return json(409, {
-                    error: 'Le date selezionate non sono più disponibili. Aggiorna il calendario e scegli altre date. / The selected dates are no longer available — please refresh the calendar and pick different dates.',
+                    error: t('Le date selezionate non sono più disponibili: aggiorna il calendario e scegline altre.', 'Those dates have just been taken — please refresh the calendar and pick different ones.'),
                 });
             }
         } catch (e) {
@@ -110,7 +112,6 @@ export async function onRequestPost({ request, env }) {
 
         const origin = new URL(request.url).origin;
         // La pagina di pagamento Stripe parla la lingua da cui e' partito il cliente
-        const isEn = lang === 'en';
         const description = isEn
             ? `${checkIn} to ${checkOut} • ${totalNights} night${totalNights === 1 ? '' : 's'} • ${guests} guest${guests === '1' ? '' : 's'}`
             : `Dal ${checkIn} al ${checkOut} • ${totalNights} ${totalNights === 1 ? 'notte' : 'notti'} • ${guests} ${guests === '1' ? 'ospite' : 'ospiti'}`;
@@ -145,7 +146,7 @@ export async function onRequestPost({ request, env }) {
 
         if (!resp.ok) {
             console.error('Errore API Stripe:', session);
-            const msg = (session && session.error && session.error.message) || 'Errore nella creazione del pagamento.';
+            const msg = (session && session.error && session.error.message) || t('Non riesco ad avviare il pagamento. Riprova, oppure scrivimi su WhatsApp.', 'I could not start the payment. Please try again, or message me on WhatsApp.');
             return json(502, { error: msg });
         }
 

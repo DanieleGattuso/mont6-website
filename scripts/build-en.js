@@ -80,6 +80,9 @@ function buildIndex() {
             '<meta name="twitter:description" content="Due minuti dal Duomo, cinque dalla spiaggia. Prenotazione diretta.">',
             '<meta name="twitter:description" content="Two minutes from the Cathedral, five from the beach. Book direct.">'
         )
+        .replace('<meta property="og:image:alt" content="Il soggiorno di Mont°6: travi a vista, maioliche siciliane e luce calda">',
+                 '<meta property="og:image:alt" content="The living room at Mont°6: exposed beams, Sicilian tiles and warm light">')
+        .replace('"priceRange": "€90 - €220 a notte",', '"priceRange": "€90 - €220 per night",')
         .replace('<meta property="og:locale" content="it_IT">', '<meta property="og:locale" content="en_GB">')
         .replace('<meta property="og:locale:alternate" content="en_GB">', '<meta property="og:locale:alternate" content="it_IT">');
 
@@ -116,7 +119,10 @@ function buildPrivacy() {
         .replace('<html lang="it" data-lang="it">', '<html lang="en" data-lang="en">')
         .replace(/<title>[^<]*<\/title>/, '<title>Mont°6 — Privacy Policy</title>')
         // "Torna alla home" da /en/privacy.html deve portare alla home inglese
-        .replace('href="index.html"', 'href="/en/"');
+        .replace('href="index.html"', 'href="/en/"')
+        // canonical proprio: e' la stessa pagina a due indirizzi
+        .replace('<link rel="canonical" href="https://mont6cefalu.it/privacy">',
+                 '<link rel="canonical" href="https://mont6cefalu.it/en/privacy">');
     return absolutePaths(html);
 }
 
