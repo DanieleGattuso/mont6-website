@@ -103,19 +103,22 @@ export async function onRequestPost({ request, env }) {
         }
 
         const origin = new URL(request.url).origin;
-        const description = `Dal ${checkIn} al ${checkOut} • ${totalNights} ${totalNights === 1 ? 'notte' : 'notti'} • ${guests} ${guests === '1' ? 'ospite' : 'ospiti'}`;
+        // La pagina di pagamento Stripe parla la lingua da cui e' partito il cliente
+        const isEn = lang === 'en';
+        const description = isEn
+            ? `${checkIn} to ${checkOut} • ${totalNights} night${totalNights === 1 ? '' : 's'} • ${guests} guest${guests === '1' ? '' : 's'}`
+            : `Dal ${checkIn} al ${checkOut} • ${totalNights} ${totalNights === 1 ? 'notte' : 'notti'} • ${guests} ${guests === '1' ? 'ospite' : 'ospiti'}`;
 
         // Corpo form-encoded per l'API Stripe
         const params = new URLSearchParams();
         params.set('mode', 'payment');
         // Ritorno dal checkout nella stessa lingua da cui si e partiti
-        const isEn = lang === 'en';
         params.set('success_url', `${origin}/success.html?session_id={CHECKOUT_SESSION_ID}${isEn ? '&lang=en' : ''}`);
         params.set('cancel_url', `${origin}/${isEn ? 'en/' : ''}#booking`);
         params.set('line_items[0][quantity]', '1');
         params.set('line_items[0][price_data][currency]', 'eur');
         params.set('line_items[0][price_data][unit_amount]', String(totalAmountCent));
-        params.set('line_items[0][price_data][product_data][name]', 'Soggiorno presso Mont°6 Cefalù');
+        params.set('line_items[0][price_data][product_data][name]', isEn ? 'Stay at Mont°6 Cefalù' : 'Soggiorno presso Mont°6 Cefalù');
         params.set('line_items[0][price_data][product_data][description]', description);
         params.set('line_items[0][price_data][product_data][images][0]', 'https://mont6cefalu.it/img/_MG_4132.jpg');
         params.set('metadata[checkIn]', checkIn);
