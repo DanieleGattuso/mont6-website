@@ -42,6 +42,7 @@
 
     /* Brand */
     --color-accent:        #A8854C;            /* antique bronze            */
+    --color-accent-deep:   #8C6B3A;            /* per fondi con testo bianco: 4.9:1 */
     --color-accent-hover:  #C2A063;            /* lifted gold               */
     --color-accent-light:  rgba(168, 133, 76, 0.08);
     --color-accent-line:   rgba(168, 133, 76, 0.45);
@@ -177,7 +178,7 @@ p { font-weight: 400; }
 .cookie-content p { font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.78); }
 .cookie-content a { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; }
 .btn-cookie {
-    background: var(--color-accent); color: #fff; border: none;
+    background: var(--color-accent-deep); color: #fff; border: none;
     padding: 0.85rem 2.2rem; border-radius: var(--radius-sm);
     font-family: var(--font-body); font-size: 0.78rem; font-weight: 500;
     text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer;
@@ -238,7 +239,7 @@ p { font-weight: 400; }
 
 /* Nav Booking Button */
 .btn-nav-book {
-    background-color: var(--color-accent); color: #fff !important;
+    background-color: var(--color-accent-deep); color: #fff !important;
     padding: 0.8rem 1.6rem; border-radius: var(--radius-sm);
     font-weight: 500; transition: background-color 0.4s, transform 0.4s, box-shadow 0.4s;
 }
@@ -369,7 +370,7 @@ p { font-weight: 400; }
 
 /* Hero CTA */
 .btn-hero {
-    background: var(--color-accent); border: none; color: #fff;
+    background: var(--color-accent-deep); border: none; color: #fff;
     padding: 1.25rem 3.2rem; font-size: 0.82rem;
     box-shadow: none;
 }
@@ -691,7 +692,7 @@ p { font-weight: 400; }
 }
 .btn-whatsapp { background: var(--color-bg-dark); color: #fff; }
 .btn-whatsapp:hover { background: #2A3630; }
-.btn-stripe { background: var(--color-accent); color: #fff; }
+.btn-stripe { background: var(--color-accent-deep); color: #fff; }
 .btn-stripe:hover { background: var(--color-accent-hover); }
 .btn-outline { background: transparent; border: 1px solid var(--color-bg-dark); color: var(--color-bg-dark); }
 .btn-outline:hover { background: var(--color-bg-dark); color: #fff; }

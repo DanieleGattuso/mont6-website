@@ -4,6 +4,8 @@
 
 /**
  * CSS non critici caricati in async: non bloccano il primo paint.
+ * I percorsi sono ASSOLUTI: questo file e' condiviso fra / e /en/, un percorso
+ * relativo da /en/ punterebbe a /en/vendor/... dove Cloudflare risponde con HTML.
  * (flatpickr = calendario, glightbox = galleria: servono solo all'interazione)
  */
 function loadCss(href) {
@@ -20,7 +22,7 @@ function loadCss(href) {
 // flatpickr.min.css è nel <head> (serve prima dell'init del calendario).
 // glightbox serve solo all'apertura della galleria: caricato dopo il load.
 window.addEventListener('load', () => {
-    loadCss('vendor/glightbox/glightbox.min.css');
+    loadCss('/vendor/glightbox/glightbox.min.css');
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -50,10 +52,10 @@ function initMapLazy() {
         if (started) return;
         started = true;
         Promise.all([
-            loadCss('vendor/leaflet/leaflet.css'),
+            loadCss('/vendor/leaflet/leaflet.css'),
             new Promise((resolve) => {
                 const s = document.createElement('script');
-                s.src = 'vendor/leaflet/leaflet.js';
+                s.src = '/vendor/leaflet/leaflet.js';
                 s.onload = resolve;
                 s.onerror = resolve;
                 document.head.appendChild(s);
