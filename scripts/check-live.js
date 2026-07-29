@@ -94,9 +94,17 @@ const visibleText = () => {
             check('[it] testo italiano presente', /Due passi|Spiaggia|Ristoranti/.test(joined));
         }
 
-        // il calendario deve aprirsi con misure sane, non a tutto schermo
+        // il calendario deve aprirsi con misure sane, non a tutto schermo.
+        // Si apre via JS: aspettiamo che sia davvero aperto invece di sperare
+        // in un ritardo fisso (altrimenti il test fallisce a caso).
+        await page.evaluate(() => document.getElementById('booking').scrollIntoView());
         await page.click('#date-range').catch(() => {});
-        await new Promise((r) => setTimeout(r, 600));
+        await page
+            .waitForFunction(() => {
+                const c = document.querySelector('.flatpickr-calendar');
+                return c && c.classList.contains('open') && c.getBoundingClientRect().width > 0;
+            }, { timeout: 5000 })
+            .catch(() => {});
         const cal = await page.evaluate(() => {
             const c = document.querySelector('.flatpickr-calendar');
             if (!c) return null;
