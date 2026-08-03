@@ -583,24 +583,43 @@ function initCookieBanner() {
 /**
  * Floating CTA on Mobile — show after scrolling past hero
  */
+/**
+ * Barra "Prenota ora" fissa in basso, solo su telefono.
+ * Sparisce quando si arriva alla sezione prenotazione: li' i pulsanti veri ci
+ * sono gia', e soprattutto la barra copriva l'ultima riga del calendario
+ * rendendo NON toccabili quelle date (visto su iPhone reale).
+ */
 function initFloatingCTA() {
     const floatingCta = document.getElementById('floatingCta');
-    if (!floatingCta) return;
-    
     const heroSection = document.getElementById('home');
-    if (!heroSection) return;
-    
-    const heroHeight = heroSection.offsetHeight;
-    
-    window.addEventListener('scroll', () => {
-        if (window.innerWidth > 768) return; // Only on mobile
-        
-        if (window.scrollY > heroHeight * 0.7) {
-            floatingCta.classList.add('visible');
-        } else {
+    if (!floatingCta || !heroSection) return;
+
+    const booking = document.getElementById('booking');
+
+    const aggiorna = () => {
+        if (window.innerWidth > 768) {
             floatingCta.classList.remove('visible');
+            return;
         }
-    });
+
+        const passatoHero = window.scrollY > heroSection.offsetHeight * 0.7;
+
+        let dentroPrenotazione = false;
+        if (booking) {
+            const r = booking.getBoundingClientRect();
+            dentroPrenotazione = r.top < window.innerHeight && r.bottom > 0;
+        }
+
+        // Col calendario aperto la barra non deve mai comparire
+        const calendarioAperto = !!document.querySelector('.flatpickr-calendar.open');
+
+        floatingCta.classList.toggle('visible', passatoHero && !dentroPrenotazione && !calendarioAperto);
+    };
+
+    window.addEventListener('scroll', aggiorna, { passive: true });
+    window.addEventListener('resize', aggiorna);
+    document.addEventListener('click', () => setTimeout(aggiorna, 50)); // apertura/chiusura calendario
+    aggiorna();
 }
 
 /**

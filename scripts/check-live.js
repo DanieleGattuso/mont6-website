@@ -113,6 +113,23 @@ const visibleText = () => {
         });
         check(`[${lang}] calendario apre di misura giusta`, !!cal && cal.open && cal.w <= 400 && cal.nav, cal && `${cal.w}px`);
 
+        // La barra fissa "Prenota ora" non deve coprire il calendario: su iPhone
+        // rendeva non toccabile l'ultima riga di date.
+        const sovrapposizione = await page.evaluate(() => {
+            const c = document.querySelector('.flatpickr-calendar.open');
+            const bar = document.getElementById('floatingCta');
+            if (!c || !bar) return { ok: true };
+            const visibile = getComputedStyle(bar).transform !== 'matrix(1, 0, 0, 1, 0, 0)'
+                ? false
+                : bar.classList.contains('visible');
+            if (!visibile) return { ok: true };
+            const a = c.getBoundingClientRect();
+            const b = bar.getBoundingClientRect();
+            const copre = a.bottom > b.top && a.top < b.bottom;
+            return { ok: !copre, dettaglio: `calendario fino a ${Math.round(a.bottom)}px, barra da ${Math.round(b.top)}px` };
+        });
+        check(`[${lang}] la barra non copre il calendario`, sovrapposizione.ok, sovrapposizione.dettaglio);
+
         await page.close();
     }
 
