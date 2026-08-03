@@ -90,10 +90,12 @@ function buildIndex() {
         .replace('<meta property="og:locale" content="it_IT">', '<meta property="og:locale" content="en_GB">')
         .replace('<meta property="og:locale:alternate" content="en_GB">', '<meta property="og:locale:alternate" content="it_IT">');
 
-    // Selettore lingua: su /en/ è EN a essere attivo
+    // Selettore lingua: su /en/ è EN a essere attivo.
+    // Il link IT porta ?lang=it perché è una scelta esplicita: senza, chi ha il
+    // browser in inglese verrebbe subito rispedito su /en/ dal middleware.
     html = html
         .replace(/<a class="lang-btn active" href="\/" hreflang="it" aria-current="true">IT<\/a>/g,
-            '<a class="lang-btn" href="/" hreflang="it">IT</a>')
+            '<a class="lang-btn" href="/?lang=it" hreflang="it">IT</a>')
         .replace(/<a class="lang-btn" href="\/en\/" hreflang="en">EN<\/a>/g,
             '<a class="lang-btn active" href="/en/" hreflang="en" aria-current="true">EN</a>');
 
