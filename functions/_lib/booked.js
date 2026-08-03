@@ -31,6 +31,11 @@ export async function getBookedRanges({ request, env }) {
                     if (r && r.from && r.to) ranges.push({ from: r.from, to: r.to });
                 }
             }
+        } else {
+            // Stesso trattamento dei feed iCal: se la fonte non risponde non
+            // possiamo dire "libero". E' l'unica fonte sempre presente.
+            partial = true;
+            console.error('blocked-dates.json non disponibile. Status:', res.status);
         }
     } catch (e) {
         partial = true;
@@ -92,7 +97,17 @@ export async function getBookedRanges({ request, env }) {
         }
     }
 
-    return { ranges, partial };
+    // La stessa prenotazione torna indietro dai portali (esportiamo il nostro
+    // calendario e loro ce lo rimandano): senza deduplica il calendario sbaglia.
+    const visti = new Set();
+    const unici = ranges.filter((r) => {
+        const chiave = `${r.from}|${r.to}`;
+        if (visti.has(chiave)) return false;
+        visti.add(chiave);
+        return true;
+    });
+
+    return { ranges: unici, partial };
 }
 
 /**

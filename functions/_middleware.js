@@ -36,9 +36,13 @@ export function decide({ pathname, langParam, cookie = '', acceptLanguage = '', 
 
 const COOKIE = (lang) => `mont6_lang=${lang}; Path=/; Max-Age=31536000; SameSite=Lax`;
 
-function redirectToEn(origin, setCookie) {
+function redirectToEn(url, setCookie) {
+    // La query va conservata (utm_source e simili), tolto solo il nostro lang=
+    const query = new URLSearchParams(url.search);
+    query.delete('lang');
+    const coda = query.toString();
     const headers = new Headers({
-        Location: `${origin}/en/`,
+        Location: `${url.origin}/en/${coda ? '?' + coda : ''}`,
         'Cache-Control': 'no-store',
         Vary: 'Accept-Language, Cookie',
     });
@@ -58,8 +62,8 @@ export async function onRequest(context) {
             userAgent: request.headers.get('user-agent') || '',
         });
 
-        if (action === 'redirect') return redirectToEn(url.origin, false);
-        if (action === 'redirect-remember-en') return redirectToEn(url.origin, true);
+        if (action === 'redirect') return redirectToEn(url, false);
+        if (action === 'redirect-remember-en') return redirectToEn(url, true);
 
         const response = await next();
         if (action === 'pass-remember-it') {

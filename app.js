@@ -254,46 +254,61 @@ function initBookingForm() {
             // Scelto l'arrivo, il giorno in cui inizia la prenotazione successiva
             // torna selezionabile: quella mattina e' una partenza valida.
             applyDisabled(selectedDates.length === 1 ? selectedDates[0] : null);
-
-            // Dynamic price calculation when both dates are selected
-            if (selectedDates.length === 2 && priceBox) {
-                const start = selectedDates[0];
-                const end = selectedDates[1];
-                const { total, nightCount, avgNightly } = calculatePrice(start, end);
-
-                if (nightCount > 0) {
-                    priceNightly.textContent = `€${avgNightly}`;
-                    priceTotal.textContent = `€${total}`;
-
-                    // Numero notti nell'etichetta + risparmio stimato vs portali (~15% di commissioni)
-                    const lang = document.documentElement.getAttribute('data-lang') || 'it';
-                    const nightsLabel = document.getElementById('priceNights');
-                    if (nightsLabel) {
-                        nightsLabel.textContent = lang === 'en'
-                            ? `${nightCount} nights × average per night`
-                            : `${nightCount} notti × prezzo medio a notte`;
-                    }
-                    const savings = Math.round(total * 0.15);
-                    const savingsIt = document.getElementById('savingsAmount');
-                    const savingsEn = document.getElementById('savingsAmountEn');
-                    if (savingsIt) savingsIt.textContent = `€${savings}`;
-                    if (savingsEn) savingsEn.textContent = `€${savings}`;
-
-                    // Imposta di soggiorno: €2 a persona per notte, si paga in Comune
-                    // solo per le prime 5 notti. Non entra nel pagamento Stripe.
-                    const tax = TOURIST_TAX_PER_NIGHT * Math.min(nightCount, TOURIST_TAX_MAX_NIGHTS) * Number(guests());
-                    ['taxAmount', 'taxAmountEn'].forEach(id => {
-                        const el = document.getElementById(id);
-                        if (el) el.textContent = `€${tax}`;
-                    });
-
-                    priceBox.classList.add('visible');
-                }
-            } else if (priceBox) {
-                priceBox.classList.remove('visible');
-            }
+            refreshPriceBox();
         }
     });
+
+    /**
+     * Riempie il box del prezzo con la selezione corrente.
+     * Sta in una funzione sua perche' va rifatto anche quando cambia il numero
+     * di ospiti, non solo quando cambiano le date: l'imposta di soggiorno
+     * dipende da entrambi.
+     */
+    function refreshPriceBox() {
+        if (!priceBox) return;
+        const selezione = fp.selectedDates;
+        if (selezione.length !== 2) {
+            priceBox.classList.remove('visible');
+            return;
+        }
+
+        const { total, nightCount, avgNightly } = calculatePrice(selezione[0], selezione[1]);
+        if (nightCount <= 0) {
+            priceBox.classList.remove('visible');
+            return;
+        }
+
+        priceNightly.textContent = `€${avgNightly}`;
+        priceTotal.textContent = `€${total}`;
+
+        const lang = document.documentElement.getAttribute('data-lang') || 'it';
+        const nightsLabel = document.getElementById('priceNights');
+        if (nightsLabel) {
+            nightsLabel.textContent = lang === 'en'
+                ? `${nightCount} nights × average per night`
+                : `${nightCount} notti × prezzo medio a notte`;
+        }
+
+        // Risparmio stimato rispetto ai portali (~15% di commissioni)
+        const savings = Math.round(total * 0.15);
+        ['savingsAmount', 'savingsAmountEn'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = `€${savings}`;
+        });
+
+        // Imposta di soggiorno: 2 € a persona per notte, solo per le prime 5
+        // notti, da pagare all'arrivo. Non entra nel pagamento Stripe.
+        const tax = TOURIST_TAX_PER_NIGHT * Math.min(nightCount, TOURIST_TAX_MAX_NIGHTS) * Number(guests());
+        ['taxAmount', 'taxAmountEn'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = `€${tax}`;
+        });
+
+        priceBox.classList.add('visible');
+    }
+
+    // Cambiando il numero di ospiti cambia l'imposta: va ricalcolata
+    guestSelect.addEventListener('change', refreshPriceBox);
 
     // Notti occupate: estremi INCLUSI (from e to sono entrambe notti gia' vendute)
     let bookedRanges = [];
@@ -317,8 +332,14 @@ function initBookingForm() {
         const next = checkIn
             ? bookedRanges.filter(r => r.from > checkIn).sort((a, b) => a.from - b.from)[0]
             : null;
+        // Confronto per data e non per oggetto: la stessa prenotazione puo'
+        // arrivare due volte (la esportiamo ai portali e ci rientra), e liberarne
+        // una sola lascerebbe l'altra a bloccare il giorno di partenza.
+        const inizioProssimo = next ? +next.from : null;
         const list = bookedRanges
-            .map(r => (r === next ? { from: addDays(r.from, 1), to: r.to } : r))
+            .map(r => (inizioProssimo !== null && +r.from === inizioProssimo
+                ? { from: addDays(r.from, 1), to: r.to }
+                : r))
             .filter(r => r.from <= r.to);
 
         // Oltre la prenotazione successiva non si va: senza questo sbarramento
@@ -400,7 +421,9 @@ function initBookingForm() {
 
         const [checkIn, checkOut] = dates.split(SEP).map(d => d.trim());
         const toDate = (str) => { const [d, m, y] = str.split('/'); return new Date(y, m - 1, d); };
-        if ((toDate(checkOut) - toDate(checkIn)) / 86400000 < 2) {
+        // Notti di calendario, non ore: nel weekend del cambio d'ora un giorno
+        // dura 23 o 25 ore e un soggiorno legittimo verrebbe rifiutato.
+        if (Math.round((toDate(checkOut) - toDate(checkIn)) / 86400000) < 2) {
             say('Il soggiorno minimo è di 2 notti.', 'The minimum stay is 2 nights.');
             return null;
         }
@@ -413,8 +436,10 @@ function initBookingForm() {
     try {
         const saved = JSON.parse(sessionStorage.getItem(SEL_KEY) || 'null');
         if (saved && saved.dates && saved.dates.length === 2) {
-            fp.setDate(saved.dates, true, 'Y-m-d');
+            // Prima gli ospiti, poi le date: setDate fa scattare subito il
+            // ricalcolo, che deve gia' vedere il numero giusto di ospiti.
             if (saved.guests) guestSelect.value = saved.guests;
+            fp.setDate(saved.dates, true, 'Y-m-d');
         }
     } catch (e) { /* selezione non ripristinabile: si riparte dal calendario vuoto */ }
 

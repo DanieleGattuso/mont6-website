@@ -57,7 +57,7 @@ export async function onRequestPost({ request, env }) {
 
         const startDate = parseDate(checkIn);
         const endDate = parseDate(checkOut);
-        const totalNights = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+        const totalNights = Math.round((endDate - startDate) / (1000 * 60 * 60 * 24));
 
         if (!(totalNights > 0)) {
             return json(400, { error: t('La data di check-out deve essere successiva al check-in.', 'The check-out date must be after the check-in date.') });
@@ -93,13 +93,22 @@ export async function onRequestPost({ request, env }) {
             // ma lo registriamo: meglio una verifica manuale che una vendita persa.
         }
 
-        // Tariffe per mese (file statico servito da Cloudflare Pages)
+        // Tariffe per mese (file statico servito da Cloudflare Pages).
+        // Se non le leggiamo NON si tira a indovinare: il preventivo mostrato al
+        // cliente verrebbe da una tabella, l'addebito da un'altra.
         let prezzi = null;
         try {
             const r = await fetch(new URL('/prezzi.json', request.url));
             if (r.ok) prezzi = await r.json();
+            else console.error('prezzi.json non disponibile. Status:', r.status);
         } catch (e) {
             console.error('Errore lettura prezzi.json:', e);
+        }
+        if (!prezzi) {
+            return json(503, {
+                error: t('Non riesco a calcolare il prezzo in questo momento. Scrivimi su WhatsApp e ti confermo io.',
+                         'I cannot work out the price right now — message me on WhatsApp and I will confirm.'),
+            });
         }
 
         // Totale notte per notte (gestisce soggiorni a cavallo di due mesi)

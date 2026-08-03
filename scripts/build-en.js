@@ -96,7 +96,7 @@ function buildIndex() {
     html = html
         .replace(/<a class="lang-btn active" href="\/" hreflang="it" aria-current="true">IT<\/a>/g,
             '<a class="lang-btn" href="/?lang=it" hreflang="it">IT</a>')
-        .replace(/<a class="lang-btn" href="\/en\/" hreflang="en">EN<\/a>/g,
+        .replace(/<a class="lang-btn" href="\/\?lang=en" hreflang="en">EN<\/a>/g,
             '<a class="lang-btn active" href="/en/" hreflang="en" aria-current="true">EN</a>');
 
     // Dati strutturati: lingua, URL e FAQ in inglese
@@ -159,6 +159,10 @@ const outPrivacy = buildPrivacy();
 // su disco file rotti pronti per il "git add ." di pubblica.bat.
 const relIndex = relativeRefs(out);
 const relPrivacy = relativeRefs(outPrivacy);
+// Ogni sostituzione qui sopra è una stringa letterale: se il testo italiano
+// cambia, la .replace() non trova più nulla e fallisce IN SILENZIO, lasciando
+// la pagina inglese con pezzi in italiano. Questi controlli sono la rete:
+// verificano il risultato, non l'intenzione.
 const checks = [
     ['lang inglese', out.includes('<html lang="en" data-lang="en">')],
     ['canonical /en/', out.includes('href="https://mont6cefalu.it/en/"')],
@@ -166,7 +170,21 @@ const checks = [
     ['nessun percorso relativo (index)', relIndex.length === 0, relIndex.join(', ')],
     ['nessun percorso relativo (privacy)', relPrivacy.length === 0, relPrivacy.join(', ')],
     ['FAQ in inglese', out.includes('What are the check-in and check-out times')],
+    ['FAQ complete', (out.match(/"@type": "Question"/g) || []).length === EN_FAQ.mainEntity.length],
     ['switcher EN attivo', out.includes('class="lang-btn active" href="/en/"')],
+    ['switcher IT porta ?lang=it', out.includes('href="/?lang=it"')],
+    ['title tradotto', /<title>[^<]*Apartment[^<]*<\/title>/.test(out)],
+    ['description tradotta', /<meta name="description" content="Self-contained apartment/.test(out)],
+    ['og:title tradotto', out.includes('<meta property="og:title" content="Mont°6 — Apartment in the old town of Cefalù">')],
+    ['og:description tradotta', out.includes('<meta property="og:description" content="Two minutes from the Cathedral, five from the beach. Book direct, no booking fees.">')],
+    ['twitter:title tradotto', out.includes('<meta name="twitter:title" content="Mont°6 — Apartment in the old town of Cefalù">')],
+    ['twitter:description tradotta', out.includes('<meta name="twitter:description" content="Two minutes from the Cathedral, five from the beach. Book direct.">')],
+    ['og:locale invertito', out.includes('og:locale" content="en_GB"') && out.includes('og:locale:alternate" content="it_IT"')],
+    ['og:image:alt tradotto', out.includes('exposed beams, Sicilian tiles')],
+    ['priceRange tradotto', out.includes('"€90 - €220 per night"')],
+    ['inLanguage impostato', out.includes('"inLanguage": "en"')],
+    ['descrizione JSON-LD tradotta', out.includes('"description": "Self-contained apartment in the pedestrian')],
+    ['privacy: canonical inglese', outPrivacy.includes('https://mont6cefalu.it/en/privacy')],
 ];
 const failed = checks.filter(([, ok]) => !ok);
 failed.forEach(([name, , detail]) => console.error('FALLITO: ' + name + (detail ? ' -> ' + detail : '')));

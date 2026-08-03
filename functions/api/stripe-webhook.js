@@ -114,6 +114,44 @@ export async function onRequestPost({ request, env }) {
     let event;
     try { event = JSON.parse(payload); } catch { return new Response('Bad JSON', { status: 400 }); }
 
+    // Rimborso: le condizioni pubblicate sul sito prevedono cancellazioni, quindi
+    // le date devono tornare libere. Stripe manda payment_intent, non l'id della
+    // sessione: lo ritroviamo interrogando l'API, cosi' non serve toccare il database.
+    if (event.type === 'charge.refunded' && env.DB) {
+        const charge = event.data.object;
+        const intent = charge.payment_intent;
+        const rimborsoTotale = charge.amount_refunded >= charge.amount;
+        try {
+            const r = await fetch(
+                `https://api.stripe.com/v1/checkout/sessions?payment_intent=${intent}&limit=1`,
+                { headers: { Authorization: `Bearer ${env.STRIPE_SECRET_KEY}` } }
+            );
+            const data = await r.json();
+            const sessionId = data && data.data && data.data[0] && data.data[0].id;
+            if (sessionId && rimborsoTotale) {
+                await env.DB.prepare(
+                    `UPDATE bookings SET status = 'cancelled' WHERE stripe_session_id = ?`
+                ).bind(sessionId).run();
+                await sendEmail(env, {
+                    to: env.BOOKING_HOST_EMAIL,
+                    subject: 'Prenotazione rimborsata: date tornate disponibili',
+                    html: `<p>Rimborso totale registrato. La prenotazione ${esc(sessionId)} e' stata annullata e le sue date sono di nuovo prenotabili.</p>`,
+                });
+            } else if (sessionId) {
+                // Rimborso parziale (la penale del 50%): il soggiorno resta valido,
+                // le date restano bloccate. Avvisiamo l'host, decide lui.
+                await sendEmail(env, {
+                    to: env.BOOKING_HOST_EMAIL,
+                    subject: 'Rimborso PARZIALE registrato: le date restano bloccate',
+                    html: `<p>Rimborso parziale sulla prenotazione ${esc(sessionId)}. Le date NON sono state liberate: se la cancellazione e' definitiva, rimborsa il resto oppure liberale a mano in blocked-dates.json.</p>`,
+                });
+            }
+        } catch (e) {
+            console.error('Errore gestione rimborso:', e);
+            return new Response('Errore gestione rimborso', { status: 500 });
+        }
+    }
+
     // 2. Gestiamo solo il pagamento completato
     if (event.type === 'checkout.session.completed') {
         const s = event.data.object;
@@ -126,20 +164,45 @@ export async function onRequestPost({ request, env }) {
             const email = s.customer_details?.email || '';
             const name = s.customer_details?.name || '';
 
-            // 2a. Salva nel database (idempotente grazie a UNIQUE su stripe_session_id)
-            if (env.DB) {
-                try {
-                    await env.DB.prepare(
-                        `INSERT OR IGNORE INTO bookings
-                         (stripe_session_id, check_in, check_out, guests, amount_total, currency, guest_email, guest_name)
-                         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-                    ).bind(
-                        s.id, checkInISO, checkOutISO, parseInt(guests, 10) || null,
-                        s.amount_total || 0, s.currency || 'eur', email, name
-                    ).run();
-                } catch (e) {
-                    console.error('Errore inserimento D1:', e);
+            // 2a. Salva nel database PRIMA di confermare qualsiasi cosa.
+            // Se questa scrittura non riesce, la prenotazione non blocca le date:
+            // rispondiamo 500 cosi' Stripe ritenta (per 3 giorni) e avvisa. Confermare
+            // all'ospite un soggiorno che il sistema non ha registrato e' peggio.
+            if (!env.DB) {
+                console.error('D1 non collegato: prenotazione pagata NON registrata', s.id);
+                await sendEmail(env, {
+                    to: env.BOOKING_HOST_EMAIL,
+                    subject: `ATTENZIONE: pagamento ricevuto ma NON registrato (${checkInISO} → ${checkOutISO})`,
+                    html: hostEmailHtml({ name, email, checkIn: checkInISO, checkOut: checkOutISO, guests, total }),
+                });
+                return new Response('DB non disponibile', { status: 500 });
+            }
+
+            try {
+                const res = await env.DB.prepare(
+                    `INSERT OR IGNORE INTO bookings
+                     (stripe_session_id, check_in, check_out, guests, amount_total, currency, guest_email, guest_name)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+                ).bind(
+                    s.id, checkInISO, checkOutISO, parseInt(guests, 10) || null,
+                    s.amount_total || 0, s.currency || 'eur', email, name
+                ).run();
+
+                // Stripe ritenta lo stesso evento dopo un nostro 500: se la riga
+                // c'era gia', le email erano gia' partite. Non le mandiamo due volte.
+                if (res && res.meta && res.meta.changes === 0) {
+                    return new Response(JSON.stringify({ received: true, duplicate: true }), {
+                        status: 200, headers: { 'Content-Type': 'application/json' },
+                    });
                 }
+            } catch (e) {
+                console.error('Errore inserimento D1:', e);
+                await sendEmail(env, {
+                    to: env.BOOKING_HOST_EMAIL,
+                    subject: `ATTENZIONE: pagamento ricevuto ma NON registrato (${checkInISO} → ${checkOutISO})`,
+                    html: hostEmailHtml({ name, email, checkIn: checkInISO, checkOut: checkOutISO, guests, total }),
+                });
+                return new Response('Errore scrittura prenotazione', { status: 500 });
             }
 
             // 2b. Email ospite + notifica host
