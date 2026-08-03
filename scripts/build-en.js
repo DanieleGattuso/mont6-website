@@ -39,7 +39,7 @@ const EN_FAQ = {
         ['Are linens and towels included?',
             'Yes: bed linen, towels and a set of toiletries are always included in the price, along with a few breakfast basics.'],
         ['What is the minimum stay at Mont°6?',
-            'Two nights. In high season (July and August) three nights may be required. Rates run from €90 to €220 a night depending on the month.'],
+            'Two nights. In high season (July and August) three nights may be required. Rates run from €82 to €200 a night depending on the month.'],
         ['Is it cheaper to book Mont°6 directly?',
             'Yes. Booking direct on mont6cefalu.it saves up to 15% against the portals, which add booking and service fees. You also get a bottle of Sicilian wine on arrival and flexible check-in and check-out times when the apartment is free.'],
         ['Can I cancel my booking at Mont°6, and how do refunds work?',
@@ -64,7 +64,7 @@ function buildIndex() {
         )
         .replace(
             /<meta name="description" content="[^"]*">/,
-            '<meta name="description" content="Self-contained apartment in the old town of Cefalù: two minutes on foot from the Cathedral, five from the beach. One bedroom, air conditioning, proper kitchen. From €90 a night, booked direct with no fees.">'
+            '<meta name="description" content="Self-contained apartment in the old town of Cefalù: two minutes on foot from the Cathedral, five from the beach. One bedroom, air conditioning, proper kitchen. From €82 a night, booked direct with no fees.">'
         )
         .replace('<link rel="canonical" href="https://mont6cefalu.it/">', '<link rel="canonical" href="https://mont6cefalu.it/en/">')
         .replace('<meta property="og:url" content="https://mont6cefalu.it">', '<meta property="og:url" content="https://mont6cefalu.it/en/">')
@@ -86,7 +86,7 @@ function buildIndex() {
         )
         .replace('<meta property="og:image:alt" content="Il soggiorno di Mont°6: travi a vista, maioliche siciliane e luce calda">',
                  '<meta property="og:image:alt" content="The living room at Mont°6: exposed beams, Sicilian tiles and warm light">')
-        .replace('"priceRange": "€90 - €220 a notte",', '"priceRange": "€90 - €220 per night",')
+        .replace('"priceRange": "€82 - €200 a notte",', '"priceRange": "€82 - €200 per night",')
         .replace('<meta property="og:locale" content="it_IT">', '<meta property="og:locale" content="en_GB">')
         .replace('<meta property="og:locale:alternate" content="en_GB">', '<meta property="og:locale:alternate" content="it_IT">');
 
@@ -181,7 +181,7 @@ const checks = [
     ['twitter:description tradotta', out.includes('<meta name="twitter:description" content="Two minutes from the Cathedral, five from the beach. Book direct.">')],
     ['og:locale invertito', out.includes('og:locale" content="en_GB"') && out.includes('og:locale:alternate" content="it_IT"')],
     ['og:image:alt tradotto', out.includes('exposed beams, Sicilian tiles')],
-    ['priceRange tradotto', out.includes('"€90 - €220 per night"')],
+    ['priceRange tradotto', out.includes('"€82 - €200 per night"')],
     ['inLanguage impostato', out.includes('"inLanguage": "en"')],
     ['descrizione JSON-LD tradotta', out.includes('"description": "Self-contained apartment in the pedestrian')],
     ['privacy: canonical inglese', outPrivacy.includes('https://mont6cefalu.it/en/privacy')],

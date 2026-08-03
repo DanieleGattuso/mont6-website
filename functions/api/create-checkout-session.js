@@ -11,11 +11,17 @@ const MONTHS = [
     'Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
     'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre',
 ];
-const FALLBACK_PRICE = 150;
-
 function getPriceForDate(date, prezzi) {
-    const name = MONTHS[date.getMonth()];
-    return (prezzi && prezzi[name]) || FALLBACK_PRICE;
+    // Nessun valore di ripiego: un mese mancante non deve diventare una tariffa
+    // inventata diversa da quella mostrata all'ospite. La completezza della
+    // tabella e' verificata prima, da tariffeComplete().
+    return prezzi[MONTHS[date.getMonth()]];
+}
+
+/** Tutti e dodici i mesi presenti, con un numero positivo. */
+function tariffeComplete(prezzi) {
+    if (!prezzi || typeof prezzi !== 'object') return false;
+    return MONTHS.every((m) => Number.isFinite(prezzi[m]) && prezzi[m] > 0);
 }
 
 function json(status, obj) {
@@ -104,7 +110,8 @@ export async function onRequestPost({ request, env }) {
         } catch (e) {
             console.error('Errore lettura prezzi.json:', e);
         }
-        if (!prezzi) {
+        if (!tariffeComplete(prezzi)) {
+            console.error('Tariffe incomplete o illeggibili: pagamento rifiutato');
             return json(503, {
                 error: t('Non riesco a calcolare il prezzo in questo momento. Scrivimi su WhatsApp e ti confermo io.',
                          'I cannot work out the price right now — message me on WhatsApp and I will confirm.'),

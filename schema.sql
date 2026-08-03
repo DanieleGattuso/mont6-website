@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS bookings (
     guest_name         TEXT,
     status             TEXT DEFAULT 'confirmed',
     -- gestione email del ciclo ospite (idea #5): timestamp di invio, NULL = non ancora inviata
+    sent_confirmation_at TEXT,             -- conferma di pagamento: NULL = non ancora inviata
     sent_prearrival_at TEXT,
     sent_review_at     TEXT,
     created_at         TEXT DEFAULT (datetime('now'))

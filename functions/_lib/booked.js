@@ -26,14 +26,29 @@ export async function getBookedRanges({ request, env }) {
         const res = await fetch(new URL('/blocked-dates.json', request.url));
         if (res.ok) {
             const data = await res.json();
-            if (Array.isArray(data)) {
+            if (!Array.isArray(data)) {
+                // Un errore di battitura nel file non deve trasformarsi in "tutto libero"
+                partial = true;
+                console.error('blocked-dates.json non e un array:', typeof data);
+            } else {
+                const ISO = /^\d{4}-\d{2}-\d{2}$/;
                 for (const r of data) {
-                    if (r && r.from && r.to) ranges.push({ from: r.from, to: r.to });
+                    const valido = r && ISO.test(r.from || '') && ISO.test(r.to || '') && r.to >= r.from;
+                    if (valido) {
+                        ranges.push({ from: r.from, to: r.to });
+                    } else {
+                        // Scartare in silenzio una riga sbagliata = vendere quelle date
+                        partial = true;
+                        console.error('Voce non valida in blocked-dates.json:', JSON.stringify(r));
+                    }
                 }
             }
+        } else if (res.status === 404) {
+            // File assente: significa "nessun blocco manuale", non un guasto.
+            // Trattarlo come guasto renderebbe questo file l'interruttore
+            // generale degli incassi, pur non contenendo quasi mai nulla.
+            console.error('blocked-dates.json assente (404): nessun blocco manuale');
         } else {
-            // Stesso trattamento dei feed iCal: se la fonte non risponde non
-            // possiamo dire "libero". E' l'unica fonte sempre presente.
             partial = true;
             console.error('blocked-dates.json non disponibile. Status:', res.status);
         }

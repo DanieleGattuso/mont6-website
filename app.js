@@ -183,22 +183,32 @@ function initSmoothScroll() {
 }
 
 /**
- * Price data (mirrors prezzi.json for client-side calculation)
+ * Tariffe mensili. La fonte vera e' prezzi.json, lo stesso file che usa il
+ * server per addebitare: qui c'e' solo l'ordine dei mesi per leggerlo.
+ * Se il file non arriva NON si mostra un prezzo inventato (prima le due tabelle
+ * erano copie a mano e potevano divergere: mostrato X, addebitato Y).
  */
-const PREZZI = {
-    0: 90,   // Gennaio
-    1: 90,   // Febbraio
-    2: 90,   // Marzo
-    3: 100,  // Aprile
-    4: 135,  // Maggio
-    5: 160,  // Giugno
-    6: 190,  // Luglio
-    7: 220,  // Agosto
-    8: 140,  // Settembre
-    9: 100,  // Ottobre
-    10: 90,  // Novembre
-    11: 90   // Dicembre
-};
+const MESI = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
+    'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+let TARIFFE = null; // riempita da prezzi.json
+
+async function caricaTariffe() {
+    try {
+        const r = await fetch('/prezzi.json');
+        if (!r.ok) return false;
+        const d = await r.json();
+        if (MESI.every((m) => Number.isFinite(d[m]) && d[m] > 0)) {
+            TARIFFE = d;
+            return true;
+        }
+        console.error('prezzi.json incompleto');
+    } catch (e) {
+        console.error('prezzi.json non leggibile:', e);
+    }
+    return false;
+}
+
+const MIN_NOTTI = 2; // soggiorno minimo, uguale a quello che applica il server
 
 // Imposta di soggiorno del Comune di Cefalù: si paga all'arrivo, non passa
 // da Stripe. Il tetto e' sulle notti, non sull'importo.
@@ -209,13 +219,14 @@ const TOURIST_TAX_MAX_NIGHTS = 5;
  * Calculate total price for a date range
  */
 function calculatePrice(startDate, endDate) {
+    if (!TARIFFE) return { total: 0, nightCount: 0, avgNightly: 0, senzaTariffe: true };
+
     let total = 0;
     let nightCount = 0;
     let currentDate = new Date(startDate);
-    
+
     while (currentDate < endDate) {
-        const monthIndex = currentDate.getMonth();
-        total += PREZZI[monthIndex] || 150;
+        total += TARIFFE[MESI[currentDate.getMonth()]];
         nightCount++;
         currentDate.setDate(currentDate.getDate() + 1);
     }
@@ -238,6 +249,11 @@ function initBookingForm() {
     const priceTotal = document.getElementById('priceTotal');
 
     if (!dateInput || (!btnRequest && !btnStripe)) return;
+
+    // Le tariffe arrivano dallo stesso file che usa il server per addebitare
+    caricaTariffe().then((ok) => {
+        if (ok) refreshPriceBox();
+    });
 
     // Il calendario segue la lingua della pagina: su /en/ mesi e separatore in inglese
     const EN_PAGE = document.documentElement.getAttribute('data-lang') === 'en';
@@ -272,8 +288,18 @@ function initBookingForm() {
             return;
         }
 
-        const { total, nightCount, avgNightly } = calculatePrice(selezione[0], selezione[1]);
-        if (nightCount <= 0) {
+        const { total, nightCount, avgNightly, senzaTariffe } = calculatePrice(selezione[0], selezione[1]);
+
+        if (senzaTariffe) {
+            priceBox.classList.remove('visible');
+            say('Non riesco a caricare le tariffe: scrivimi su WhatsApp e ti confermo il prezzo.',
+                'I cannot load the rates right now — message me on WhatsApp and I will confirm the price.');
+            return;
+        }
+
+        // Sotto il minimo non si mostra un prezzo che poi verrebbe rifiutato:
+        // prima convivevano sullo schermo un totale e il rifiuto di quel totale.
+        if (nightCount < MIN_NOTTI) {
             priceBox.classList.remove('visible');
             return;
         }
@@ -285,8 +311,8 @@ function initBookingForm() {
         const nightsLabel = document.getElementById('priceNights');
         if (nightsLabel) {
             nightsLabel.textContent = lang === 'en'
-                ? `${nightCount} nights × average per night`
-                : `${nightCount} notti × prezzo medio a notte`;
+                ? `${nightCount} night${nightCount === 1 ? '' : 's'} × average per night`
+                : `${nightCount} nott${nightCount === 1 ? 'e' : 'i'} × prezzo medio a notte`;
         }
 
         // Risparmio stimato rispetto ai portali (~15% di commissioni)
@@ -308,7 +334,7 @@ function initBookingForm() {
     }
 
     // Cambiando il numero di ospiti cambia l'imposta: va ricalcolata
-    guestSelect.addEventListener('change', refreshPriceBox);
+    if (guestSelect) guestSelect.addEventListener('change', refreshPriceBox);
 
     // Notti occupate: estremi INCLUSI (from e to sono entrambe notti gia' vendute)
     let bookedRanges = [];
@@ -423,7 +449,7 @@ function initBookingForm() {
         const toDate = (str) => { const [d, m, y] = str.split('/'); return new Date(y, m - 1, d); };
         // Notti di calendario, non ore: nel weekend del cambio d'ora un giorno
         // dura 23 o 25 ore e un soggiorno legittimo verrebbe rifiutato.
-        if (Math.round((toDate(checkOut) - toDate(checkIn)) / 86400000) < 2) {
+        if (Math.round((toDate(checkOut) - toDate(checkIn)) / 86400000) < MIN_NOTTI) {
             say('Il soggiorno minimo è di 2 notti.', 'The minimum stay is 2 nights.');
             return null;
         }
