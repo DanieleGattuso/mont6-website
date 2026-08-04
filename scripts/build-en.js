@@ -20,7 +20,7 @@ const OUT_DIR = path.join(ROOT, 'en');
  */
 function absolutePaths(html) {
     return html
-        .replace(/(href|src)="(img\/|vendor\/|style\.css|app\.js|lang-init\.js|privacy\.html|success\.html)/g, '$1="/$2')
+        .replace(/(href|src|data-bg|data-bg-lg)="(img\/|vendor\/|style\.css|app\.js|lang-init\.js|privacy\.html|success\.html)/g, '$1="/$2')
         .replace(/url\('img\//g, "url('/img/")
         .replace(/(srcset|imagesrcset)="([^"]+)"/g, (_, attr, value) =>
             `${attr}="${value.replace(/(^|,\s*)(img\/|vendor\/)/g, '$1/$2')}"`);
@@ -144,7 +144,7 @@ function relativeRefs(html) {
         const t = v.trim();
         if (t && !/^(\/|https?:|#|data:|mailto:|tel:|whatsapp:)/.test(t)) bad.push(t);
     };
-    for (const m of html.matchAll(/(?:href|src)="([^"]+)"/g)) push(m[1]);
+    for (const m of html.matchAll(/(?:href|src|data-bg|data-bg-lg)="([^"]+)"/g)) push(m[1]);
     for (const m of html.matchAll(/(?:srcset|imagesrcset)="([^"]+)"/g)) {
         m[1].split(',').forEach((part) => push(part.trim().split(/\s+/)[0]));
     }

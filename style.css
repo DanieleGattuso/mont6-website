@@ -448,6 +448,9 @@ p { font-weight: 400; }
    PARALLAX BREAK
    ========================================================================== */
 .parallax-break {
+    /* Tinta di attesa: la foto arriva quando la sezione si avvicina, e sopra
+       c'e' un titolo bianco che su fondo chiaro sarebbe illeggibile */
+    background-color: #1c2420;
     height: 72vh; background-attachment: fixed; background-size: cover; background-position: center;
     display: flex; align-items: center; justify-content: center; position: relative;
 }
@@ -565,7 +568,7 @@ p { font-weight: 400; }
     box-shadow: var(--shadow-soft); transition: transform 0.5s var(--ease-out), box-shadow 0.5s;
 }
 .explore-card:hover { box-shadow: var(--shadow-medium); }
-.explore-img { height: 210px; background-size: cover; background-position: center; transition: transform 0.8s var(--ease-out); }
+.explore-img { height: 210px; background-color: var(--color-bg-light); background-size: cover; background-position: center; transition: transform 0.8s var(--ease-out); }
 .explore-card:hover .explore-img { transform: scale(1.06); }
 .explore-content { padding: 1.6rem; }
 .explore-content h3 { font-size: 1.45rem; margin-bottom: 0.5rem; }
@@ -896,7 +899,6 @@ span.flatpickr-weekday { color: var(--color-accent) !important; font-weight: 600
    ========================================================================== */
 @media (max-width: 768px) {
     .hero-bg { background-image: url('img/opt/_MG_4132-1024.webp') !important; }
-    .parallax-break { background-image: url('img/opt/_MG_4133-1024.webp') !important; }
 }
 
 

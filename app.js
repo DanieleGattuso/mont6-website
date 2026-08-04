@@ -28,6 +28,7 @@ window.addEventListener('load', () => {
 document.addEventListener('DOMContentLoaded', () => {
     initLang();
     initNavbar();
+    initLazyBackgrounds();
     initScrollReveal();
     initSmoothScroll();
     initBookingForm();
@@ -38,6 +39,41 @@ document.addEventListener('DOMContentLoaded', () => {
     initFloatingCTA();
     initMapLazy();
 });
+
+/**
+ * Sfondi CSS delle sezioni basse (parallasse e cartoline di Cefalù).
+ * Scritti in data-bg invece che in uno style inline: un background-image nel
+ * markup lo scarica subito il preload scanner, ed erano 630 kB che partivano
+ * col primo paint per foto a due schermate di distanza. Qui arrivano quando
+ * la sezione si avvicina. data-bg-lg e' la versione grande per gli schermi
+ * larghi. Senza IntersectionObserver si caricano tutte subito, come prima.
+ */
+function initLazyBackgrounds() {
+    const elementi = document.querySelectorAll('[data-bg]');
+    if (!elementi.length) return;
+
+    const mostra = (el) => {
+        const grande = el.dataset.bgLg;
+        el.style.backgroundImage = `url('${grande && window.innerWidth > 768 ? grande : el.dataset.bg}')`;
+        delete el.dataset.bg;
+    };
+
+    if (!('IntersectionObserver' in window)) {
+        elementi.forEach(mostra);
+        return;
+    }
+
+    // 400px di anticipo: la foto e' gia' li' quando la sezione entra in campo
+    const osservatore = new IntersectionObserver((voci, obs) => {
+        voci.forEach((v) => {
+            if (!v.isIntersecting) return;
+            mostra(v.target);
+            obs.unobserve(v.target);
+        });
+    }, { rootMargin: '400px 0px' });
+
+    elementi.forEach((el) => osservatore.observe(el));
+}
 
 /**
  * Leaflet (~180KB tra JS/CSS/tile) caricato solo quando la mappa
