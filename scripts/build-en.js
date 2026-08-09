@@ -91,12 +91,14 @@ function buildIndex() {
         .replace('<meta property="og:locale:alternate" content="en_GB">', '<meta property="og:locale:alternate" content="it_IT">');
 
     // Selettore lingua: su /en/ è EN a essere attivo.
-    // Il link IT porta ?lang=it perché è una scelta esplicita: senza, chi ha il
-    // browser in inglese verrebbe subito rispedito su /en/ dal middleware.
+    // Il link IT punta a "/" pulito, l'indirizzo che sta in sitemap. Che sia
+    // una scelta esplicita e non un capriccio del browser lo dicono il cookie
+    // scritto da app.js e, per chi ha JavaScript spento, il Referer che
+    // controlla il middleware.
     html = html
         .replace(/<a class="lang-btn active" href="\/" hreflang="it" aria-current="true">IT<\/a>/g,
-            '<a class="lang-btn" href="/?lang=it" hreflang="it">IT</a>')
-        .replace(/<a class="lang-btn" href="\/\?lang=en" hreflang="en">EN<\/a>/g,
+            '<a class="lang-btn" href="/" hreflang="it">IT</a>')
+        .replace(/<a class="lang-btn" href="\/en\/" hreflang="en">EN<\/a>/g,
             '<a class="lang-btn active" href="/en/" hreflang="en" aria-current="true">EN</a>');
 
     // Dati strutturati: lingua, URL e FAQ in inglese
@@ -113,7 +115,7 @@ function buildIndex() {
 
     html = absolutePaths(html);
     // Dalla pagina inglese si va alla privacy inglese
-    html = html.replace(/href="\/privacy\.html"/g, 'href="/en/privacy.html"');
+    html = html.replace(/href="\/privacy"/g, 'href="/en/privacy"');
     html = html.replace('<head>', '<head>\n    <!-- Generato da scripts/build-en.js: non modificare a mano, si scrive in /index.html -->');
 
     return html;
@@ -124,8 +126,8 @@ function buildPrivacy() {
     html = html
         .replace('<html lang="it" data-lang="it">', '<html lang="en" data-lang="en">')
         .replace(/<title>[^<]*<\/title>/, '<title>Mont°6 — Privacy Policy</title>')
-        // "Torna alla home" da /en/privacy.html deve portare alla home inglese
-        .replace('href="index.html"', 'href="/en/"')
+        // "Torna alla home" da /en/privacy deve portare alla home inglese
+        .replace('href="/" class="btn-luxe btn-back"', 'href="/en/" class="btn-luxe btn-back"')
         // canonical proprio: e' la stessa pagina a due indirizzi
         .replace('<link rel="canonical" href="https://mont6cefalu.it/privacy">',
                  '<link rel="canonical" href="https://mont6cefalu.it/en/privacy">');
@@ -172,7 +174,9 @@ const checks = [
     ['FAQ in inglese', out.includes('What are the check-in and check-out times')],
     ['FAQ complete', (out.match(/"@type": "Question"/g) || []).length === EN_FAQ.mainEntity.length],
     ['switcher EN attivo', out.includes('class="lang-btn active" href="/en/"')],
-    ['switcher IT porta ?lang=it', out.includes('href="/?lang=it"')],
+    ['switcher IT porta alla home pulita', out.includes('<a class="lang-btn" href="/" hreflang="it">IT</a>')],
+    ['nessun ?lang= nei link interni', !out.includes('?lang=') && !outPrivacy.includes('?lang=')],
+    ['privacy inglese senza estensione', out.includes('href="/en/privacy"') && !out.includes('privacy.html')],
     ['title tradotto', /<title>[^<]*Apartment[^<]*<\/title>/.test(out)],
     ['description tradotta', /<meta name="description" content="Self-contained apartment/.test(out)],
     ['og:title tradotto', out.includes('<meta property="og:title" content="Mont°6 — Apartment in the old town of Cefalù">')],
@@ -185,6 +189,7 @@ const checks = [
     ['inLanguage impostato', out.includes('"inLanguage": "en"')],
     ['descrizione JSON-LD tradotta', out.includes('"description": "Self-contained apartment in the pedestrian')],
     ['privacy: canonical inglese', outPrivacy.includes('https://mont6cefalu.it/en/privacy')],
+    ['privacy: ritorno alla home inglese', outPrivacy.includes('href="/en/" class="btn-luxe btn-back"')],
 ];
 const failed = checks.filter(([, ok]) => !ok);
 failed.forEach(([name, , detail]) => console.error('FALLITO: ' + name + (detail ? ' -> ' + detail : '')));

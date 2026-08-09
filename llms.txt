@@ -42,4 +42,5 @@
 
 - [Home / booking](https://mont6cefalu.it/): photos, amenities, availability
   calendar, prices, direct booking
-- [Privacy policy](https://mont6cefalu.it/privacy.html)
+- [Privacy policy](https://mont6cefalu.it/privacy)
+- [Home / booking, English](https://mont6cefalu.it/en/): same page in English
