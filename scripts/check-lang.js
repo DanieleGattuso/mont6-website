@@ -50,15 +50,40 @@ const CASI = [
     ['la privacy non viene toccata', { pathname: '/privacy', acceptLanguage: 'en-GB' }, 'pass'],
 ];
 
+/** Dove finisce chi arriva col www davanti. null = non lo si tocca. */
+const CASI_WWW = [
+    ['la home con www va sul dominio nudo',
+        { hostname: 'www.mont6cefalu.it', pathname: '/', search: '' }, 'https://mont6cefalu.it/'],
+    ['il www conserva percorso e query',
+        { hostname: 'www.mont6cefalu.it', pathname: '/en/', search: '?utm_source=instagram' },
+        'https://mont6cefalu.it/en/?utm_source=instagram'],
+    ['anche le API col www vengono spostate',
+        { hostname: 'www.mont6cefalu.it', pathname: '/api/get-booked-dates', search: '' },
+        'https://mont6cefalu.it/api/get-booked-dates'],
+    ['il dominio nudo non si tocca',
+        { hostname: 'mont6cefalu.it', pathname: '/', search: '' }, null],
+    ['l\'anteprima di Cloudflare non si tocca',
+        { hostname: 'mont6-website.pages.dev', pathname: '/', search: '' }, null],
+    ['niente inganni da un dominio che inizia per www',
+        { hostname: 'wwwmont6cefalu.it', pathname: '/', search: '' }, null],
+];
+
 (async () => {
     const mod = await import(pathToFileURL(path.join(__dirname, '..', 'functions', '_middleware.js')).href);
     let falliti = 0;
+    for (const [nome, input, atteso] of CASI_WWW) {
+        const esito = mod.senzaWww(input);
+        const ok = esito === atteso;
+        if (!ok) falliti++;
+        console.log(`${ok ? 'ok  ' : 'FAIL'}  ${nome}${ok ? '' : `  -> ${esito}, atteso ${atteso}`}`);
+    }
     for (const [nome, input, atteso] of CASI) {
         const esito = mod.decide(input);
         const ok = esito === atteso;
         if (!ok) falliti++;
         console.log(`${ok ? 'ok  ' : 'FAIL'}  ${nome}${ok ? '' : `  -> ${esito}, atteso ${atteso}`}`);
     }
-    console.log(`\n${CASI.length - falliti}/${CASI.length} controlli superati`);
+    const totale = CASI.length + CASI_WWW.length;
+    console.log(`\n${totale - falliti}/${totale} controlli superati`);
     process.exit(falliti ? 1 : 0);
 })();

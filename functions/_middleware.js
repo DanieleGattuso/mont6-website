@@ -1,7 +1,12 @@
 /**
  * Chi digita mont6cefalu.it con il browser in inglese finisce su /en/.
  *
- * Regole, in ordine:
+ * Prima di tutto il resto: chi arriva su www.mont6cefalu.it viene spostato sul
+ * dominio nudo. Cloudflare serviva il sito intero a tutti e due gli indirizzi,
+ * cioe' due copie complete online. Google non se n'era ancora accorto, ma era
+ * questione di tempo: meglio una porta sola, e permanente.
+ *
+ * Regole della lingua, in ordine:
  *  1. Solo la home "/" viene toccata. Tutto il resto passa liscio.
  *  2. Chi arriva su "/" cliccando IT dalla pagina inglese ha scelto: il
  *     Referer dice /en/, quindi si serve l'italiano e si ricorda. Senza questa
@@ -21,6 +26,16 @@
  */
 
 const BOT = /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|whatsapp|telegram|embed|preview|lighthouse|headlesschrome/i;
+
+/**
+ * L'indirizzo con www dove va a finire, o null se non c'e' niente da spostare.
+ * Percorso e query restano quelli, senno' un link condiviso perde il pezzo che
+ * conta. Pura apposta: vedi scripts/check-lang.js
+ */
+export function senzaWww({ hostname, pathname = '/', search = '' }) {
+    if (!hostname || !hostname.startsWith('www.')) return null;
+    return `https://${hostname.slice(4)}${pathname}${search}`;
+}
 
 /** Il click su IT arriva dalla pagina inglese dello stesso sito? */
 function daPaginaInglese(referer, origin) {
@@ -71,6 +86,21 @@ export async function onRequest(context) {
     const { request, next } = context;
     try {
         const url = new URL(request.url);
+
+        // Il www esce di scena subito, prima di qualsiasi ragionamento sulla
+        // lingua: quello lo fa poi il dominio nudo, una volta sola.
+        // 308 se non e' una GET, cosi' il metodo e il corpo non si perdono:
+        // oggi non dovrebbe capitare (dalle pagine www non ci si arriva piu'),
+        // ma un POST trasformato in GET dal redirect fallirebbe in silenzio.
+        const apex = senzaWww(url);
+        if (apex) {
+            const permanente = request.method === 'GET' || request.method === 'HEAD';
+            return new Response(null, {
+                status: permanente ? 301 : 308,
+                headers: { Location: apex, 'Cache-Control': 'public, max-age=3600' },
+            });
+        }
+
         const action = decide({
             pathname: url.pathname,
             langParam: url.searchParams.get('lang'),
