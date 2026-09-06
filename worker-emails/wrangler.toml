@@ -4,17 +4,17 @@
 
 name = "mont6-email-cron"
 main = "worker.js"
-compatibility_date = "2024-11-01"
+compatibility_date = "2026-06-28"
 
 # Esegue ogni giorno alle 09:07 UTC
 [triggers]
 crons = ["7 9 * * *"]
 
-# Stesso database D1 del sito. Inserisci il database_id (lo ottieni con: wrangler d1 list)
+# Stesso database D1 del sito, verificato nell'account Cloudflare.
 [[d1_databases]]
 binding = "DB"
 database_name = "mont6-bookings"
-database_id = "INSERISCI_QUI_IL_DATABASE_ID"
+database_id = "4718f991-a4f4-4502-8e49-f08fa61b2a4e"
 
 # I segreti (RESEND_API_KEY) si impostano con:  wrangler secret put RESEND_API_KEY
 # Le variabili in chiaro si possono mettere qui sotto:

@@ -6,7 +6,7 @@
  * → Incolla questo URL nella sezione "Importa calendario" di Airbnb/Booking:
  *      https://mont6cefalu.it/api/calendar.ics
  *
- * Binding richiesto: DB (database D1 "mont6-bookings"). Senza, restituisce un calendario vuoto.
+ * Un guasto D1 restituisce 503, mai un calendario vuoto che liberi le date sui portali.
  */
 
 function toICalDate(iso) {
@@ -15,6 +15,8 @@ function toICalDate(iso) {
 }
 
 export async function onRequestGet({ env }) {
+    const unavailable = () => new Response('Calendar temporarily unavailable', { status: 503, headers: { 'Cache-Control': 'no-store' } });
+    if (!env.DB) return unavailable();
     let rows = [];
     if (env.DB) {
         try {
@@ -24,6 +26,7 @@ export async function onRequestGet({ env }) {
             rows = results || [];
         } catch (e) {
             console.error('Errore lettura D1 per iCal:', e);
+            return unavailable();
         }
     }
 

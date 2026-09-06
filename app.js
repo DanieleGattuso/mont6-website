@@ -230,7 +230,7 @@ let TARIFFE = null; // riempita da prezzi.json
 
 async function caricaTariffe() {
     try {
-        const r = await fetch('/prezzi.json');
+        const r = await fetch('/prezzi.json', { cache: 'no-store', signal: AbortSignal.timeout(10000) });
         if (!r.ok) return false;
         const d = await r.json();
         if (MESI.every((m) => Number.isFinite(d[m]) && d[m] > 0)) {
@@ -262,11 +262,12 @@ function calculatePrice(startDate, endDate) {
     let currentDate = new Date(startDate);
 
     while (currentDate < endDate) {
-        total += TARIFFE[MESI[currentDate.getMonth()]];
+        total += Math.round(TARIFFE[MESI[currentDate.getMonth()]] * 100);
         nightCount++;
         currentDate.setDate(currentDate.getDate() + 1);
     }
     
+    total /= 100;
     const avgNightly = nightCount > 0 ? Math.round(total / nightCount) : 0;
     
     return { total, nightCount, avgNightly };
@@ -286,9 +287,15 @@ function initBookingForm() {
 
     if (!dateInput || (!btnRequest && !btnStripe)) return;
 
+    let availabilityReady = false;
+    let checkoutAttempt = null;
+    try { checkoutAttempt = JSON.parse(sessionStorage.getItem('mont6_checkout') || 'null'); } catch { /* storage optional */ }
+    if (btnStripe) btnStripe.disabled = true;
+
     // Le tariffe arrivano dallo stesso file che usa il server per addebitare
     caricaTariffe().then((ok) => {
         if (ok) refreshPriceBox();
+        if (btnStripe) btnStripe.disabled = !ok || !availabilityReady;
     });
 
     // Il calendario segue la lingua della pagina: su /en/ mesi e separatore in inglese
@@ -428,7 +435,8 @@ function initBookingForm() {
         }
     };
 
-    fetch('/api/get-booked-dates')
+    const availabilityQuery = checkoutAttempt?.id ? `?request_id=${encodeURIComponent(checkoutAttempt.id)}` : '';
+    fetch('/api/get-booked-dates' + availabilityQuery, { cache: 'no-store', signal: AbortSignal.timeout(12000) })
         .then(response => {
             if (!response.ok) throw new Error("Serverless API non attiva");
             return response.json();
@@ -437,6 +445,8 @@ function initBookingForm() {
             // L'API risponde { ranges, partial }; accetta anche il vecchio array
             // per non rompere nulla nei minuti del deploy.
             updateCalendarDisabledDates(Array.isArray(data) ? data : (data && data.ranges) || []);
+            availabilityReady = !!data && Array.isArray(data.ranges) && data.partial === false;
+            if (btnStripe) btnStripe.disabled = !availabilityReady || !TARIFFE;
             if (data && data.partial) {
                 // Una fonte non ha risposto: il calendario potrebbe mostrare
                 // libere delle date che non lo sono. Meglio dirlo.
@@ -445,6 +455,10 @@ function initBookingForm() {
             }
         })
         .catch(err => {
+            availabilityReady = false;
+            if (btnStripe) btnStripe.disabled = true;
+            say('Non riesco a verificare la disponibilità. Ricarica la pagina o scrivimi su WhatsApp.',
+                'I cannot verify availability. Reload the page or message me on WhatsApp.');
             console.warn("Funzione serverless non disponibile. Fallback locale:", err.message);
             fetch('/blocked-dates.json')
                 .then(res => {
@@ -483,6 +497,11 @@ function initBookingForm() {
 
         const [checkIn, checkOut] = dates.split(SEP).map(d => d.trim());
         const toDate = (str) => { const [d, m, y] = str.split('/'); return new Date(y, m - 1, d); };
+        if (bookedRanges.some(r => toDate(checkIn) <= r.to && toDate(checkOut) > r.from)) {
+            say('Le date selezionate comprendono notti già occupate. Scegli un altro periodo.',
+                'Your selection includes booked nights. Choose another date range.');
+            return null;
+        }
         // Notti di calendario, non ore: nel weekend del cambio d'ora un giorno
         // dura 23 o 25 ore e un soggiorno legittimo verrebbe rifiutato.
         if (Math.round((toDate(checkOut) - toDate(checkIn)) / 86400000) < MIN_NOTTI) {
@@ -521,6 +540,7 @@ function initBookingForm() {
 
     if (btnStripe) {
         btnStripe.addEventListener('click', async () => {
+            if (!availabilityReady || !TARIFFE) return;
             const range = validDates();
             if (!range) return;
             const [checkIn, checkOut] = range;
@@ -534,19 +554,30 @@ function initBookingForm() {
             } catch (e) { /* niente ripristino, il pagamento prosegue comunque */ }
 
             try {
+                const selection = JSON.stringify({ checkIn, checkOut, guests: guests(), lang: isEn() ? 'en' : 'it' });
+                if (checkoutAttempt?.selection !== selection) checkoutAttempt = { id: crypto.randomUUID(), selection };
+                try { sessionStorage.setItem('mont6_checkout', JSON.stringify(checkoutAttempt)); } catch { /* retry remains in memory */ }
                 const response = await fetch('/api/create-checkout-session', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ checkIn, checkOut, guests: guests(), lang: isEn() ? 'en' : 'it' })
+                    body: JSON.stringify({ checkIn, checkOut, guests: guests(), lang: isEn() ? 'en' : 'it', requestId: checkoutAttempt.id,
+                        expectedAmount: Math.round(calculatePrice(fp.selectedDates[0], fp.selectedDates[1]).total * 100) }),
+                    signal: AbortSignal.timeout(45000),
                 });
                 const data = await response.json().catch(() => ({}));
 
                 if (!response.ok || !data.url) {
+                    if (data.resetRequest) {
+                        checkoutAttempt = null;
+                        try { sessionStorage.removeItem('mont6_checkout'); } catch { /* storage optional */ }
+                    }
                     throw new Error(data.error || (isEn()
                         ? 'The payment did not start. Try again, or message me on WhatsApp.'
                         : 'Il pagamento non è partito. Riprova, oppure scrivimi su WhatsApp.'));
                 }
-                window.location.href = data.url;
+                const checkoutUrl = new URL(data.url);
+                if (checkoutUrl.protocol !== 'https:' || checkoutUrl.hostname !== 'checkout.stripe.com') throw new Error(isEn() ? 'Invalid payment link.' : 'Link di pagamento non valido.');
+                window.location.href = checkoutUrl.href;
             } catch (err) {
                 say(err.message, err.message);
                 btnStripe.disabled = false;
@@ -554,6 +585,9 @@ function initBookingForm() {
             }
         });
     }
+
+    // Browsers can restore a disabled button from the back/forward cache.
+    window.addEventListener('pageshow', event => { if (event.persisted) window.location.reload(); });
 }
 
 /**
@@ -627,17 +661,21 @@ function initCookieBanner() {
     if (!banner || !acceptBtn) return;
     
     // Check if already accepted
-    const cookieAccepted = localStorage.getItem('mont6_cookie_accepted');
+    let cookieAccepted = false;
+    try { cookieAccepted = localStorage.getItem('mont6_cookie_accepted') === 'true'; } catch { /* storage may be disabled */ }
+    let timer;
     
     if (!cookieAccepted) {
         // Show banner after a short delay
-        setTimeout(() => {
-            banner.classList.add('visible');
+        timer = setTimeout(() => {
+            if (!cookieAccepted) banner.classList.add('visible');
         }, 1500);
     }
     
     acceptBtn.addEventListener('click', () => {
-        localStorage.setItem('mont6_cookie_accepted', 'true');
+        cookieAccepted = true;
+        clearTimeout(timer);
+        try { localStorage.setItem('mont6_cookie_accepted', 'true'); } catch { /* remember for this page only */ }
         banner.classList.remove('visible');
     });
 }
@@ -697,11 +735,10 @@ function initMap() {
     const property = [38.0386, 14.0226]; // posizione approssimata, centro storico
     const map = L.map(el, { scrollWheelZoom: false, zoomControl: true }).setView(property, 16);
 
-    // Basemap minimal ed elegante (CARTO Positron) — niente API key
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        subdomains: 'abcd',
-        maxZoom: 20,
-        attribution: '&copy; OpenStreetMap &copy; CARTO',
+    // Standard OSM tiles: browser caching and Referer are preserved.
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
 
     // Marker brandizzato per la dimora (pin a goccia dorato con etichetta)

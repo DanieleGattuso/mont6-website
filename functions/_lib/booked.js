@@ -1,136 +1,76 @@
-/**
- * Libreria condivisa — raccolta di tutte le date occupate.
- * Usata da /api/get-booked-dates (calendario sul sito) e da
- * /api/create-checkout-session (blocco anti doppia-prenotazione).
- *
- * Ogni intervallo restituito è { from, to } in formato "YYYY-MM-DD",
- * con entrambi gli estremi INCLUSIVI (notti occupate).
- * Nota iCal: DTEND è esclusivo (è il giorno di check-out, libero per un
- * nuovo check-in), quindi viene riportato al giorno precedente.
- */
+import { parseDate, isoDate, readAsset } from './payment.js';
 
-function shiftISO(iso, days) {
-    const d = new Date(iso + 'T00:00:00Z');
+const shiftISO = (iso, days) => {
+    const d = parseDate(iso);
+    if (!d) throw new Error('Invalid calendar date');
     d.setUTCDate(d.getUTCDate() + days);
-    return d.toISOString().slice(0, 10);
-}
+    return isoDate(d);
+};
 
-export async function getBookedRanges({ request, env }) {
+export function parseCalendar(text) {
+    const unfolded = text.replace(/\r?\n[ \t]/g, '');
+    if (!/^BEGIN:VCALENDAR\s*$/m.test(unfolded) || !/^END:VCALENDAR\s*$/m.test(unfolded)) throw new Error('Invalid iCal feed');
     const ranges = [];
-    // Se una fonte non risponde, la disponibilita' che restituiamo e' INCOMPLETA:
-    // dire "libero" quando non lo sappiamo porta a doppie prenotazioni.
-    let partial = false;
-
-    // 1. Date bloccate manualmente (file statico, estremi già inclusivi)
-    try {
-        const res = await fetch(new URL('/blocked-dates.json', request.url));
-        if (res.ok) {
-            const data = await res.json();
-            if (!Array.isArray(data)) {
-                // Un errore di battitura nel file non deve trasformarsi in "tutto libero"
-                partial = true;
-                console.error('blocked-dates.json non e un array:', typeof data);
-            } else {
-                const ISO = /^\d{4}-\d{2}-\d{2}$/;
-                for (const r of data) {
-                    const valido = r && ISO.test(r.from || '') && ISO.test(r.to || '') && r.to >= r.from;
-                    if (valido) {
-                        ranges.push({ from: r.from, to: r.to });
-                    } else {
-                        // Scartare in silenzio una riga sbagliata = vendere quelle date
-                        partial = true;
-                        console.error('Voce non valida in blocked-dates.json:', JSON.stringify(r));
-                    }
-                }
-            }
-        } else if (res.status === 404) {
-            // File assente: significa "nessun blocco manuale", non un guasto.
-            // Trattarlo come guasto renderebbe questo file l'interruttore
-            // generale degli incassi, pur non contenendo quasi mai nulla.
-            console.error('blocked-dates.json assente (404): nessun blocco manuale');
-        } else {
-            partial = true;
-            console.error('blocked-dates.json non disponibile. Status:', res.status);
-        }
-    } catch (e) {
-        partial = true;
-        console.error('Errore nella lettura di blocked-dates.json:', e);
+    const events = unfolded.match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g) || [];
+    if ((unfolded.match(/BEGIN:VEVENT/g) || []).length !== events.length) throw new Error('Truncated iCal feed');
+    for (const ev of events) {
+        if (/^STATUS:CANCELLED\s*$/m.test(ev)) continue;
+        // Rental exports use all-day events. Unsupported recurrence must not look free.
+        if (/^(RRULE|RDATE|EXDATE)[;:]/m.test(ev)) throw new Error('Unsupported recurring iCal event');
+        const start = /^DTSTART(?:;[^:\r\n]*)?:(\d{8})\s*$/m.exec(ev);
+        const end = /^DTEND(?:;[^:\r\n]*)?:(\d{8})\s*$/m.exec(ev);
+        if (!start || !end) throw new Error('Unsupported or incomplete iCal dates');
+        const format = x => `${x.slice(0, 4)}-${x.slice(4, 6)}-${x.slice(6, 8)}`;
+        const from = format(start[1]), checkout = format(end[1]);
+        if (!parseDate(from) || !parseDate(checkout) || checkout <= from) throw new Error('Invalid iCal range');
+        ranges.push({ from, to: shiftISO(checkout, -1) });
     }
-
-    // 2. Calendari esterni opzionali (iCal): Airbnb + Booking.com
-    const icalFeeds = [
-        { name: 'Airbnb', url: env.AIRBNB_ICAL_URL },
-        { name: 'Booking', url: env.BOOKING_ICAL_URL },
-    ].filter((f) => f.url);
-
-    for (const feed of icalFeeds) {
-        try {
-            const response = await fetch(feed.url);
-            if (response.ok) {
-                const icsText = await response.text();
-                const events = icsText.split('BEGIN:VEVENT');
-
-                for (let i = 1; i < events.length; i++) {
-                    const ev = events[i];
-                    const startMatch = ev.match(/DTSTART.*?:.*?(\d{8})/);
-                    const endMatch = ev.match(/DTEND.*?:.*?(\d{8})/);
-
-                    if (startMatch && endMatch) {
-                        const s = startMatch[1]; // "YYYYMMDD"
-                        const e = endMatch[1];
-                        const from = `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6, 8)}`;
-                        // DTEND esclusivo → l'ultima notte occupata è il giorno prima
-                        const to = shiftISO(`${e.slice(0, 4)}-${e.slice(4, 6)}-${e.slice(6, 8)}`, -1);
-                        if (to >= from) ranges.push({ from, to });
-                    }
-                }
-            } else {
-                partial = true;
-                console.error(`Errore caricamento calendario ${feed.name}. Status: ${response.status}`);
-            }
-        } catch (err) {
-            partial = true;
-            console.error(`Errore durante il recupero del calendario ${feed.name}:`, err);
-        }
-    }
-
-    // 3. Prenotazioni dirette pagate (D1) — check_out è il giorno di partenza, libero
-    if (env.DB) {
-        try {
-            const { results } = await env.DB.prepare(
-                `SELECT check_in, check_out FROM bookings WHERE status = 'confirmed'`
-            ).all();
-            for (const row of results || []) {
-                if (row.check_in && row.check_out) {
-                    const to = shiftISO(row.check_out, -1);
-                    if (to >= row.check_in) ranges.push({ from: row.check_in, to });
-                }
-            }
-        } catch (e) {
-            partial = true;
-            console.error('Errore lettura prenotazioni D1:', e);
-        }
-    }
-
-    // La stessa prenotazione torna indietro dai portali (esportiamo il nostro
-    // calendario e loro ce lo rimandano): senza deduplica il calendario sbaglia.
-    const visti = new Set();
-    const unici = ranges.filter((r) => {
-        const chiave = `${r.from}|${r.to}`;
-        if (visti.has(chiave)) return false;
-        visti.add(chiave);
-        return true;
-    });
-
-    return { ranges: unici, partial };
+    return ranges;
 }
 
-/**
- * Verifica se un soggiorno [checkIn, checkOut) si sovrappone alle date occupate.
- * Le notti del soggiorno vanno da checkIn a checkOut-1 (il check-out è una partenza).
- * Date in formato ISO "YYYY-MM-DD"; il confronto lessicografico è sufficiente.
- */
-export function overlapsBooked(checkInISO, checkOutISO, ranges) {
-    const lastNight = shiftISO(checkOutISO, -1);
-    return ranges.some((r) => checkInISO <= r.to && lastNight >= r.from);
+export async function getBookedRanges({ request, env, excludeHoldId = '' }) {
+    const ranges = [];
+    let partial = false;
+    try {
+        const response = await readAsset(request, env, '/blocked-dates.json');
+        if (!response.ok) throw new Error(`Manual calendar HTTP ${response.status}`);
+        const data = await response.json();
+        if (!Array.isArray(data)) throw new Error('Manual calendar must be an array');
+        for (const r of data) {
+            if (!r || !/^\d{4}-\d{2}-\d{2}$/.test(r.from) || !/^\d{4}-\d{2}-\d{2}$/.test(r.to)
+                || !parseDate(r.from) || !parseDate(r.to) || r.to < r.from) throw new Error('Invalid manual calendar range');
+            ranges.push({ from: r.from, to: r.to });
+        }
+    } catch (e) { partial = true; console.error('Manual calendar unavailable:', e.message); }
+
+    for (const url of [env.AIRBNB_ICAL_URL, env.BOOKING_ICAL_URL].filter(Boolean)) {
+        try {
+            const response = await fetch(url, { signal: AbortSignal.timeout(8000), cache: 'no-store' });
+            if (!response.ok) throw new Error(`iCal HTTP ${response.status}`);
+            ranges.push(...parseCalendar(await response.text()));
+        } catch (e) { partial = true; console.error('External calendar unavailable:', e.message); }
+    }
+    if (!env.DB) partial = true;
+    else {
+        try {
+            const { results } = await env.DB.prepare(`SELECT check_in, check_out FROM bookings WHERE status = 'confirmed'
+                UNION ALL SELECT check_in, check_out FROM checkout_holds WHERE status = 'active' AND id != ?`).bind(excludeHoldId).all();
+            for (const row of results || []) {
+                if (!parseDate(row.check_in) || !parseDate(row.check_out) || row.check_out <= row.check_in) throw new Error('Invalid DB range');
+                ranges.push({ from: row.check_in, to: shiftISO(row.check_out, -1) });
+            }
+        } catch (e) { partial = true; console.error('Booking calendar unavailable:', e.message); }
+    }
+    // Merge overlapping/adjacent ranges so check-out logic also handles one-night blocks.
+    const merged = [];
+    for (const r of ranges.sort((a, b) => a.from.localeCompare(b.from))) {
+        const last = merged[merged.length - 1];
+        if (last && r.from <= shiftISO(last.to, 1)) last.to = last.to > r.to ? last.to : r.to;
+        else merged.push({ ...r });
+    }
+    return { ranges: merged, partial };
+}
+
+export function overlapsBooked(checkIn, checkOut, ranges) {
+    return ranges.some(r => checkIn <= r.to && checkOut > r.from);
 }

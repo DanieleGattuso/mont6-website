@@ -16,7 +16,7 @@
   Permissions-Policy: geolocation=(), microphone=(), camera=()
   X-XSS-Protection: 0
   Access-Control-Allow-Origin: https://mont6cefalu.it
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.basemaps.cartocdn.com; connect-src 'self' https://cloudflareinsights.com; frame-src 'none'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://tile.openstreetmap.org; connect-src 'self' https://cloudflareinsights.com; frame-src 'none'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
 
 # Asset immutabili: cache lunga lato browser (le foto non cambiano mai di nome)
 /img/*
@@ -32,4 +32,14 @@
 
 /prezzi.json
   Cache-Control: no-cache
+  X-Robots-Tag: noindex, nofollow
+
+/success.html
+  Cache-Control: no-store
+  Referrer-Policy: no-referrer
+  X-Robots-Tag: noindex, nofollow
+
+/success
+  Cache-Control: no-store
+  Referrer-Policy: no-referrer
   X-Robots-Tag: noindex, nofollow

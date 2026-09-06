@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mont°6 — Prenotazione Confermata</title>
+    <title>Mont°6 — Stato della prenotazione</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="no-referrer">
+    <script src="lang-init.js"></script>
     
     
     <!-- Favicon -->
@@ -59,29 +62,27 @@
 
     <div class="success-wrapper">
         <div class="success-card">
-            <div class="success-icon">
+            <div class="success-icon" id="confirmed-icon" hidden>
                 <svg viewBox="0 0 24 24" width="64" height="64" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
                 </svg>
             </div>
             
-            <h1 class="success-title">
-                <span class="lang-it">Prenotazione confermata</span>
-                <span class="lang-en">Booking confirmed</span>
+            <h1 class="success-title" id="booking-status-title">
+                <span class="lang-it">Verifica della prenotazione</span>
+                <span class="lang-en">Checking your booking</span>
             </h1>
             
-            <p class="lead-text">
-                <span class="lang-it">Il pagamento è andato a buon fine e le date sono tue.</span>
-                <span class="lang-en">The payment went through and the dates are yours.</span>
+            <p class="lead-text" id="booking-status-message" role="status" aria-live="polite">
+                <span class="lang-it">Attendi mentre verifichiamo il pagamento e le date.</span>
+                <span class="lang-en">Please wait while we verify your payment and dates.</span>
             </p>
             
-            <p>
-                <span class="lang-it">Trovi la ricevuta con date e totale nella tua email. Qualche giorno prima dell'arrivo ti mando il codice della serratura e le indicazioni per raggiungere Vicolo Monteleone 6.</span>
-                <span class="lang-en">The receipt with your dates and total is in your inbox. A few days before you arrive I will send the door code and directions to Vicolo Monteleone 6.</span>
-            </p>
+            <p id="booking-status-details" hidden></p>
+            <noscript>Per verificare la prenotazione abilita JavaScript o scrivimi su WhatsApp. / Enable JavaScript or contact me on WhatsApp to verify your booking.</noscript>
 
-            <a href="index.html" class="btn-luxe btn-success-home">
+            <a href="/" id="booking-home" class="btn-luxe btn-success-home">
                 <span class="lang-it">Torna al sito</span>
                 <span class="lang-en">Back to the site</span>
             </a>
@@ -94,6 +95,6 @@
     </div>
 
     <!-- Semplice script per gestire la lingua salvata -->
-    <script src="lang-init.js"></script>
+    <script src="booking-status.js?v=1"></script>
 </body>
 </html>

@@ -16,19 +16,41 @@ if errorlevel 1 (
     exit /b 1
 )
 echo.
+echo Verifica dei pagamenti e della lingua...
+call npm test
+if errorlevel 1 (
+    echo *** TEST FALLITI: pubblicazione interrotta. ***
+    pause
+    exit /b 1
+)
+echo.
 echo 2. Rilevamento delle modifiche apportate...
 git add .
+if errorlevel 1 goto :errore
 echo.
 echo 3. Salvataggio delle modifiche (Commit)...
-git commit -m "Aggiornamento tariffe/calendario"
+git diff --cached --quiet
+if errorlevel 1 (
+    git commit -m "Aggiornamento sito Mont6"
+    if errorlevel 1 goto :errore
+)
 echo.
 echo 4. Invio dei file su GitHub (Push)...
 git push
+if errorlevel 1 goto :errore
 echo.
 echo =======================================================
 echo   COMPLETATO CON SUCCESSO!
-echo   Cloudflare ha rilevato le modifiche e sta aggiornando
-echo   il sito online. Tra circa 30 secondi sarà tutto live!
+echo   File inviati a GitHub. Controlla il risultato del deploy
+echo   su Cloudflare prima di considerare il sito aggiornato.
 echo =======================================================
 echo.
 pause
+exit /b 0
+
+:errore
+echo.
+echo *** PUBBLICAZIONE INTERROTTA: un comando Git non e' riuscito. ***
+echo Controlla l'errore qui sopra. La pubblicazione non e' confermata.
+pause
+exit /b 1

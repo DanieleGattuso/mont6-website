@@ -52,6 +52,7 @@ function redirectToEn(url, setCookie) {
 
 export async function onRequest(context) {
     const { request, next } = context;
+    let downstreamStarted = false;
     try {
         const url = new URL(request.url);
         const action = decide({
@@ -65,6 +66,7 @@ export async function onRequest(context) {
         if (action === 'redirect') return redirectToEn(url, false);
         if (action === 'redirect-remember-en') return redirectToEn(url, true);
 
+        downstreamStarted = true;
         const response = await next();
         if (action === 'pass-remember-it') {
             const res = new Response(response.body, response);
@@ -81,6 +83,8 @@ export async function onRequest(context) {
     } catch (e) {
         // Un errore qui non deve mai far cadere il sito: si serve la pagina
         console.error('Errore middleware lingua:', e);
+        // Never execute a payment handler twice after it has already failed.
+        if (downstreamStarted) return new Response('Service temporarily unavailable', { status: 503, headers: { 'Cache-Control': 'no-store' } });
         return next();
     }
 }

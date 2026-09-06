@@ -1,64 +1,36 @@
-# Mont°6 — Setup email automatiche (pre-arrivo + recensione)
+# Mont°6 — Email automatiche
 
-Attiva il Worker `worker-emails/worker.js` che ogni giorno invia, da solo:
-- l'email **pre-arrivo** ~2 giorni prima del check-in;
-- la richiesta di **recensione** dopo il check-out.
+Il Worker è separato dal sito: va pubblicato a parte, dopo la migrazione descritta in `BACKEND-SETUP.md`.
+Usa le tabelle `bookings`, `checkout_holds` ed `email_deliveries` nello stesso database D1 delle Pages Functions.
 
-Usa lo **stesso database D1** (`mont6-bookings`) già creato. Scegli UNA delle due strade.
+## Configurazione
 
----
+In `worker-emails/wrangler.toml`, sostituire `INSERISCI_QUI_IL_DATABASE_ID` con l'ID verificato di `mont6-bookings`. Il segnaposto non è un ID valido e impedisce il deploy.
+Configurare il binding `DB`, il secret `RESEND_API_KEY`, il mittente verificato `BOOKING_FROM_EMAIL` e, facoltativamente, un link HTTPS `REVIEW_URL` e il secret `CRON_TEST_KEY`.
 
-## Strada A — Dalla dashboard (consigliata, a click)
+Dalla cartella `worker-emails`:
 
-1. **Crea il Worker**
-   Cloudflare → **Workers & Pages** → **Create** → **Worker** → nome `mont6-email-cron` → **Deploy**.
-
-2. **Incolla il codice**
-   Apri il Worker → **Edit code** → cancella tutto e incolla il contenuto di `worker-emails/worker.js` → **Deploy**.
-
-3. **Collega il database**
-   Worker → **Settings** → **Bindings** → **Add → D1 database**:
-   - Variable name: `DB`
-   - Database: `mont6-bookings`
-
-4. **Aggiungi le variabili**
-   Worker → **Settings** → **Variables and Secrets**:
-   | Nome | Tipo | Valore |
-   |---|---|---|
-   | `RESEND_API_KEY` | Secret | la tua `re_…` |
-   | `BOOKING_FROM_EMAIL` | Plaintext | `prenotazioni@mont6cefalu.it` |
-   | `REVIEW_URL` *(opzionale)* | Plaintext | link recensione (es. la tua pagina Airbnb/Google) |
-   | `CRON_TEST_KEY` *(opzionale)* | Secret | una parola a caso, per il test manuale |
-
-5. **Imposta il Cron**
-   Worker → **Settings** → **Triggers** → **Cron Triggers** → **Add** → `7 9 * * *` (ogni giorno alle 09:07 UTC).
-
-6. **Deploy** di nuovo per applicare tutto.
-
----
-
-## Strada B — Da terminale (wrangler)
-
-```bash
-cd worker-emails
-wrangler d1 list                       # copia l'ID di mont6-bookings
-# incolla l'ID in wrangler.toml (campo database_id)
-wrangler secret put RESEND_API_KEY     # incolla la chiave quando richiesto
-wrangler deploy
+```sh
+npx wrangler secret put RESEND_API_KEY
+npx wrangler deploy
 ```
 
----
+Usare il deploy dal repository: il Worker importa funzioni di data da `functions/_lib/payment.js`. Incollare il solo file `worker.js` nell'editor della dashboard non include il modulo importato.
+Il Cron definito nel file di configurazione esegue il Worker alle 09:07 UTC.
 
-## Come testare subito (senza aspettare il cron)
-1. Aggiungi la variabile `CRON_TEST_KEY` (Secret) con un valore a tua scelta.
-2. Visita: `https://mont6-email-cron.<tuo-sottodominio>.workers.dev/?key=IL_TUO_VALORE`
-3. Risponde con `{"prearrival":N,"reviews":N}` ed esegue subito l'invio per le prenotazioni che rientrano nelle date.
+## Comportamento
 
-> Suggerimento per un test reale: nel database imposta temporaneamente su una prenotazione un `check_in` tra 2 giorni (e `sent_prearrival_at` a NULL), poi lancia il test.
+- Pre-arrivo: ospiti in arrivo da oggi a due giorni, comprese prenotazioni dell'ultimo momento e invii da recuperare dopo un guasto.
+- Recensione: soggiorni conclusi con email ancora da inviare.
+- Giorni calcolati nel fuso `Europe/Rome`.
+- Testi in italiano o inglese secondo il checkout (italiano per le prenotazioni precedenti senza lingua).
+- I nomi degli ospiti vengono convertiti in testo sicuro prima di essere inclusi nelle email.
+- Le ricevute persistenti e le chiavi di idempotenza limitano i duplicati. Un errore segnala il fallimento del Cron; il prossimo run ritenta gli invii mancanti.
 
----
+## Test manuale
 
-### Note
-- Ogni email parte **una sola volta** (le colonne `sent_prearrival_at` / `sent_review_at` vengono valorizzate dopo l'invio).
-- Il Worker è separato dal sito: non influisce sul deploy di Cloudflare Pages.
-- I testi delle email sono in `worker-emails/worker.js` (funzioni `prearrivalHtml` e `reviewHtml`): personalizzabili quando vuoi.
+Il test esegue davvero gli invii delle prenotazioni eleggibili: usare un ambiente di prova con destinatari controllati.
+Inviare una richiesta **POST** all'URL del Worker con header `Authorization: Bearer <CRON_TEST_KEY>`. Il precedente parametro `?key=` non avvia più gli invii e non deve essere usato: esponeva il secret nella cronologia e nei log.
+Non modificare le date di prenotazioni reali per provare il Cron.
+
+I test offline del repository controllano anche i template e non inviano email.

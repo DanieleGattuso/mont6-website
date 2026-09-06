@@ -10,6 +10,7 @@ import { getBookedRanges } from '../_lib/booked.js';
 const JSON_HEADERS = {
     'Access-Control-Allow-Origin': 'https://mont6cefalu.it',
     'Content-Type': 'application/json',
+    'Cache-Control': 'no-store',
 };
 
 export function onRequestOptions() {
@@ -23,7 +24,10 @@ export function onRequestOptions() {
 }
 
 export async function onRequestGet({ request, env }) {
-    const { ranges, partial } = await getBookedRanges({ request, env });
+    // A saved, unguessable request ID lets its owner resume their own Checkout.
+    const id = new URL(request.url).searchParams.get('request_id') || '';
+    const excludeHoldId = /^[a-f0-9-]{36}$/i.test(id) ? id : '';
+    const { ranges, partial } = await getBookedRanges({ request, env, excludeHoldId });
     // partial = una fonte non ha risposto: il client lo dice all'ospite
     return new Response(JSON.stringify({ ranges, partial }), { headers: JSON_HEADERS });
 }

@@ -4,7 +4,9 @@
   "description": "Mont°6 Luxury Retreat Website",
   "main": "app.js",
   "scripts": {
-    "build": "node scripts/build-en.js"
+    "build": "node scripts/build-en.js",
+    "test": "node --test scripts/check-payments.js && node scripts/check-lang.js",
+    "test:browser": "node scripts/check-browser.cjs"
   },
   "devDependencies": {
     "sharp": "^0.35.3"

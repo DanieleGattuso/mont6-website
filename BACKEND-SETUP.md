@@ -1,67 +1,106 @@
-# Mont°6 — Setup backend automazioni (Cloudflare)
+# Mont°6 — Pagamenti e prenotazioni
 
-Guida per attivare: **webhook Stripe → database D1 → blocco date automatico → email**.
-Tutti i passi sono lato dashboard/CLI: il codice è già nel repo.
+## Aggiornamento del 6 settembre 2026
 
-## 1. Crea il database D1
+Le correzioni sono locali. Nessun deploy e nessun addebito reale fanno parte del collaudo.
+Prima di pubblicare le nuove Functions, applicare la migrazione e aggiornare gli eventi Stripe.
+L'anteprima estetica è separata dal repository e richiede l'approvazione del proprietario.
 
-Dal tuo computer (una volta sola), con Node installato:
+### Database esistente
 
-```bash
-npm install -g wrangler          # se non l'hai
-wrangler login
-wrangler d1 create mont6-bookings
-wrangler d1 execute mont6-bookings --remote --file=./schema.sql
+Eseguire nella cartella del sito, dopo avere verificato di selezionare `mont6-bookings`:
+
+```sh
+npx wrangler d1 execute mont6-bookings --remote --file=./migrations/0001_payment_safety.sql
 ```
 
-L'ultimo comando crea la tabella `bookings`.
+La migrazione è additiva e ripetibile: crea `checkout_holds`, `booking_cancellations` ed `email_deliveries` senza cancellare le prenotazioni.
+Per un database nuovo usare `schema.sql`, che comprende anche queste tabelle.
+Il binding `DB` è obbligatorio sulle Pages Functions e sul Worker email. Se manca, i pagamenti si fermano con 503.
 
-## 2. Collega il database alle Functions (binding)
+### Configurazione Pages
 
-Cloudflare → **Workers & Pages → mont6-website → Settings → Functions → D1 database bindings → Add binding**
-- **Variable name:** `DB`
-- **D1 database:** `mont6-bookings`
-- Salva (vale sia per Production che Preview).
-
-## 3. Aggiungi le variabili/segreti
-
-Cloudflare → **mont6-website → Settings → Variables and Secrets** (ambiente **Production**):
-
-| Nome | Tipo | Valore |
+| Nome | Tipo | Uso |
 |---|---|---|
-| `STRIPE_SECRET_KEY` | Secret | (già presente) `sk_live_…` |
-| `STRIPE_WEBHOOK_SECRET` | Secret | `whsec_…` (vedi passo 4) |
-| `RESEND_API_KEY` | Secret | `re_…` (dal tuo account Resend) |
-| `BOOKING_FROM_EMAIL` | Plaintext | `prenotazioni@mont6cefalu.it` *(o `onboarding@resend.dev` per partire subito)* |
-| `BOOKING_HOST_EMAIL` | Plaintext | l'email dove vuoi ricevere le notifiche |
+| `STRIPE_SECRET_KEY` | Secret | API Stripe; chiave test solo nell'ambiente test |
+| `STRIPE_WEBHOOK_SECRET` | Secret | Firma dell'endpoint webhook di quell'ambiente |
+| `RESEND_API_KEY` | Secret | Invio conferme e notifiche |
+| `BOOKING_FROM_EMAIL` | Variabile | Mittente appartenente a un dominio verificato su Resend |
+| `BOOKING_HOST_EMAIL` | Variabile | Indirizzo dell'host |
+| `AIRBNB_ICAL_URL` | Secret facoltativo | Feed iCal privato Airbnb |
+| `BOOKING_ICAL_URL` | Secret facoltativo | Feed iCal privato Booking.com |
 
-## 4. Crea il webhook su Stripe
+`onboarding@resend.dev` è un mittente di prova con restrizioni sui destinatari: non è una soluzione per inviare conferme a tutti gli ospiti.
+Usare un database distinto e credenziali Stripe test nell'ambiente di prova. Non condividere il database reale con le prove.
 
-Stripe Dashboard → **Developers → Webhooks → Add endpoint**
-- **Endpoint URL:** `https://mont6cefalu.it/api/stripe-webhook`
-- **Eventi:** seleziona `checkout.session.completed`
-- Crea, poi copia il **Signing secret** (`whsec_…`) → mettilo in `STRIPE_WEBHOOK_SECRET` (passo 3).
+### Eventi dell'endpoint Stripe
 
-## 5. (Email professionale) Verifica il dominio su Resend
+URL: `https://mont6cefalu.it/api/stripe-webhook`
 
-Per inviare da `prenotazioni@mont6cefalu.it`:
-Resend → **Domains → Add domain → mont6cefalu.it** → aggiungi i record DNS indicati su Cloudflare (DNS della zona mont6cefalu.it). A verifica completata, usa quell'indirizzo in `BOOKING_FROM_EMAIL`.
-*(Se vuoi partire subito senza verifica, usa `onboarding@resend.dev` — funziona ma come mittente è meno elegante.)*
+- `checkout.session.completed`
+- `checkout.session.async_payment_succeeded`
+- `checkout.session.async_payment_failed`
+- `checkout.session.expired`
+- `charge.refunded`
 
-## 6. Redeploy
+I nuovi Checkout accettano carte (ed eventuali wallet compatibili configurati in Stripe) e scadono dopo 35 minuti. I metodi differiti delle sessioni precedenti restano gestiti tramite gli eventi asincroni.
+Controllare i cinque eventi nel Dashboard: non basta che siano presenti nel codice.
 
-Dopo aver aggiunto binding e variabili: **Deployments → ultimo deploy → `…` → Retry deployment** (le variabili/binding si applicano solo ai deploy nuovi).
+### Ordine di rilascio
 
-## Come testare
+1. Applicare la migrazione a D1.
+2. Verificare binding, segreti e mittente Resend.
+3. Aggiungere gli eventi all'endpoint Stripe e verificare il relativo signing secret.
+4. Pubblicare le Pages Functions e gli asset aggiornati; il file `pubblica.bat` non esegue migrazioni D1.
+5. Pubblicare anche il Worker email separato, seguendo `EMAIL-AUTOMATION-SETUP.md`.
+6. Collaudare in un ambiente Stripe test: carta di prova, annullamento del checkout, sessione scaduta, rimborso, webhook ripetuto ed email.
+7. Controllare stato della prenotazione, date nel calendario e tentativi di consegna nel Dashboard Stripe.
 
-1. Fai una prenotazione di prova (con chiave Stripe in **test mode** se preferisci non addebitare).
-2. Verifica: arriva l'email di conferma all'ospite + la notifica a te.
-3. Ricarica il sito: quelle date risultano **sbarrate** nel calendario (lette da D1).
-4. Controlla i dati salvati: `wrangler d1 execute mont6-bookings --remote --command "SELECT * FROM bookings"`.
+Durante il passaggio, vecchie sessioni Stripe possono essere ancora aperte. Non si può impedire retroattivamente che vengano pagate: un conflitto viene rifiutato in fase di registrazione e segnalato all'host. Per un rilascio pulito, attendere o far scadere le vecchie sessioni aperte prima di accettare nuovi checkout.
 
----
+## Comportamento corretto
 
-### Note tecniche
-- La firma del webhook è verificata con Web Crypto (no dipendenze).
-- L'inserimento è **idempotente** (UNIQUE su `stripe_session_id`): Stripe può ritentare senza creare duplicati.
-- Se il binding `DB` non è configurato, le Functions continuano a funzionare (degradano sul file statico `blocked-dates.json`), quindi il sito non si rompe mai durante il setup.
+- L'importo viene calcolato sul server, notte per notte, in centesimi, a partire da `prezzi.json`.
+- Un'istruzione SQL atomica riserva le date prima della creazione del pagamento. Le prenotazioni adiacenti sono consentite.
+- La stessa richiesta riprende la stessa sessione. Un errore di rete ambiguo non libera date che potrebbero essere già pagabili.
+- Le riserve scadute vengono liberate dopo conferma di Stripe, tramite webhook o riconciliazione al prossimo tentativo per quelle date. L'orologio locale da solo non autorizza a rivenderle.
+- La conferma richiede pagamento verificato e prenotazione registrata. La pagina finale non mostra nomi o email e non è memorizzabile in cache.
+- Il rimborso totale annulla la prenotazione e libera la riserva, anche se la notifica precede quella del pagamento.
+- Il rimborso parziale mantiene le date occupate. Se corrisponde a una cancellazione definitiva con penale, annullare esplicitamente la prenotazione in D1: rimuovere una voce dal JSON non basta.
+- Le conferme ospite e host hanno ricevute di invio distinte. Un errore provoca un retry Stripe; Resend riceve una chiave di idempotenza stabile.
+- Il calendario iCal esportato risponde 503 in caso di guasto D1; non pubblica un falso calendario vuoto.
+
+## Recupero di una riserva incerta
+
+Query diagnostica (non contiene nomi o email):
+
+```sql
+SELECT id, stripe_session_id, check_in, check_out, expires_at, status
+FROM checkout_holds
+WHERE status = 'active';
+```
+
+Se Stripe ha risposto ma il salvataggio dell'ID non è riuscito, lo stesso browser può recuperare la sessione riutilizzando l'ID della richiesta. Il webhook contiene comunque `metadata.holdId`.
+Una riserva senza sessione salvata e senza evento può restare bloccata: verificare in Stripe il relativo `holdId` prima di liberarla. Non rilasciare automaticamente le riserve dubbie.
+
+## Limiti operativi da tenere presenti
+
+- Airbnb e Booking.com sincronizzano iCal in modo asincrono: non c'è un blocco atomico condiviso con i portali. Per una garanzia tra canali serve un channel manager. Il blocco atomico implementato copre le prenotazioni dirette del sito.
+- I feed devono contenere intervalli giornalieri con inizio e fine validi. Feed corrotti, eventi ricorrenti o formati non supportati fermano il pagamento invece di mostrare una falsa disponibilità.
+- Le chiavi di idempotenza Resend durano 24 ore. Le ricevute persistenti in D1 evitano il normale reinvio oltre questa finestra; resta una rara finestra di duplicazione se un invio riesce e il successivo salvataggio fallisce per oltre 24 ore.
+- Il checkout è pubblico: proteggere la creazione delle riserve dagli abusi con le regole anti-bot/rate limit di Cloudflare adatte al traffico reale. Queste impostazioni esterne non sono state modificate.
+- Non sono stati verificati accessi, segreti, registrazione degli eventi o schema del database in produzione. Il successo dei test locali non sostituisce il test Stripe nell'ambiente pubblicato.
+
+## Verifiche locali
+
+Node 24 (oppure una versione con `node:sqlite` disponibile):
+
+```sh
+npm test
+npm run build
+```
+
+Per il browser serve Playwright e un browser Chromium. `npm run test:browser` usa `playwright` installato localmente oppure il modulo indicato in `MONT6_PLAYWRIGHT_PATH`. `MONT6_BROWSER_CHANNEL=chrome` usa Chrome già installato.
+I test usano dati fittizi e non effettuano richieste a Stripe o Resend reali.
+
+Riferimenti: [Stripe fulfillment](https://docs.stripe.com/checkout/fulfillment), [Stripe webhooks](https://docs.stripe.com/webhooks), [scadenza Checkout](https://docs.stripe.com/api/checkout/sessions/create), [transazioni D1](https://developers.cloudflare.com/d1/worker-api/d1-database/), [idempotenza Resend](https://resend.com/docs/dashboard/emails/idempotency-keys).
