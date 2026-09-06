@@ -122,6 +122,17 @@ function initLang() {
         const label = opt.getAttribute(lang === 'en' ? 'data-en' : 'data-it');
         if (label) opt.textContent = label;
     });
+
+    // Il selettore punta agli indirizzi puliti ("/" e "/en/"), quelli che sta
+    // in sitemap e che indicizza Google. La scelta la ricorda questo cookie,
+    // letto poi da functions/_middleware.js: senza, chi ha il browser in
+    // inglese e clicca IT verrebbe rispedito su /en/ al giro dopo.
+    document.querySelectorAll('.lang-btn[hreflang]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const scelta = btn.getAttribute('hreflang') === 'en' ? 'en' : 'it';
+            document.cookie = `mont6_lang=${scelta}; Path=/; Max-Age=31536000; SameSite=Lax`;
+        });
+    });
 }
 
 /**

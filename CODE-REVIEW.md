@@ -1,6 +1,6 @@
 # Revisione Mont°6 — 6 settembre 2026
 
-Correzioni applicate al codice locale. Nessuna modifica effettuata a Stripe, al database remoto o ai deploy. L'estetica proposta è esterna al repository e attende approvazione.
+Rilascio tecnico autorizzato il 6 settembre 2026. Migrazione D1 applicata, cinque eventi Stripe configurati e Worker email pubblicato. Chiave Stripe e feed iCal convertiti in variabili segrete con autorizzazione esplicita. Le proposte estetiche sono esterne al repository e non vengono pubblicate.
 
 ## Problemi individuati e correzioni
 
@@ -20,20 +20,21 @@ Correzioni applicate al codice locale. Nessuna modifica effettuata a Stripe, al 
 | Bassa | Ritorno dal checkout con pulsante disabilitato; errori di disponibilità non sempre visibili. | Ripristino del tentativo, aggiornamento al ritorno dalla cache del browser e messaggi espliciti. |
 | Bassa | Banner cookie che poteva riapparire dopo la chiusura; overlay della galleria che intercettava i clic. | Timer annullato, storage gestito anche se disabilitato e overlay senza intercettazione del puntatore. |
 | Bassa | Lo script di pubblicazione mostrava successo anche dopo errori Git. | Test prima dell'invio, verifica degli errori e messaggio che richiede di controllare l'esito del deploy Cloudflare. |
+| Media | La mappa mostrava “API key required” perché CARTO richiede ora una chiave. | Ripristinate le mappe con il servizio standard OpenStreetMap, attribuzione collegata e CSP aggiornata. |
 
 ## Verifiche
 
 - 27 test offline dei pagamenti, delle email e del middleware: superati. Le query vengono eseguite su SQLite reale; Stripe e Resend sono simulati e non ricevono chiamate.
 - 48 controlli browser su italiano/inglese, desktop/mobile: superati. Coprono selezione date, intervalli tra prenotazioni, prezzi, ripetizione del tentativo, guasti e pagina di conferma.
-- 14 controlli del reindirizzamento lingua: superati.
-- Build della versione inglese: 21 controlli superati.
+- 26 controlli del reindirizzamento lingua: superati dopo l'integrazione degli aggiornamenti remoti.
+- Build della versione inglese: 24 controlli superati.
 - Anteprima visuale controllata a 1440 e 390 pixel: nessuna eccezione JavaScript, immagine rotta o overflow orizzontale nei controlli effettuati. Il rilevatore CSS ha lavorato in modalità ridotta; non costituisce una certificazione di accessibilità.
 
 ## Prima della pubblicazione
 
-Seguire **BACKEND-SETUP.md**: applicare la migrazione D1, configurare tutti e cinque gli eventi Stripe e pubblicare separatamente Pages e Worker email. Verificare l'ID reale del database nel Worker: il file contiene ancora un segnaposto, non è stato inventato un ID.
+Seguire **BACKEND-SETUP.md** per i rilasci successivi. La migrazione D1 e la configurazione dei cinque eventi Stripe sono state completate; l'ID reale del database è inserito nel Worker. Le modifiche remote a URL e selettore lingua sono integrate nel rilascio.
 
-La revisione non dimostra la correttezza della configurazione remota: segreti, binding, endpoint, autorizzazioni e consegna delle email reali vanno verificati nell'ambiente di test pubblicato. Nessuna prenotazione esistente è stata modificata.
+Binding, presenza dei segreti, endpoint, eventi e schema remoto sono stati verificati. La consegna end-to-end di pagamenti ed email reali non è stata collaudata. Nessuna prenotazione esistente è stata modificata.
 
 Il blocco atomico protegge le prenotazioni dirette. La disponibilità proveniente da Airbnb/Booking resta soggetta al ritardo iCal; una garanzia atomica tra portali richiede un'integrazione di channel management. Una riserva con risposta Stripe incerta resta occupata fino alla verifica, anziché rischiare una seconda vendita. Gestione dei casi incerti e protezione anti-abuso sono descritte nella guida backend.
 

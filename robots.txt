@@ -1,6 +1,9 @@
 User-agent: *
 Allow: /
-Disallow: /success.html
 Disallow: /api/
+
+# /success.html non e' bloccata qui apposta: porta un <meta name="robots"
+# content="noindex">, che Google puo' leggere solo se le e' permesso aprirla.
+# Bloccata e basta, l'indirizzo poteva finire in ricerca senza contenuto.
 
 Sitemap: https://mont6cefalu.it/sitemap.xml

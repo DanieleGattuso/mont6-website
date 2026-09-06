@@ -2,9 +2,9 @@
 
 ## Aggiornamento del 6 settembre 2026
 
-Le correzioni sono locali. Nessun deploy e nessun addebito reale fanno parte del collaudo.
-Prima di pubblicare le nuove Functions, applicare la migrazione e aggiornare gli eventi Stripe.
-L'anteprima estetica è separata dal repository e richiede l'approvazione del proprietario.
+Rilascio tecnico autorizzato dal proprietario. Il 6 settembre sono stati applicati la migrazione D1 additiva e i cinque eventi Stripe elencati sotto; il Worker email aggiornato è attivo al 100% con i binding e il Cron esistenti.
+La chiave Stripe e i due feed privati iCal sono stati convertiti in variabili segrete nello stesso progetto Cloudflare, con autorizzazione esplicita e senza modificarne i valori.
+Le proposte estetiche restano separate dal repository e non fanno parte di questo rilascio. Il collaudo non esegue addebiti o invii email reali.
 
 ### Database esistente
 
@@ -89,7 +89,7 @@ Una riserva senza sessione salvata e senza evento può restare bloccata: verific
 - I feed devono contenere intervalli giornalieri con inizio e fine validi. Feed corrotti, eventi ricorrenti o formati non supportati fermano il pagamento invece di mostrare una falsa disponibilità.
 - Le chiavi di idempotenza Resend durano 24 ore. Le ricevute persistenti in D1 evitano il normale reinvio oltre questa finestra; resta una rara finestra di duplicazione se un invio riesce e il successivo salvataggio fallisce per oltre 24 ore.
 - Il checkout è pubblico: proteggere la creazione delle riserve dagli abusi con le regole anti-bot/rate limit di Cloudflare adatte al traffico reale. Queste impostazioni esterne non sono state modificate.
-- Non sono stati verificati accessi, segreti, registrazione degli eventi o schema del database in produzione. Il successo dei test locali non sostituisce il test Stripe nell'ambiente pubblicato.
+- Sono stati verificati binding, nomi e tipi dei segreti, cinque eventi del webhook e schema D1 in produzione. Il valore del signing secret e la consegna di un pagamento/email reale non sono stati collaudati: i test locali non sostituiscono questo controllo end-to-end.
 
 ## Verifiche locali
 

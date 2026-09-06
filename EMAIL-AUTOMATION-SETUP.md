@@ -5,7 +5,7 @@ Usa le tabelle `bookings`, `checkout_holds` ed `email_deliveries` nello stesso d
 
 ## Configurazione
 
-In `worker-emails/wrangler.toml`, sostituire `INSERISCI_QUI_IL_DATABASE_ID` con l'ID verificato di `mont6-bookings`. Il segnaposto non è un ID valido e impedisce il deploy.
+`worker-emails/wrangler.toml` contiene l'ID verificato di `mont6-bookings`. Il Worker è stato pubblicato il 6 settembre 2026 mantenendo i binding e il Cron esistenti; versione `cfe4a689-08b8-4305-9d5c-c1b8d2a25953`, traffico 100%.
 Configurare il binding `DB`, il secret `RESEND_API_KEY`, il mittente verificato `BOOKING_FROM_EMAIL` e, facoltativamente, un link HTTPS `REVIEW_URL` e il secret `CRON_TEST_KEY`.
 
 Dalla cartella `worker-emails`:
