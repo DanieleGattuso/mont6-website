@@ -45,12 +45,9 @@
     <!-- Font self-hosted: preload dei due critici (titolo hero + body) -->
     <link rel="preload" as="font" type="font/woff2" href="/vendor/fonts/CormorantGaramond-500.woff2" crossorigin>
 
-    <!-- Flatpickr CSS: nel head, deve esserci prima che flatpickr inizializzi
-         il calendario (altrimenti calcola larghezze sbagliate e si apre gigante) -->
-    <link rel="stylesheet" href="/vendor/flatpickr/flatpickr.min.css">
-
-    <!-- CSS (glightbox/leaflet caricati async da app.js) -->
-    <link rel="stylesheet" href="/style.css?v=27">
+    <!-- Un solo CSS per home e calendario: entrambi pronti prima dell'init.
+         Generato da npm run build; glightbox/leaflet restano asincroni. -->
+    <link rel="stylesheet" href="/home.css?v=28">
 
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
@@ -937,7 +934,7 @@
                             <span>Stay Dates</span>
                         </label>
                         <input type="text" id="date-range" class="luxe-input" placeholder="Check-in / Check-out" readonly>
-                        <p style="font-size: 0.75rem; color: var(--color-text-light); margin-top: 0.5rem; opacity: 0.8; font-style: italic; text-align: left;">
+                        <p style="font-size: 0.75rem; color: var(--color-text-light); margin-top: 0.5rem; font-style: italic; text-align: left;">
 
                             <span>* Crossed out dates in the calendar are already booked.</span>
                         </p>
