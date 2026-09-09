@@ -1,204 +1,118 @@
-/**
- * Genera la versione inglese del sito in en/ partendo dai file italiani.
- * Una sola sorgente da mantenere: si scrive in index.html, questo file
- * ricava en/index.html. Lanciare `npm run build` dopo ogni modifica al copy.
- *
- * Perché due URL invece del vecchio toggle JS: Google indicizza una pagina per
- * lingua solo se ha un indirizzo suo. Con hreflang, agli inglesi mostra /en/.
+/** Static HTML build. Edit templates/, then npm run build.
+ * Both IT and EN are complete documents, even without JavaScript or CSS.
+ * Prices, API handlers and checkout contracts are not changed by this build.
  */
-const fs = require('fs');
-const path = require('path');
-
+const fs = require('node:fs');
+const path = require('node:path');
+const assert = require('node:assert/strict');
+const { renderLanguage } = require('./localize-html');
 const ROOT = path.join(__dirname, '..');
-const OUT_DIR = path.join(ROOT, 'en');
-
-/**
- * I percorsi relativi non valgono dentro /en/: diventano assoluti dalla root.
- * Attenzione a srcset/imagesrcset: contengono PIÙ percorsi separati da virgola,
- * non basta sistemare il primo. Se sfuggono, /en/img/... restituisce l'HTML di
- * fallback al posto del file e le immagini spariscono.
- */
-function absolutePaths(html) {
-    return html
-        .replace(/(href|src|data-bg|data-bg-lg)="(img\/|vendor\/|style\.css|app\.js|lang-init\.js|privacy\.html|success\.html)/g, '$1="/$2')
-        .replace(/url\('img\//g, "url('/img/")
-        .replace(/(srcset|imagesrcset)="([^"]+)"/g, (_, attr, value) =>
-            `${attr}="${value.replace(/(^|,\s*)(img\/|vendor\/)/g, '$1/$2')}"`);
-}
-
-const EN_FAQ = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-        ['What are the check-in and check-out times at Mont°6 in Cefalù?',
-            'Check-in is from 3:00 PM, check-out by 10:00 AM. Mont°6 has a digital lock, so you let yourself in at any time from 3:00 PM onwards.'],
-        ['Where can I park near Mont°6 in the old town of Cefalù?',
-            'The apartment is in the pedestrian old town. We recommend Parcheggio Coco on the seafront, about a five-minute walk away.'],
-        ['Does Mont°6 accept pets?',
-            'No. For hygiene and regulatory reasons pets cannot stay at the apartment.'],
-        ['Are linens and towels included?',
-            'Yes: bed linen, towels and a set of toiletries are always included in the price, along with a few breakfast basics.'],
-        ['What is the minimum stay at Mont°6?',
-            'Two nights. In high season (July and August) three nights may be required. Rates run from €82 to €200 a night depending on the month.'],
-        ['Is it cheaper to book Mont°6 directly?',
-            'Yes. Booking direct on mont6cefalu.it saves up to 15% against the portals, which add booking and service fees. You also get a bottle of Sicilian wine on arrival and flexible check-in and check-out times when the apartment is free.'],
-        ['Can I cancel my booking at Mont°6, and how do refunds work?',
-            'Cancel up to 14 days before arrival and you get a full refund. Between 14 and 7 days before arrival the refund is 50%. From 7 days before, and in case of no-show, there is no refund. Refunds go back to the card used for the payment, usually within 5 to 10 working days.'],
-        ['Is the city tax included in the price at Mont°6?',
-            'No. The Cefalù council charges a city tax of €2 per person per night, capped at 5 nights, paid in cash on arrival. Everything else is included in the total shown on the site.'],
-    ].map(([q, a]) => ({
-        '@type': 'Question',
-        name: q,
-        acceptedAnswer: { '@type': 'Answer', text: a },
-    })),
+const ORIGIN = 'https://mont6cefalu.it';
+const read = name => fs.readFileSync(path.join(ROOT, 'templates', name), 'utf8');
+const meta = {
+    index: {
+        it: ['Mont°6 — Appartamento nel centro storico di Cefalù | Prenotazione diretta', 'Un appartamento per due in Vicolo Monteleone: camera, cucina e travi a vista. Due minuti dal Duomo, cinque dalla spiaggia. Scegli le date e prenota con Daniele.'],
+        en: ['Mont°6 — Apartment in Cefalù Old Town, Sicily | Book direct', 'An apartment for two in Vicolo Monteleone, with a bedroom, kitchen and exposed beams. Two minutes from the Cathedral, five from the beach. Book with Daniele.'],
+    },
+    privacy: {
+        it: ['Mont°6 — Informativa su privacy e cookie', 'Come Mont°6 tratta i dati delle prenotazioni, i pagamenti tramite Stripe e i cookie essenziali. Informazioni e contatti per la tua privacy.'],
+        en: ['Mont°6 — Privacy and cookie notice', 'How Mont°6 handles booking data, Stripe payments and essential cookies. Information and contact details for privacy enquiries.'],
+    },
+    success: {
+        it: ['Mont°6 — Stato della prenotazione', 'Verifica lo stato del pagamento e della prenotazione del tuo soggiorno a Mont°6, Cefalù.'],
+        en: ['Mont°6 — Booking status', 'Check the payment and booking status of your stay at Mont°6 in Cefalù.'],
+    },
+    '404': {
+        it: ['Mont°6 — Pagina non trovata', 'La pagina richiesta non è disponibile. Torna al sito di Mont°6 o verifica le date per il tuo soggiorno a Cefalù.'],
+        en: ['Mont°6 — Page not found', 'The page you requested is unavailable. Return to Mont°6 or check dates for your stay in Cefalù.'],
+    },
 };
+const plain = text => text.replace(/<[^>]*>/g, '').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+const urlFor = (page, lang) => `${ORIGIN}${lang === 'en' ? '/en' : ''}/${page === 'index' ? '' : page}`;
+const absolutePaths = html => html
+    .replace(/(href|src|data-bg|data-bg-lg)="(img\/|vendor\/|style\.css|app\.js|lang-init\.js|booking-status\.js)/g, '$1="/$2')
+    .replace(/url\('img\//g, "url('/img/")
+    .replace(/(srcset|imagesrcset)="([^"]+)"/g, (_, attr, val) => `${attr}="${val.replace(/(^|,\s*)(img\/|vendor\/)/g, '$1/$2')}"`);
 
-function buildIndex() {
-    let html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
-
-    html = html
-        .replace('<html lang="it" data-lang="it">', '<html lang="en" data-lang="en">')
-        .replace(
-            /<title>[^<]*<\/title>/,
-            '<title>Mont°6 — Apartment in the Old Town of Cefalù, Sicily | Book Direct</title>'
-        )
-        .replace(
-            /<meta name="description" content="[^"]*">/,
-            '<meta name="description" content="Self-contained apartment in the old town of Cefalù: two minutes on foot from the Cathedral, five from the beach. One bedroom, air conditioning, proper kitchen. From €82 a night, booked direct with no fees.">'
-        )
-        .replace('<link rel="canonical" href="https://mont6cefalu.it/">', '<link rel="canonical" href="https://mont6cefalu.it/en/">')
-        .replace('<meta property="og:url" content="https://mont6cefalu.it">', '<meta property="og:url" content="https://mont6cefalu.it/en/">')
-        .replace(
-            '<meta property="og:title" content="Mont°6 — Appartamento nel centro storico di Cefalù">',
-            '<meta property="og:title" content="Mont°6 — Apartment in the old town of Cefalù">'
-        )
-        .replace(
-            '<meta property="og:description" content="Due minuti dal Duomo, cinque dalla spiaggia. Prenotazione diretta, senza commissioni.">',
-            '<meta property="og:description" content="Two minutes from the Cathedral, five from the beach. Book direct, no booking fees.">'
-        )
-        .replace(
-            '<meta name="twitter:title" content="Mont°6 — Appartamento nel centro storico di Cefalù">',
-            '<meta name="twitter:title" content="Mont°6 — Apartment in the old town of Cefalù">'
-        )
-        .replace(
-            '<meta name="twitter:description" content="Due minuti dal Duomo, cinque dalla spiaggia. Prenotazione diretta.">',
-            '<meta name="twitter:description" content="Two minutes from the Cathedral, five from the beach. Book direct.">'
-        )
-        .replace('<meta property="og:image:alt" content="Il soggiorno di Mont°6: travi a vista, maioliche siciliane e luce calda">',
-                 '<meta property="og:image:alt" content="The living room at Mont°6: exposed beams, Sicilian tiles and warm light">')
-        .replace('"priceRange": "€82 - €200 a notte",', '"priceRange": "€82 - €200 per night",')
-        .replace('<meta property="og:locale" content="it_IT">', '<meta property="og:locale" content="en_GB">')
-        .replace('<meta property="og:locale:alternate" content="en_GB">', '<meta property="og:locale:alternate" content="it_IT">');
-
-    // Selettore lingua: su /en/ è EN a essere attivo.
-    // Il link IT punta a "/" pulito, l'indirizzo che sta in sitemap. Che sia
-    // una scelta esplicita e non un capriccio del browser lo dicono il cookie
-    // scritto da app.js e, per chi ha JavaScript spento, il Referer che
-    // controlla il middleware.
-    html = html
-        .replace(/<a class="lang-btn active" href="\/" hreflang="it" aria-current="true">IT<\/a>/g,
-            '<a class="lang-btn" href="/" hreflang="it">IT</a>')
-        .replace(/<a class="lang-btn" href="\/en\/" hreflang="en">EN<\/a>/g,
-            '<a class="lang-btn active" href="/en/" hreflang="en" aria-current="true">EN</a>');
-
-    // Dati strutturati: lingua, URL e FAQ in inglese
-    html = html
-        .replace('"url": "https://mont6cefalu.it",', '"url": "https://mont6cefalu.it/en/",\n        "inLanguage": "en",')
-        .replace(
-            /"description": "Appartamento indipendente[^"]*",/,
-            '"description": "Self-contained apartment in the pedestrian old town of Cefalù: one bedroom, one bathroom, a proper kitchen, air conditioning and fibre Wi-Fi. Two minutes on foot from the Cathedral, five from the beach.",'
-        )
-        .replace(
-            /<script type="application\/ld\+json">\s*\{\s*"@context": "https:\/\/schema\.org",\s*"@type": "FAQPage"[\s\S]*?<\/script>/,
-            '<script type="application/ld+json">\n' + JSON.stringify(EN_FAQ, null, 4) + '\n    </script>'
-        );
-
-    html = absolutePaths(html);
-    // Dalla pagina inglese si va alla privacy inglese
-    html = html.replace(/href="\/privacy"/g, 'href="/en/privacy"');
-    html = html.replace('<head>', '<head>\n    <!-- Generato da scripts/build-en.js: non modificare a mano, si scrive in /index.html -->');
-
-    return html;
-}
-
-function buildPrivacy() {
-    let html = fs.readFileSync(path.join(ROOT, 'privacy.html'), 'utf8');
-    html = html
-        .replace('<html lang="it" data-lang="it">', '<html lang="en" data-lang="en">')
-        .replace(/<title>[^<]*<\/title>/, '<title>Mont°6 — Privacy Policy</title>')
-        // "Torna alla home" da /en/privacy deve portare alla home inglese
-        .replace('href="/" class="btn-luxe btn-back"', 'href="/en/" class="btn-luxe btn-back"')
-        // canonical proprio: e' la stessa pagina a due indirizzi
-        .replace('<link rel="canonical" href="https://mont6cefalu.it/privacy">',
-                 '<link rel="canonical" href="https://mont6cefalu.it/en/privacy">');
-    return absolutePaths(html);
-}
-
-/**
- * Da /en/ ogni percorso relativo punta dentro /en/, dove non c'è nulla:
- * Cloudflare risponde 200 con l'HTML di fallback e il browser si trova una
- * pagina al posto di un'immagine o di un foglio di stile. Qui elenchiamo
- * ogni riferimento che non parte da "/" o da un protocollo.
- */
-function relativeRefs(html) {
-    const bad = [];
-    const push = (v) => {
-        const t = v.trim();
-        if (t && !/^(\/|https?:|#|data:|mailto:|tel:|whatsapp:)/.test(t)) bad.push(t);
-    };
-    for (const m of html.matchAll(/(?:href|src|data-bg|data-bg-lg)="([^"]+)"/g)) push(m[1]);
-    for (const m of html.matchAll(/(?:srcset|imagesrcset)="([^"]+)"/g)) {
-        m[1].split(',').forEach((part) => push(part.trim().split(/\s+/)[0]));
+function build(page, lang) {
+    let html = read(`${page}.html`).replace('<!-- COOKIE_NOTICE -->', read('cookie-notice.html'));
+    html = renderLanguage(html, lang)
+        .replace('<html lang="it" data-lang="it">', `<html lang="${lang}" data-lang="${lang}">`);
+    const [title, description] = meta[page][lang];
+    html = html.replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`)
+        .replace(/\s*<meta (?:name="(?:description|twitter:title|twitter:description)"|property="(?:og:title|og:description|og:url|og:locale|og:locale:alternate)") content="[^"]*">/g, '')
+        .replace('</title>', `</title>
+    <meta name="description" content="${description}">
+    <meta property="og:title" content="${title}">
+    <meta property="og:description" content="${description}">
+    <meta property="og:url" content="${urlFor(page,lang)}">
+    <meta property="og:locale" content="${lang === 'en' ? 'en_GB' : 'it_IT'}">
+    <meta property="og:locale:alternate" content="${lang === 'en' ? 'it_IT' : 'en_GB'}">
+    <meta name="twitter:title" content="${title}">
+    <meta name="twitter:description" content="${description}">`);
+    html = html.replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${urlFor(page,lang)}">`);
+    if (lang === 'en') {
+        html = html.replace(/href="\/privacy(?=["#])/g, 'href="/en/privacy')
+            .replace(/href="\/" class="btn-luxe/g, 'href="/en/" class="btn-luxe')
+            .replace('href="/" id="booking-home"', 'href="/en/" id="booking-home"')
+            .replace('href="/#booking"', 'href="/en/#booking"')
+            .replace(/<a class="lang-btn active" href="\/" hreflang="it" aria-current="true">IT<\/a>/g, '<a class="lang-btn" href="/" hreflang="it">IT</a>')
+            .replace(/<a class="lang-btn" href="\/en\/" hreflang="en">EN<\/a>/g, '<a class="lang-btn active" href="/en/" hreflang="en" aria-current="true">EN</a>')
+            .replace('content="Il soggiorno di Mont°6: travi a vista, maioliche siciliane e luce calda"', 'content="The living room at Mont°6: exposed beams, Sicilian tiles and warm light"');
     }
-    for (const m of html.matchAll(/url\(['"]?([^'")]+)['"]?\)/g)) push(m[1]);
-    return [...new Set(bad)];
+    if (page === 'index') {
+        const faq = [...html.matchAll(/<button class="faq-question">([\s\S]*?)<span class="faq-icon">[\s\S]*?<div class="faq-answer">\s*<p>([\s\S]*?)<\/p>/g)]
+            .map(([, q,a]) => ({ '@type':'Question', name:plain(q), acceptedAnswer:{'@type':'Answer', text:plain(a)} }));
+        assert.equal(faq.length, 8, `${lang}: all visible FAQs included in schema`);
+        html = html.replace(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g, (_, json) => {
+            const data = JSON.parse(json);
+            if (data['@type'] === 'VacationRental') {
+                data.url = urlFor(page,lang);
+                data.mainEntityOfPage = {'@type':'WebPage', '@id':urlFor(page,lang)+'#booking', inLanguage:lang};
+                if (lang === 'en') {
+                    data.description = 'Self-contained apartment in the pedestrian old town of Cefalù: one bedroom, one bathroom, an equipped kitchen, air conditioning and fibre Wi-Fi. Two minutes on foot from the Cathedral, five from the beach.';
+                    data.priceRange = data.priceRange.replace('a notte', 'per night');
+                }
+                // Airbnb reviews remain visible and attributed, but are not
+                // republished as first-party rating markup for Google.
+                delete data.review;
+                delete data.aggregateRating;
+            }
+            if (data['@type'] === 'FAQPage') { data.inLanguage=lang; data.mainEntity=faq; }
+            return `<script type="application/ld+json">\n${JSON.stringify(data,null,4)}\n    </script>`;
+        });
+    }
+    return absolutePaths(html).replace('<head>', '<head>\n    <!-- Generated by scripts/build-en.js. Edit templates/, then npm run build. -->');
 }
 
-const out = buildIndex();
-const outPrivacy = buildPrivacy();
-
-// I controlli girano PRIMA di scrivere: una build fallita non deve lasciare
-// su disco file rotti pronti per il "git add ." di pubblica.bat.
-const relIndex = relativeRefs(out);
-const relPrivacy = relativeRefs(outPrivacy);
-// Ogni sostituzione qui sopra è una stringa letterale: se il testo italiano
-// cambia, la .replace() non trova più nulla e fallisce IN SILENZIO, lasciando
-// la pagina inglese con pezzi in italiano. Questi controlli sono la rete:
-// verificano il risultato, non l'intenzione.
-const checks = [
-    ['lang inglese', out.includes('<html lang="en" data-lang="en">')],
-    ['canonical /en/', out.includes('href="https://mont6cefalu.it/en/"')],
-    ['hreflang presenti', (out.match(/rel="alternate" hreflang/g) || []).length === 3],
-    ['nessun percorso relativo (index)', relIndex.length === 0, relIndex.join(', ')],
-    ['nessun percorso relativo (privacy)', relPrivacy.length === 0, relPrivacy.join(', ')],
-    ['FAQ in inglese', out.includes('What are the check-in and check-out times')],
-    ['FAQ complete', (out.match(/"@type": "Question"/g) || []).length === EN_FAQ.mainEntity.length],
-    ['switcher EN attivo', out.includes('class="lang-btn active" href="/en/"')],
-    ['switcher IT porta alla home pulita', out.includes('<a class="lang-btn" href="/" hreflang="it">IT</a>')],
-    ['nessun ?lang= nei link interni', !out.includes('?lang=') && !outPrivacy.includes('?lang=')],
-    ['privacy inglese senza estensione', out.includes('href="/en/privacy"') && !out.includes('privacy.html')],
-    ['title tradotto', /<title>[^<]*Apartment[^<]*<\/title>/.test(out)],
-    ['description tradotta', /<meta name="description" content="Self-contained apartment/.test(out)],
-    ['og:title tradotto', out.includes('<meta property="og:title" content="Mont°6 — Apartment in the old town of Cefalù">')],
-    ['og:description tradotta', out.includes('<meta property="og:description" content="Two minutes from the Cathedral, five from the beach. Book direct, no booking fees.">')],
-    ['twitter:title tradotto', out.includes('<meta name="twitter:title" content="Mont°6 — Apartment in the old town of Cefalù">')],
-    ['twitter:description tradotta', out.includes('<meta name="twitter:description" content="Two minutes from the Cathedral, five from the beach. Book direct.">')],
-    ['og:locale invertito', out.includes('og:locale" content="en_GB"') && out.includes('og:locale:alternate" content="it_IT"')],
-    ['og:image:alt tradotto', out.includes('exposed beams, Sicilian tiles')],
-    ['priceRange tradotto', out.includes('"€82 - €200 per night"')],
-    ['inLanguage impostato', out.includes('"inLanguage": "en"')],
-    ['descrizione JSON-LD tradotta', out.includes('"description": "Self-contained apartment in the pedestrian')],
-    ['privacy: canonical inglese', outPrivacy.includes('https://mont6cefalu.it/en/privacy')],
-    ['privacy: ritorno alla home inglese', outPrivacy.includes('href="/en/" class="btn-luxe btn-back"')],
-];
-const failed = checks.filter(([, ok]) => !ok);
-failed.forEach(([name, , detail]) => console.error('FALLITO: ' + name + (detail ? ' -> ' + detail : '')));
-if (failed.length) {
-    console.error('Build interrotta: en/ non e stato toccato.');
-    process.exit(1);
+function validate(html, page, lang) {
+    assert.equal((html.match(/<h1\b/g)||[]).length, 1, `${page}/${lang}: one h1`);
+    assert.ok(!html.includes(`class="lang-${lang === 'en' ? 'it' : 'en'}`), `${page}/${lang}: no other-language blocks`);
+    const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
+    assert.equal(ids.length, new Set(ids).size, `${page}/${lang}: unique IDs`);
+    let level=0;
+    for (const match of html.matchAll(/<h([1-6])\b/g)) {
+        const next=Number(match[1]);
+        assert.ok(next<=level+1, `${page}/${lang}: heading h${level} -> h${next}`);
+        level=next;
+    }
+    for (const match of html.matchAll(/(?:href|src|data-bg|data-bg-lg)="([^"]+)"/g)) {
+        assert.match(match[1], /^(\/|https?:|#|data:|mailto:|tel:)/, `${page}/${lang}: absolute asset/link`);
+    }
+    for (const match of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) JSON.parse(match[1]);
 }
 
-fs.mkdirSync(OUT_DIR, { recursive: true });
-fs.writeFileSync(path.join(OUT_DIR, 'index.html'), out);
-fs.writeFileSync(path.join(OUT_DIR, 'privacy.html'), outPrivacy);
-console.log('en/index.html + en/privacy.html generati (' + checks.length + ' controlli ok)');
+// Validate all documents before writing any output.
+const outputs = [];
+for (const page of Object.keys(meta)) for (const lang of ['it','en']) {
+    const html=build(page,lang);
+    validate(html,page,lang);
+    outputs.push([`${lang==='en'?'en/':''}${page}.html`, html]);
+}
+// / remains the Italian canonical URL; /it/ is an explicit Italian alias.
+outputs.push(['it/index.html', outputs.find(([file])=>file==='index.html')[1]]);
+for (const [file,html] of outputs) {
+    fs.mkdirSync(path.dirname(path.join(ROOT,file)),{recursive:true});
+    fs.writeFileSync(path.join(ROOT,file),html);
+}
+console.log(`${outputs.length} static pages generated; language, headings, IDs, paths and JSON-LD checked.`);

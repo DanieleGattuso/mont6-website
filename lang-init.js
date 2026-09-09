@@ -1,8 +1,12 @@
-// Lingua delle pagine secondarie (privacy, conferma pagamento).
-// Ordine: ?lang= nell'URL (lo passa Stripe al ritorno dal checkout), poi italiano.
+// Preserve existing Stripe return URLs while serving separate language pages.
+// Query parameters (including session_id) stay intact. No payment logic here.
 (function () {
     var q = new URLSearchParams(location.search).get('lang');
-    var lang = q === 'en' || (!q && document.documentElement.getAttribute('data-lang') === 'en') ? 'en' : 'it';
-    document.documentElement.setAttribute('data-lang', lang);
-    document.documentElement.setAttribute('lang', lang);
+    var lang = document.documentElement.getAttribute('data-lang') || 'it';
+    if ((q === 'it' || q === 'en') && q !== lang) {
+        var page = location.pathname.replace(/^\/en\//, '/');
+        if (/^\/(success|privacy)(\.html)?\/?$/.test(page)) {
+            location.replace((q === 'en' ? '/en' : '') + page + location.search + location.hash);
+        }
+    }
 })();

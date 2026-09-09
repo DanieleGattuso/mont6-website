@@ -33,9 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSmoothScroll();
     initBookingForm();
     initFAQ();
-    initParallax();
     initGalleryLightbox();
-    initCookieBanner();
     initFloatingCTA();
     initMapLazy();
 });
@@ -183,24 +181,37 @@ function initNavbar() {
  * Intersection Observer for scroll animations
  */
 function initScrollReveal() {
-    const reveals = document.querySelectorAll('.reveal-up, .reveal-right, .reveal-left');
+    const reveals = document.querySelectorAll('.reveal-up, .reveal-right, .reveal-left, .gal-fig');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (!('IntersectionObserver' in window) || reducedMotion.matches) return;
 
-    const revealOptions = {
-        threshold: 0.15,
-        rootMargin: "0px 0px -50px 0px"
-    };
-
-    const revealObserver = new IntersectionObserver((entries, observer) => {
+    const show = element => element.classList.remove('reveal-pending');
+    const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-                observer.unobserve(entry.target);
-            }
+            if (!entry.isIntersecting) return;
+            show(entry.target);
+            observer.unobserve(entry.target);
         });
-    }, revealOptions);
-
-    reveals.forEach(reveal => {
-        revealObserver.observe(reveal);
+    }, { threshold: 0, rootMargin: '0px 0px -24px 0px' });
+    reveals.forEach(element => {
+        // First-screen content and booking controls never wait for animation.
+        if (element.closest('#home, #booking') || element.getBoundingClientRect().top < window.innerHeight) return;
+        element.classList.add('reveal-pending');
+        observer.observe(element);
+    });
+    reducedMotion.addEventListener('change', event => {
+        if (!event.matches) return;
+        reveals.forEach(show);
+        observer.disconnect();
+    });
+    document.addEventListener('focusin', event => {
+        // A keyboard user must never focus an invisible descendant.
+        let element = event.target.closest('.reveal-pending');
+        while (element) {
+            show(element);
+            observer.unobserve(element);
+            element = element.parentElement?.closest('.reveal-pending');
+        }
     });
 }
 
@@ -222,7 +233,7 @@ function initSmoothScroll() {
   
                 window.scrollTo({
                     top: offsetPosition,
-                    behavior: "smooth"
+                    behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
                 });
             }
         });
@@ -368,13 +379,6 @@ function initBookingForm() {
                 ? `${nightCount} night${nightCount === 1 ? '' : 's'} × average per night`
                 : `${nightCount} nott${nightCount === 1 ? 'e' : 'i'} × prezzo medio a notte`;
         }
-
-        // Risparmio stimato rispetto ai portali (~15% di commissioni)
-        const savings = Math.round(total * 0.15);
-        ['savingsAmount', 'savingsAmountEn'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = `€${savings}`;
-        });
 
         // Imposta di soggiorno: 2 € a persona per notte, solo per le prime 5
         // notti, da pagare all'arrivo. Non entra nel pagamento Stripe.
@@ -632,21 +636,6 @@ function initFAQ() {
 }
 
 /**
- * Parallax floating effect for secondary images
- */
-function initParallax() {
-    const floatingElements = document.querySelectorAll('.parallax-float');
-    
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        floatingElements.forEach(el => {
-            const speed = 0.05;
-            el.style.transform = `translateY(${scrolled * speed * -1}px)`;
-        });
-    });
-}
-
-/**
  * GLightbox Gallery Initialization
  */
 function initGalleryLightbox() {
@@ -657,37 +646,9 @@ function initGalleryLightbox() {
         touchNavigation: true,
         loop: true,
         autoplayVideos: false,
-        openEffect: 'zoom',
-        closeEffect: 'fade'
-    });
-}
-
-/**
- * Cookie Banner Logic
- */
-function initCookieBanner() {
-    const banner = document.getElementById('cookieBanner');
-    const acceptBtn = document.getElementById('cookieAccept');
-    
-    if (!banner || !acceptBtn) return;
-    
-    // Check if already accepted
-    let cookieAccepted = false;
-    try { cookieAccepted = localStorage.getItem('mont6_cookie_accepted') === 'true'; } catch { /* storage may be disabled */ }
-    let timer;
-    
-    if (!cookieAccepted) {
-        // Show banner after a short delay
-        timer = setTimeout(() => {
-            if (!cookieAccepted) banner.classList.add('visible');
-        }, 1500);
-    }
-    
-    acceptBtn.addEventListener('click', () => {
-        cookieAccepted = true;
-        clearTimeout(timer);
-        try { localStorage.setItem('mont6_cookie_accepted', 'true'); } catch { /* remember for this page only */ }
-        banner.classList.remove('visible');
+        openEffect: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'none' : 'fade',
+        closeEffect: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'none' : 'fade',
+        slideEffect: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'none' : 'slide'
     });
 }
 
