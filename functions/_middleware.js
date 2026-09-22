@@ -66,7 +66,7 @@ export function decide({ pathname, langParam, cookie = '', acceptLanguage = '', 
     return first.startsWith('en') ? 'redirect' : 'pass';
 }
 
-const COOKIE = (lang) => `mont6_lang=${lang}; Path=/; Max-Age=31536000; SameSite=Lax`;
+const COOKIE = (lang) => `mont6_lang=${lang}; Path=/; Max-Age=31536000; SameSite=Lax; Secure`;
 
 function redirectToEn(url, setCookie) {
     // La query va conservata (utm_source e simili), tolto solo il nostro lang=
@@ -82,7 +82,7 @@ function redirectToEn(url, setCookie) {
     return new Response(null, { status: 302, headers });
 }
 
-export async function onRequest(context) {
+async function routeRequest(context) {
     const { request, next } = context;
     let downstreamStarted = false;
     try {
@@ -99,6 +99,15 @@ export async function onRequest(context) {
             return new Response(null, {
                 status: permanente ? 301 : 308,
                 headers: { Location: apex, 'Cache-Control': 'public, max-age=3600' },
+            });
+        }
+
+        // Production checkout must pass through the protected public domain.
+        // A pages.dev alias must not bypass the zone's checkout rate limit.
+        if (url.pathname.startsWith('/api/create-checkout-session')
+            && context.env?.BOOKING_ORIGIN && url.origin !== context.env.BOOKING_ORIGIN) {
+            return Response.json({ error: 'Use the official booking website.' }, {
+                status: 403, headers: { 'Cache-Control': 'no-store' },
             });
         }
 
@@ -136,4 +145,25 @@ export async function onRequest(context) {
         if (downstreamStarted) return new Response('Service temporarily unavailable', { status: 503, headers: { 'Cache-Control': 'no-store' } });
         return next();
     }
+}
+
+// Pages _headers applies to static assets, not responses created by Functions.
+// Cover API responses, redirects and errors here as well.
+export async function onRequest(context) {
+    const response = await routeRequest(context);
+    const secured = new Response(response.body, response);
+    const headers = secured.headers;
+    headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+    headers.set('X-Content-Type-Options', 'nosniff');
+    headers.set('X-Frame-Options', 'SAMEORIGIN');
+    headers.set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+    const path = new URL(context.request.url).pathname;
+    if (path.startsWith('/api/')) {
+        headers.set('Referrer-Policy', 'no-referrer');
+        headers.set('X-Robots-Tag', 'noindex, nofollow');
+        headers.set('Content-Security-Policy', "default-src 'none'; frame-ancestors 'none'; base-uri 'none'");
+    } else if (!headers.has('Referrer-Policy')) {
+        headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+    }
+    return secured;
 }

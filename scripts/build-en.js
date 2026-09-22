@@ -6,6 +6,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const assert = require('node:assert/strict');
 const { renderLanguage } = require('./localize-html');
+const { buildDistribution } = require('./distribution');
 const ROOT = path.join(__dirname, '..');
 const ORIGIN = 'https://mont6cefalu.it';
 const read = name => fs.readFileSync(path.join(ROOT, 'templates', name), 'utf8');
@@ -122,3 +123,5 @@ for (const [file,html] of outputs) {
     fs.writeFileSync(path.join(ROOT,file),html);
 }
 console.log(`${outputs.length} static pages generated; language, headings, IDs, paths and JSON-LD checked.`);
+const publishedFiles = buildDistribution(ROOT);
+console.log(`${publishedFiles.length} public files copied to dist; source, configuration and private files excluded.`);

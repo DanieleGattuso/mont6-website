@@ -198,7 +198,7 @@
             "name": "Can I cancel? How do refunds work?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Cancel up to 14 days before arrival and you get a full refund. Between 14 and 7 days before, the refund is 50%. From 7 days before, and in case of no-show, there is no refund. Refunds go back to the card you paid with, usually within 5-10 working days. To cancel, just message me on WhatsApp or send an email."
+                "text": "Cancel at least 14 days before arrival for a full refund. Cancel at least 7 days but less than 14 days before arrival for a 50% refund. Cancellations less than 7 days before arrival and no-shows are not refundable. Refunds go back to the card you paid with, usually within 5-10 working days. To cancel, just message me on WhatsApp or send an email."
             }
         },
         {
@@ -876,7 +876,7 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="faq-item">
+                        <div class="faq-item" id="cancellation-policy">
                             <h4 class="faq-question-heading"><button class="faq-question">
 
                                 <span>Can I cancel? How do refunds work?</span>
@@ -885,7 +885,7 @@
                             <div class="faq-answer">
                                 <p>
 
-                                    <span>Cancel up to 14 days before arrival and you get a full refund. Between 14 and 7 days before, the refund is 50%. From 7 days before, and in case of no-show, there is no refund. Refunds go back to the card you paid with, usually within 5-10 working days. To cancel, just message me on WhatsApp or send an email.</span>
+                                    <span>Cancel at least 14 days before arrival for a full refund. Cancel at least 7 days but less than 14 days before arrival for a 50% refund. Cancellations less than 7 days before arrival and no-shows are not refundable. Refunds go back to the card you paid with, usually within 5-10 working days. To cancel, just message me on WhatsApp or send an email.</span>
                                 </p>
                             </div>
                         </div>
@@ -984,7 +984,11 @@
                         <span>Request via WhatsApp</span>
                     </button>
 
-                    <button id="btn-request-stripe" class="btn-luxe btn-stripe full-width mt-3">
+                    <p class="price-tax mt-3" id="booking-payment-info">
+
+                        <span>Your stay is paid in full on Stripe; city tax is paid on arrival. Read the <a href="#cancellation-policy">cancellation policy</a> and <a href="/en/privacy">privacy notice</a> before continuing.</span>
+                    </p>
+                    <button id="btn-request-stripe" class="btn-luxe btn-stripe full-width mt-3" aria-describedby="booking-payment-info">
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
 
                         <span>Book &amp; pay online</span>
@@ -994,7 +998,7 @@
                     <p style="text-align: center; font-size: 0.75rem; color: var(--color-text-light); margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 6px;">
                         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#28a745" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
 
-                        <span>Payments handled by Stripe. Your card details never touch this site.</span>
+                        <span>Payments handled by Stripe. Your full card number and security code never pass through this site.</span>
                     </p>
 
                     <div class="direct-benefits-box mt-4" style="border-top: 1px solid rgba(0,0,0,0.08); padding-top: 2rem;">
@@ -1094,7 +1098,7 @@
     <script src="/vendor/glightbox/glightbox.min.js"></script>
 
     <!-- Custom JS -->
-    <script src="/app.js?v=25"></script>
+    <script src="/app.js?v=26"></script>
         <aside class="cookie-banner" id="cookieBanner" hidden aria-label="Cookies">
         <div class="cookie-content">
             <p><span>We use only essential cookies for the site and your booking.</span></p>

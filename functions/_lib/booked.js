@@ -1,4 +1,5 @@
 import { parseDate, isoDate, readAsset } from './payment.js';
+import { readBoundedText } from './body.js';
 
 const shiftISO = (iso, days) => {
     const d = parseDate(iso);
@@ -43,11 +44,18 @@ export async function getBookedRanges({ request, env, excludeHoldId = '' }) {
         }
     } catch (e) { partial = true; console.error('Manual calendar unavailable:', e.message); }
 
-    for (const url of [env.AIRBNB_ICAL_URL, env.BOOKING_ICAL_URL].filter(Boolean)) {
+    const sources = { airbnb: env.AIRBNB_ICAL_URL, booking: env.BOOKING_ICAL_URL };
+    // Production sets "airbnb,booking". Omission preserves deliberately standalone setups.
+    const required = String(env.REQUIRED_ICAL_SOURCES || '').split(',').map(name => name.trim().toLowerCase()).filter(Boolean);
+    if (required.some(name => !Object.hasOwn(sources, name) || !sources[name])) {
+        partial = true;
+        console.error('Required external calendar configuration is incomplete');
+    }
+    for (const url of Object.values(sources).filter(Boolean)) {
         try {
             const response = await fetch(url, { signal: AbortSignal.timeout(8000), cache: 'no-store' });
             if (!response.ok) throw new Error(`iCal HTTP ${response.status}`);
-            ranges.push(...parseCalendar(await response.text()));
+            ranges.push(...parseCalendar(await readBoundedText(response, 1048576)));
         } catch (e) { partial = true; console.error('External calendar unavailable:', e.message); }
     }
     if (!env.DB) partial = true;

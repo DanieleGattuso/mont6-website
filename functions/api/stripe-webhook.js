@@ -1,4 +1,6 @@
 import { json, stripe, recordPaidSession, cancelSession, releaseExpiredSession, sessionDetails } from '../_lib/payment.js';
+import { BodyTooLargeError, readBoundedText } from '../_lib/body.js';
+import { getBookingTerms, HOST_CONTACT } from '../_lib/booking-terms.js';
 
 const enc = new TextEncoder();
 const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -32,8 +34,13 @@ async function deliver(env, key, { to, subject, html }) {
     await env.DB.prepare('INSERT OR IGNORE INTO email_deliveries (delivery_key) VALUES (?)').bind(key).run();
 }
 
-function guestHtml(d) {
+function guestHtml(d, termsVersion) {
     const en = d.lang === 'en';
+    const terms = getBookingTerms(termsVersion, d.lang);
+    const conditions = terms ? `<h2>${esc(terms.title)}</h2>
+        <p>${esc(terms.cancellation)}</p><p>${esc(terms.cancellationRequest)}</p>
+        <p>${esc(terms.touristTax)}</p>
+        <p>${esc(terms.versionLabel)} ${esc(termsVersion)} · <a href="${esc(terms.detailsUrl)}">${esc(terms.detailsLabel)}</a></p>` : '';
     return `<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;color:#26231F">
         <h1>Mont°6 — ${en ? 'Booking confirmed' : 'Prenotazione confermata'}</h1>
         <p>${en ? 'Hello' : 'Ciao'} ${esc(d.name)}, ${en ? 'your stay is confirmed.' : 'il tuo soggiorno è confermato.'}</p>
@@ -41,13 +48,21 @@ function guestHtml(d) {
         ${en ? 'Guests' : 'Ospiti'}: ${d.guests}<br>${en ? 'Paid' : 'Totale pagato'}: €${d.total}</p>
         <p>${en ? 'Check-in from 3pm. Check-out by 10am. Arrival instructions will follow before your stay.'
             : 'Check-in dalle 15:00. Check-out entro le 10:00. Riceverai le istruzioni di arrivo prima del soggiorno.'}</p>
-        <p>Mont°6 · Cefalù</p></div>`;
+        ${conditions}
+        <p>${en ? 'Landlord' : 'Locatore'}: ${esc(HOST_CONTACT.name)}<br>
+        ${esc(HOST_CONTACT.property)} · ${esc(HOST_CONTACT.address)}<br>
+        <a href="mailto:${esc(HOST_CONTACT.email)}">${esc(HOST_CONTACT.email)}</a> · ${esc(HOST_CONTACT.phone)}</p></div>`;
 }
 
 export async function onRequestPost({ request, env }) {
     if (!env.STRIPE_WEBHOOK_SECRET) return json(503, { error: 'Webhook not configured' });
-    const payload = await request.text();
-    if (payload.length > 1048576) return json(413, { error: 'Payload too large' });
+    let payload;
+    try { payload = await readBoundedText(request, 1048576); }
+    catch (error) {
+        return error instanceof BodyTooLargeError
+            ? json(413, { error: 'Payload too large' })
+            : json(400, { error: 'Invalid request body' });
+    }
     if (!await verifyStripeSignature(payload, request.headers.get('stripe-signature'), env.STRIPE_WEBHOOK_SECRET)) return json(400, { error: 'Invalid signature' });
     let event;
     try { event = JSON.parse(payload); } catch { return json(400, { error: 'Invalid JSON' }); }
@@ -86,7 +101,7 @@ export async function onRequestPost({ request, env }) {
                     (async () => {
                         if (!booking.sent_confirmation_at) {
                             await deliver(env, `mont6-guest-${s.id}`, { to: d.email,
-                                subject: d.lang === 'en' ? 'Your stay at Mont°6 is confirmed' : 'La tua prenotazione a Mont°6 è confermata', html: guestHtml(d) });
+                                subject: d.lang === 'en' ? 'Your stay at Mont°6 is confirmed' : 'La tua prenotazione a Mont°6 è confermata', html: guestHtml(d, s.metadata?.termsVersion) });
                             await env.DB.prepare("UPDATE bookings SET sent_confirmation_at = datetime('now') WHERE stripe_session_id = ?").bind(s.id).run();
                         }
                     })(),

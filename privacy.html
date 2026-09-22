@@ -86,9 +86,10 @@
             <h1>Informativa su privacy e cookie</h1>
 
             <p class="lead-text">
-                <span>Benvenuto su Mont°6. Rispettiamo la tua privacy e ci impegniamo a proteggere i tuoi dati personali in conformità con il Regolamento UE 2016/679 (GDPR).</span>
+                <span>Questa informativa spiega quali dati tratta Mont°6 quando visiti il sito, chiedi informazioni o prenoti un soggiorno, e come esercitare i tuoi diritti ai sensi del Regolamento UE 2016/679 (GDPR).</span>
 
             </p>
+            <p><span>Ultimo aggiornamento: <time datetime="2026-09-22">22 settembre 2026</time>.</span></p>
                    <!-- SEZIONE 1: TITOLARE -->
             <h2>1. Titolare del Trattamento</h2>
 
@@ -111,15 +112,26 @@
             <ul>
                 <li>
                     <strong><span>Dati di Prenotazione:</span></strong>
-                    <span>Date del soggiorno, numero di ospiti, ed eventuali informazioni di contatto inviate tramite WhatsApp o email. Questi dati servono a gestire la disponibilità della struttura e confermare la prenotazione.</span>
+                    <span>Date del soggiorno, numero di ospiti, importo, stato della prenotazione e identificativi del tentativo di prenotazione e del pagamento. Dopo il pagamento riceviamo da Stripe anche il nome e l’indirizzo email inseriti nel checkout e li registriamo insieme alla prenotazione. Questi dati servono a riservare le date, verificare il pagamento, inviare la conferma e gestire il soggiorno, eventuali cancellazioni e rimborsi.</span>
 
                 </li>
                 <li>
                     <strong><span>Dati di Pagamento:</span></strong>
-                    <span>Le transazioni di pagamento online sono gestite interamente ed in modo sicuro dalla piattaforma terza <strong>Stripe</strong>. Non raccogliamo, memorizziamo né abbiamo accesso ai dati della tua carta di credito o di debito. I dettagli della transazione sono trattati direttamente da Stripe per elaborare il pagamento in conformità con i loro standard di sicurezza (PCI-DSS).</span>
+                    <span>Il pagamento avviene sul checkout ospitato da <strong>Stripe</strong>. Il numero completo della carta e il codice di sicurezza (CVC/CVV) non vengono trasmessi al sito né salvati nel nostro database. Riceviamo gli identificativi, l’importo e l’esito della transazione; Stripe può mostrare al gestore dati parziali del metodo di pagamento, come il circuito e le ultime quattro cifre, per riconoscere la transazione e fornire assistenza.</span>
+
+                </li>
+                <li>
+                    <strong><span>Richieste e comunicazioni:</span></strong>
+                    <span>Se ci contatti via email o WhatsApp, trattiamo i recapiti e il contenuto dei messaggi per risponderti e organizzare il soggiorno. Non inviare i dati completi della carta tramite questi canali. Il sito non offre un modulo per caricare documenti d’identità.</span>
+
+                </li>
+                <li>
+                    <strong><span>Dati tecnici:</span></strong>
+                    <span>Durante la navigazione i servizi che erogano e proteggono il sito trattano dati delle richieste, come indirizzo IP, data e ora, pagina richiesta, informazioni sul browser ed eventuali errori. Sono utilizzati per far funzionare il sito, diagnosticare problemi e prevenire abusi. La sezione sui cookie descrive le memorie del browser, la mappa e le statistiche del sito.</span>
 
                 </li>
             </ul>
+            <p><span>I dati richiesti per confermare una prenotazione e gestire il pagamento sono necessari a questi servizi: senza di essi non possiamo completare la prenotazione online. Non è necessario prestare un consenso generico alla privacy per questo trattamento. Non utilizziamo i dati della prenotazione per inviare newsletter o pubblicità.</span></p>
 
             <!-- SEZIONE 3: BASE GIURIDICA -->
             <h2>3. Base Giuridica del Trattamento</h2>
@@ -129,28 +141,52 @@
 
             </p>
             <ul>
-                <li><span>Esecuzione di un contratto o misure precontrattuali (per gestire la richiesta di prenotazione e il soggiorno).</span></li>
-                <li><span>Adempimento di obblighi legali (es. comunicazione degli ospiti all'autorità di pubblica sicurezza "Alloggiati Web", gestione delle imposte regionali e nazionali).</span></li>
+                <li><span>Esecuzione del contratto o di misure precontrattuali richieste dall’interessato (art. 6, par. 1, lett. b GDPR): rispondere alle richieste, gestire prenotazione, pagamento, soggiorno e assistenza.</span></li>
+                <li><span>Adempimento di obblighi legali (art. 6, par. 1, lett. c GDPR): documentazione fiscale e amministrativa e obblighi relativi al soggiorno, comprese le comunicazioni alle autorità competenti. Gli eventuali ulteriori dati richiesti per identificare gli ospiti sono raccolti nell’ambito delle procedure di arrivo, non dal modulo di prenotazione di questo sito.</span></li>
+                <li><span>Legittimo interesse (art. 6, par. 1, lett. f GDPR): proteggere sito e prenotazioni da abusi, diagnosticare errori, misurare in forma aggregata visite e prestazioni e tutelare i diritti in caso di contestazioni, nei limiti necessari e tenendo conto dei diritti e delle libertà degli interessati.</span></li>
             </ul>
 
-            <!-- SEZIONE 4: CONSERVAZIONE -->
-            <h2>4. Conservazione dei Dati</h2>
+            <!-- SEZIONE 4: DESTINATARI -->
+            <h2>4. Servizi utilizzati e destinatari</h2>
+
+            <ul>
+                <li><span><strong>Cloudflare</strong> ospita e protegge il sito, esegue le funzioni di prenotazione e conserva i dati delle prenotazioni nel database D1. Fornisce inoltre le statistiche descritte nella sezione cookie. <a href="https://www.cloudflare.com/privacypolicy/">Informativa Cloudflare</a>.</span></li>
+                <li><span><strong>Stripe</strong> gestisce i pagamenti e la prevenzione delle frodi. In base al servizio svolto, tratta dati per conto del gestore o per proprie finalità, comprese quelle previste dalla legge. <a href="https://stripe.com/privacy">Informativa Stripe</a>.</span></li>
+                <li><span><strong>Resend</strong> invia le email di conferma e gli avvisi di servizio: riceve indirizzo email, nome e contenuto del messaggio, comprese date e importo del soggiorno. Le email sono ricevute anche dai servizi di posta utilizzati dal gestore e dal destinatario. <a href="https://resend.com/legal/privacy-policy">Informativa Resend</a>.</span></li>
+                <li><span><strong>OpenStreetMap Foundation</strong> riceve i dati tecnici necessari a fornire le immagini della mappa, come l’indirizzo IP. <a href="https://osmfoundation.org/wiki/Privacy_Policy">Informativa OpenStreetMap</a>.</span></li>
+                <li><span><strong>WhatsApp</strong> interviene solo se scegli di aprire il relativo collegamento e usare il servizio per contattarci. Il collegamento non è una chat incorporata nel sito. <a href="https://www.whatsapp.com/legal/privacy-policy-eea">Informativa WhatsApp</a>.</span></li>
+            </ul>
+            <p><span>I dati possono essere comunicati alle autorità competenti quando richiesto dalla legge e ai professionisti incaricati dell’assistenza fiscale o legale, limitatamente a quanto necessario. I dati delle prenotazioni non sono pubblicati sul sito; il calendario pubblico mostra la disponibilità, senza nome o recapiti degli ospiti.</span></p>
+
+            <!-- SEZIONE 5: TRASFERIMENTI -->
+            <h2>5. Trattamenti fuori dallo Spazio economico europeo</h2>
+
+            <p><span>I fornitori possono trattare dati anche fuori dallo Spazio economico europeo, compresi gli Stati Uniti. Le loro condizioni descrivono le garanzie utilizzate per i trasferimenti, tra cui, ove applicabili, decisioni di adeguatezza e clausole contrattuali standard della Commissione europea. Resend indica che le proprie operazioni principali si svolgono negli Stati Uniti. Non è quindi previsto che tutti i dati restino esclusivamente in Italia o nell’Unione europea.</span></p>
+            <p><span>Puoi consultare gli accordi pubblicati da <a href="https://www.cloudflare.com/cloudflare-customer-dpa/">Cloudflare</a>, <a href="https://stripe.com/it/legal/dpa">Stripe</a> e <a href="https://resend.com/legal/dpa">Resend</a>, oltre alle informative degli altri servizi elencati sopra. Per informazioni sulle garanzie relative ai tuoi dati puoi contattare il titolare all’indirizzo email indicato in questa pagina.</span></p>
+
+            <!-- SEZIONE 6: CONSERVAZIONE -->
+            <h2>6. Conservazione dei dati</h2>
+
+            <p><span>La durata della conservazione dipende dal tipo di dato e dalla finalità. I criteri sono:</span></p>
+            <ul>
+                <li><span><strong>Richieste senza prenotazione:</strong> il tempo necessario a rispondere e completare gli eventuali chiarimenti, considerando la presenza di contestazioni ancora aperte.</span></li>
+                <li><span><strong>Prenotazioni, pagamenti e conferme:</strong> gestione del soggiorno, di cancellazioni, rimborsi e contestazioni, e successivamente gli obblighi di conservazione della documentazione fiscale e amministrativa applicabili al singolo documento. Questi criteri non comportano la conservazione delle copie dei documenti d’identità per lo stesso periodo.</span></li>
+                <li><span><strong>Tentativi di prenotazione e registri tecnici:</strong> il tempo necessario a verificare l’esito delle operazioni, prevenire duplicazioni e abusi e diagnosticare problemi; in presenza di un incidente o di una contestazione rileva anche il tempo necessario alla relativa gestione. La scadenza di un tentativo di pagamento non equivale alla cancellazione automatica di ogni registrazione tecnica.</span></li>
+                <li><span><strong>Cookie e memoria del browser:</strong> secondo la durata e le modalità descritte nella sezione seguente sui cookie, oppure fino alla cancellazione da parte dell’utente.</span></li>
+            </ul>
+            <p><span>Puoi chiedere informazioni sulla conservazione di una specifica prenotazione e richiedere la cancellazione dei dati. La richiesta viene valutata tenendo conto degli obblighi di legge e delle eventuali esigenze di tutela dei diritti.</span></p>
+
+            <!-- SEZIONE 7: DIRITTI -->
+            <h2>7. I tuoi diritti</h2>
 
             <p>
-                <span>I dati personali saranno conservati solo per il tempo strettamente necessario a completare le finalità sopra indicate o per conformarsi agli obblighi di legge di conservazione dei documenti fiscali o amministrativi.</span>
+                <span>Nei casi e nei limiti previsti dal GDPR, puoi chiedere accesso, rettifica, cancellazione e limitazione del trattamento. Puoi opporti al trattamento fondato sul legittimo interesse per motivi connessi alla tua situazione particolare. Per i dati forniti da te e trattati con strumenti automatizzati sulla base del contratto o del consenso, puoi esercitare il diritto alla portabilità. Puoi scrivere a <a href="mailto:mont6.home@gmail.com" style="color: var(--color-accent); text-decoration: none;">mont6.home@gmail.com</a>; se necessario per proteggere i tuoi dati, potranno essere richieste informazioni proporzionate per verificare la tua identità.</span>
 
             </p>
+            <p><span>Hai inoltre diritto di presentare un reclamo al <a href="https://www.garanteprivacy.it/">Garante per la protezione dei dati personali</a> o all’autorità di controllo competente, in particolare nello Stato membro in cui risiedi abitualmente, lavori o ritieni si sia verificata una violazione.</span></p>
 
-            <!-- SEZIONE 5: DIRITTI -->
-            <h2>5. I Tuoi Diritti</h2>
-
-            <p>
-                <span>Hai il diritto in qualsiasi momento di richiedere l'accesso ai tuoi dati, la loro rettifica, cancellazione, limitazione del trattamento o di opporti al loro utilizzo. Puoi esercitare questi diritti inviando un'e-mail a <a href="mailto:mont6.home@gmail.com" style="color: var(--color-accent); text-decoration: none;">mont6.home@gmail.com</a>.</span>
-
-            </p>
-
-            <!-- SEZIONE 6: COOKIE -->
-            <h2 id="cookie">6. Cookie e preferenze</h2>
+            <!-- SEZIONE 8: COOKIE -->
+            <h2 id="cookie">8. Cookie e preferenze</h2>
 
             <p>
                 <span>Questo sito non utilizza cookie di profilazione o tracciamento pubblicitario di terze parti (come Facebook Pixel o Google Analytics).</span>

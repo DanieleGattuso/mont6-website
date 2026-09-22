@@ -1,5 +1,26 @@
 # Mont°6 — Pagamenti e prenotazioni
 
+## Aggiornamento sicurezza del 22 settembre 2026
+
+La build `npm run build` produce ora `dist/`, che è l'unica directory di pubblicazione di Cloudflare Pages. `functions/` resta nella root del repository: viene compilata come codice server, non copiata tra i file pubblici. Documentazione, schema, migrazioni, strumenti e Worker email non devono essere serviti come asset.
+
+Configurazione di produzione aggiuntiva, preservando tutti i segreti e i binding esistenti:
+
+| Nome | Tipo | Valore |
+|---|---|---|
+| `BOOKING_ORIGIN` | Variabile ordinaria | `https://mont6cefalu.it` |
+| `REQUIRED_ICAL_SOURCES` | Variabile ordinaria | `airbnb,booking` |
+
+La prima impedisce nuovi checkout dagli alias Pages, sui quali le regole del dominio non si applicano. I webhook Stripe restano raggiungibili. La seconda impedisce di accettare pagamenti quando manca uno dei feed richiesti. Non condividere i segreti di produzione con gli ambienti di anteprima.
+
+Sulla zona Cloudflare sono attivi HTTPS obbligatorio, TLS minimo 1.2 e una regola che blocca per 10 secondi le richieste al percorso `/api/create-checkout-session` dopo 5 richieste in 10 secondi per IP e centro dati Cloudflare. La regola non include i webhook. È una protezione dai picchi ripetuti, non una garanzia contro bot distribuiti o richieste lente: verificarne l'effetto sul traffico reale prima di ulteriori restrizioni.
+
+Le Functions aggiungono gli header di sicurezza anche a risposte API, errori e redirect. I corpi delle richieste sono limitati in streaming: checkout 4 KiB, webhook e ciascun feed iCal 1 MiB. Le preferenze di lingua usano cookie `Secure`. Sharp è aggiornato alla versione 0.35.4.
+
+Prima di pubblicare questa versione, verificare `PRAGMA table_info(checkout_holds)` e applicare `migrations/0002_booking_terms.sql` solamente se manca `terms_version`. È una colonna facoltativa: le riserve precedenti mantengono `NULL` e gli stessi parametri Stripe. Per database nuovi, `schema.sql` la comprende già. La versione `2026-09-22` delle condizioni, confermata dal proprietario, viene salvata nelle nuove riserve, mostrata in Stripe e riportata nelle nuove conferme ospite. Conservare immutabili le versioni già pubblicate in `functions/_lib/booking-terms.js`.
+
+La revisione non esegue addebiti o invii email reali. Il recupero automatico di riserve con esito Stripe incerto resta volutamente conservativo; consultare la procedura più sotto. L'autenticazione a due fattori dell'account Cloudflare risultava disattivata nel controllo API e richiede l'intervento del titolare.
+
 ## Aggiornamento del 6 settembre 2026
 
 Rilascio tecnico autorizzato dal proprietario. Il 6 settembre sono stati applicati la migrazione D1 additiva e i cinque eventi Stripe elencati sotto; il Worker email aggiornato è attivo al 100% con i binding e il Cron esistenti.
@@ -27,8 +48,8 @@ Il binding `DB` è obbligatorio sulle Pages Functions e sul Worker email. Se man
 | `RESEND_API_KEY` | Secret | Invio conferme e notifiche |
 | `BOOKING_FROM_EMAIL` | Variabile | Mittente appartenente a un dominio verificato su Resend |
 | `BOOKING_HOST_EMAIL` | Variabile | Indirizzo dell'host |
-| `AIRBNB_ICAL_URL` | Secret facoltativo | Feed iCal privato Airbnb |
-| `BOOKING_ICAL_URL` | Secret facoltativo | Feed iCal privato Booking.com |
+| `AIRBNB_ICAL_URL` | Secret | Feed iCal privato Airbnb, richiesto in questa produzione |
+| `BOOKING_ICAL_URL` | Secret | Feed iCal privato Booking.com, richiesto in questa produzione |
 
 `onboarding@resend.dev` è un mittente di prova con restrizioni sui destinatari: non è una soluzione per inviare conferme a tutti gli ospiti.
 Usare un database distinto e credenziali Stripe test nell'ambiente di prova. Non condividere il database reale con le prove.
@@ -88,7 +109,7 @@ Una riserva senza sessione salvata e senza evento può restare bloccata: verific
 - Airbnb e Booking.com sincronizzano iCal in modo asincrono: non c'è un blocco atomico condiviso con i portali. Per una garanzia tra canali serve un channel manager. Il blocco atomico implementato copre le prenotazioni dirette del sito.
 - I feed devono contenere intervalli giornalieri con inizio e fine validi. Feed corrotti, eventi ricorrenti o formati non supportati fermano il pagamento invece di mostrare una falsa disponibilità.
 - Le chiavi di idempotenza Resend durano 24 ore. Le ricevute persistenti in D1 evitano il normale reinvio oltre questa finestra; resta una rara finestra di duplicazione se un invio riesce e il successivo salvataggio fallisce per oltre 24 ore.
-- Il checkout è pubblico: proteggere la creazione delle riserve dagli abusi con le regole anti-bot/rate limit di Cloudflare adatte al traffico reale. Queste impostazioni esterne non sono state modificate.
+- Il checkout è pubblico: il 22 settembre è stata attivata la regola di limitazione descritta sopra. Restano possibili abusi distribuiti; non è stato aggiunto un CAPTCHA né un limite commerciale alla durata massima dei soggiorni.
 - Sono stati verificati binding, nomi e tipi dei segreti, cinque eventi del webhook e schema D1 in produzione. Il valore del signing secret e la consegna di un pagamento/email reale non sono stati collaudati: i test locali non sostituiscono questo controllo end-to-end.
 
 ## Verifiche locali

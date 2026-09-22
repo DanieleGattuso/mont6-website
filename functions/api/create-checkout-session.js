@@ -1,5 +1,7 @@
 import { getBookedRanges, overlapsBooked } from '../_lib/booked.js';
 import { DAY, MONTHS, parseDate, isoDate, todayInRome, json, readAsset, stripe, reconcileHolds } from '../_lib/payment.js';
+import { BodyTooLargeError, readBoundedText } from '../_lib/body.js';
+import { CURRENT_TERMS_VERSION, checkoutTermsText } from '../_lib/booking-terms.js';
 
 export async function onRequestPost({ request, env }) {
     let lang = 'it';
@@ -9,13 +11,16 @@ export async function onRequestPost({ request, env }) {
         'I cannot verify your booking right now. Try again or message me on WhatsApp.') });
     try {
         const origin = new URL(request.url).origin;
+        if (env.BOOKING_ORIGIN && origin !== env.BOOKING_ORIGIN) return json(403, { error: 'Booking origin not allowed' });
         if (request.headers.get('Origin') && request.headers.get('Origin') !== origin) return json(403, { error: 'Origin not allowed' });
         let body;
         try {
-            const text = await request.text();
-            if (text.length > 4096) return json(413, { error: 'Request too large' });
+            const text = await readBoundedText(request, 4096);
             body = JSON.parse(text);
-        } catch { return json(400, { error: 'Richiesta non valida. / Invalid request.' }); }
+        } catch (error) {
+            if (error instanceof BodyTooLargeError) return json(413, { error: 'Request too large' });
+            return json(400, { error: 'Richiesta non valida. / Invalid request.' });
+        }
         if (!body || typeof body !== 'object' || Array.isArray(body)) return json(400, { error: 'Invalid request' });
         lang = body.lang === 'en' ? 'en' : 'it';
         if (!env.DB || !env.STRIPE_SECRET_KEY || !env.STRIPE_WEBHOOK_SECRET) return unavailable();
@@ -58,14 +63,14 @@ export async function onRequestPost({ request, env }) {
             if (!Number.isSafeInteger(amount) || amount <= 0 || amount > 99999999) return unavailable();
             if (body.expectedAmount !== undefined && body.expectedAmount !== amount) return json(409, { error: t('Il prezzo è cambiato. Ricarica la pagina per verificare il totale.', 'The price changed. Reload the page to review the total.') });
             hold = { id, check_in: checkIn, check_out: checkOut, guests, amount_total: amount,
-                lang, origin, expires_at: Math.floor(Date.now() / 1000) + 35 * 60 };
+                lang, origin, terms_version: CURRENT_TERMS_VERSION, expires_at: Math.floor(Date.now() / 1000) + 35 * 60 };
             // This single SQL statement arbitrates concurrent customers.
             const inserted = await env.DB.prepare(`INSERT INTO checkout_holds
-                (id, check_in, check_out, guests, amount_total, lang, origin, expires_at)
-                SELECT ?, ?, ?, ?, ?, ?, ?, ?
+                (id, check_in, check_out, guests, amount_total, lang, origin, terms_version, expires_at)
+                SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?
                 WHERE NOT EXISTS (SELECT 1 FROM bookings WHERE status = 'confirmed' AND check_in < ? AND check_out > ?)
                   AND NOT EXISTS (SELECT 1 FROM checkout_holds WHERE status = 'active' AND check_in < ? AND check_out > ?)`)
-                .bind(id, checkIn, checkOut, guests, amount, lang, origin, hold.expires_at,
+                .bind(id, checkIn, checkOut, guests, amount, lang, origin, hold.terms_version, hold.expires_at,
                     checkOut, checkIn, checkOut, checkIn).run();
             if (!inserted.meta.changes) return json(409, { error: t('Le date sono appena state riservate. Scegline altre o riprova più tardi.',
                 'These dates have just been reserved. Choose others or try again later.') });
@@ -85,6 +90,13 @@ export async function onRequestPost({ request, env }) {
             'metadata[guests]': String(guests), 'metadata[totalNights]': String(nights),
             'metadata[holdId]': id, 'metadata[lang]': lang,
         });
+        // Persisted on the hold: retries must send exactly the original Stripe parameters.
+        if (hold.terms_version) {
+            const termsText = checkoutTermsText(hold.terms_version, lang);
+            if (!termsText || termsText.length > 1200) throw new Error('Booking terms unavailable');
+            params.set('metadata[termsVersion]', hold.terms_version);
+            params.set('custom_text[submit][message]', termsText);
+        }
         let session;
         try { session = await stripe(env, 'checkout/sessions', { body: params, key: `mont6-checkout-${id}` }); }
         catch (error) {

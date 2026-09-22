@@ -198,7 +198,7 @@
             "name": "Posso annullare? Come funziona il rimborso?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Fino a 14 giorni prima dell'arrivo la cancellazione è gratuita: rimborso del 100%. Fra 14 e 7 giorni prima il rimborso è del 50%. Da 7 giorni prima in poi, e in caso di mancato arrivo, non è previsto rimborso. Il rimborso torna sulla stessa carta con cui hai pagato, in genere entro 5-10 giorni lavorativi. Per annullare basta scrivermi su WhatsApp o via email."
+                "text": "Con almeno 14 giorni di anticipo sull'arrivo, la cancellazione è gratuita: rimborso del 100%. Con almeno 7 giorni ma meno di 14 giorni di anticipo, il rimborso è del 50%. Con meno di 7 giorni di anticipo, oppure in caso di mancato arrivo, non è previsto rimborso. Il rimborso torna sulla stessa carta con cui hai pagato, in genere entro 5-10 giorni lavorativi. Per annullare basta scrivermi su WhatsApp o via email."
             }
         },
         {
@@ -876,7 +876,7 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="faq-item">
+                        <div class="faq-item" id="cancellation-policy">
                             <h4 class="faq-question-heading"><button class="faq-question">
                                 <span>Posso annullare? Come funziona il rimborso?</span>
 
@@ -884,7 +884,7 @@
                             </button></h4>
                             <div class="faq-answer">
                                 <p>
-                                    <span>Fino a 14 giorni prima dell'arrivo la cancellazione è gratuita: rimborso del 100%. Fra 14 e 7 giorni prima il rimborso è del 50%. Da 7 giorni prima in poi, e in caso di mancato arrivo, non è previsto rimborso. Il rimborso torna sulla stessa carta con cui hai pagato, in genere entro 5-10 giorni lavorativi. Per annullare basta scrivermi su WhatsApp o via email.</span>
+                                    <span>Con almeno 14 giorni di anticipo sull'arrivo, la cancellazione è gratuita: rimborso del 100%. Con almeno 7 giorni ma meno di 14 giorni di anticipo, il rimborso è del 50%. Con meno di 7 giorni di anticipo, oppure in caso di mancato arrivo, non è previsto rimborso. Il rimborso torna sulla stessa carta con cui hai pagato, in genere entro 5-10 giorni lavorativi. Per annullare basta scrivermi su WhatsApp o via email.</span>
 
                                 </p>
                             </div>
@@ -984,7 +984,11 @@
 
                     </button>
 
-                    <button id="btn-request-stripe" class="btn-luxe btn-stripe full-width mt-3">
+                    <p class="price-tax mt-3" id="booking-payment-info">
+                        <span>Il soggiorno si paga per intero su Stripe; l’imposta di soggiorno si paga all’arrivo. Leggi le <a href="#cancellation-policy">condizioni di cancellazione</a> e l’<a href="/privacy">informativa privacy</a> prima di proseguire.</span>
+
+                    </p>
+                    <button id="btn-request-stripe" class="btn-luxe btn-stripe full-width mt-3" aria-describedby="booking-payment-info">
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
                         <span>Prenota e paga online</span>
 
@@ -993,7 +997,7 @@
                     <!-- Trust Signal -->
                     <p style="text-align: center; font-size: 0.75rem; color: var(--color-text-light); margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 6px;">
                         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#28a745" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                        <span>Pagamento gestito da Stripe. I dati della carta non passano da qui.</span>
+                        <span>Pagamento gestito da Stripe. Il numero completo della carta e il codice di sicurezza non passano da questo sito.</span>
 
                     </p>
 
@@ -1094,7 +1098,7 @@
     <script src="/vendor/glightbox/glightbox.min.js"></script>
 
     <!-- Custom JS -->
-    <script src="/app.js?v=25"></script>
+    <script src="/app.js?v=26"></script>
         <aside class="cookie-banner" id="cookieBanner" hidden aria-label="Cookie">
         <div class="cookie-content">
             <p><span>Usiamo solo cookie essenziali per il sito e la prenotazione.</span></p>

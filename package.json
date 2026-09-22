@@ -5,10 +5,10 @@
   "main": "app.js",
   "scripts": {
     "build": "node scripts/build-en.js",
-    "test": "node --test scripts/check-payments.js scripts/check-frontend.js && node scripts/check-lang.js",
+    "test": "node --test scripts/check-payments.js scripts/check-frontend.js scripts/check-distribution.js scripts/check-security.js && node scripts/check-lang.js",
     "test:browser": "node scripts/check-browser.cjs"
   },
   "devDependencies": {
-    "sharp": "^0.35.3"
+    "sharp": "^0.35.4"
   }
 }

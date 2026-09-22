@@ -1,6 +1,32 @@
 node_modules/
+/dist/
 .DS_Store
 *.log
+
+# Credenziali locali e stato degli strumenti Cloudflare (mai nel repository)
+.env
+.env.*
+!.env.example
+!.env.*.example
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+.wrangler/
+
+# Copie di sicurezza e dati esportati; schema.sql e migrations/ restano inclusi
+/backups/
+/dumps/
+*.db
+*.sqlite
+*.sqlite3
+*.db-*
+*.sqlite-*
+*.sqlite3-*
+*.dump
+*.sql.gz
+*.sql.zip
+*.bak
+*.backup
 
 # Strumenti di sviluppo, non fanno parte del sito
 .claude/

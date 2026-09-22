@@ -241,7 +241,7 @@
                 "name": "Posso annullare la prenotazione a Mont°6 e come funziona il rimborso?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Fino a 14 giorni prima dell'arrivo la cancellazione è gratuita, con rimborso del 100%. Fra 14 e 7 giorni prima il rimborso è del 50%. Da 7 giorni prima in poi, e in caso di mancato arrivo, non è previsto rimborso. Il rimborso torna sulla stessa carta usata per il pagamento, in genere entro 5-10 giorni lavorativi."
+                    "text": "Con almeno 14 giorni di anticipo sull'arrivo, la cancellazione è gratuita: rimborso del 100%. Con almeno 7 giorni ma meno di 14 giorni di anticipo, il rimborso è del 50%. Con meno di 7 giorni di anticipo, oppure in caso di mancato arrivo, non è previsto rimborso. Il rimborso torna sulla stessa carta usata per il pagamento, in genere entro 5-10 giorni lavorativi."
                 }
             },
             {
@@ -910,7 +910,7 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="faq-item">
+                        <div class="faq-item" id="cancellation-policy">
                             <h4 class="faq-question-heading"><button class="faq-question">
                                 <span class="lang-it">Posso annullare? Come funziona il rimborso?</span>
                                 <span class="lang-en">Can I cancel? How do refunds work?</span>
@@ -918,8 +918,8 @@
                             </button></h4>
                             <div class="faq-answer">
                                 <p>
-                                    <span class="lang-it">Fino a 14 giorni prima dell'arrivo la cancellazione è gratuita: rimborso del 100%. Fra 14 e 7 giorni prima il rimborso è del 50%. Da 7 giorni prima in poi, e in caso di mancato arrivo, non è previsto rimborso. Il rimborso torna sulla stessa carta con cui hai pagato, in genere entro 5-10 giorni lavorativi. Per annullare basta scrivermi su WhatsApp o via email.</span>
-                                    <span class="lang-en">Cancel up to 14 days before arrival and you get a full refund. Between 14 and 7 days before, the refund is 50%. From 7 days before, and in case of no-show, there is no refund. Refunds go back to the card you paid with, usually within 5-10 working days. To cancel, just message me on WhatsApp or send an email.</span>
+                                    <span class="lang-it">Con almeno 14 giorni di anticipo sull'arrivo, la cancellazione è gratuita: rimborso del 100%. Con almeno 7 giorni ma meno di 14 giorni di anticipo, il rimborso è del 50%. Con meno di 7 giorni di anticipo, oppure in caso di mancato arrivo, non è previsto rimborso. Il rimborso torna sulla stessa carta con cui hai pagato, in genere entro 5-10 giorni lavorativi. Per annullare basta scrivermi su WhatsApp o via email.</span>
+                                    <span class="lang-en">Cancel at least 14 days before arrival for a full refund. Cancel at least 7 days but less than 14 days before arrival for a 50% refund. Cancellations less than 7 days before arrival and no-shows are not refundable. Refunds go back to the card you paid with, usually within 5-10 working days. To cancel, just message me on WhatsApp or send an email.</span>
                                 </p>
                             </div>
                         </div>
@@ -1018,7 +1018,11 @@
                         <span class="lang-en">Request via WhatsApp</span>
                     </button>
 
-                    <button id="btn-request-stripe" class="btn-luxe btn-stripe full-width mt-3">
+                    <p class="price-tax mt-3" id="booking-payment-info">
+                        <span class="lang-it">Il soggiorno si paga per intero su Stripe; l’imposta di soggiorno si paga all’arrivo. Leggi le <a href="#cancellation-policy">condizioni di cancellazione</a> e l’<a href="/privacy">informativa privacy</a> prima di proseguire.</span>
+                        <span class="lang-en">Your stay is paid in full on Stripe; city tax is paid on arrival. Read the <a href="#cancellation-policy">cancellation policy</a> and <a href="/privacy">privacy notice</a> before continuing.</span>
+                    </p>
+                    <button id="btn-request-stripe" class="btn-luxe btn-stripe full-width mt-3" aria-describedby="booking-payment-info">
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
                         <span class="lang-it">Prenota e paga online</span>
                         <span class="lang-en">Book &amp; pay online</span>
@@ -1027,8 +1031,8 @@
                     <!-- Trust Signal -->
                     <p style="text-align: center; font-size: 0.75rem; color: var(--color-text-light); margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 6px;">
                         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#28a745" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                        <span class="lang-it">Pagamento gestito da Stripe. I dati della carta non passano da qui.</span>
-                        <span class="lang-en">Payments handled by Stripe. Your card details never touch this site.</span>
+                        <span class="lang-it">Pagamento gestito da Stripe. Il numero completo della carta e il codice di sicurezza non passano da questo sito.</span>
+                        <span class="lang-en">Payments handled by Stripe. Your full card number and security code never pass through this site.</span>
                     </p>
                     
                     <div class="direct-benefits-box mt-4" style="border-top: 1px solid rgba(0,0,0,0.08); padding-top: 2rem;">
@@ -1128,7 +1132,7 @@
     <script src="vendor/glightbox/glightbox.min.js"></script>
 
     <!-- Custom JS -->
-    <script src="app.js?v=25"></script>
+    <script src="app.js?v=26"></script>
     <!-- COOKIE_NOTICE -->
     <script src="/cookie-notice.js?v=1" defer></script>
 </body>

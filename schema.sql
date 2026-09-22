@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS checkout_holds (
     amount_total INTEGER NOT NULL CHECK (amount_total > 0),
     lang TEXT NOT NULL DEFAULT 'it',
     origin TEXT NOT NULL,
+    terms_version TEXT,
     expires_at INTEGER NOT NULL,
     status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'released', 'converted')),
     created_at TEXT NOT NULL DEFAULT (datetime('now'))

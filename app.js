@@ -128,7 +128,7 @@ function initLang() {
     document.querySelectorAll('.lang-btn[hreflang]').forEach(btn => {
         btn.addEventListener('click', () => {
             const scelta = btn.getAttribute('hreflang') === 'en' ? 'en' : 'it';
-            document.cookie = `mont6_lang=${scelta}; Path=/; Max-Age=31536000; SameSite=Lax`;
+            document.cookie = `mont6_lang=${scelta}; Path=/; Max-Age=31536000; SameSite=Lax; Secure`;
         });
     });
 }
@@ -610,6 +610,15 @@ function initBookingForm() {
  */
 function initFAQ() {
     const faqItems = document.querySelectorAll('.faq-item');
+    const openLinkedFAQ = () => {
+        const target = document.getElementById(window.location.hash.slice(1));
+        if (!target?.classList.contains('faq-item')) return;
+        faqItems.forEach(item => {
+            const open = item === target;
+            item.classList.toggle('active', open);
+            item.querySelector('.faq-question')?.setAttribute('aria-expanded', String(open));
+        });
+    };
     
     faqItems.forEach(item => {
         const questionBtn = item.querySelector('.faq-question');
@@ -633,6 +642,20 @@ function initFAQ() {
             }
         });
     });
+    // Conditions linked beside payment must be readable when followed directly.
+    window.addEventListener('hashchange', openLinkedFAQ);
+    document.querySelectorAll('a[href="#cancellation-policy"]').forEach(link => {
+        link.addEventListener('click', () => {
+            const target = document.getElementById('cancellation-policy');
+            if (!target) return;
+            faqItems.forEach(item => {
+                const open = item === target;
+                item.classList.toggle('active', open);
+                item.querySelector('.faq-question')?.setAttribute('aria-expanded', String(open));
+            });
+        });
+    });
+    openLinkedFAQ();
 }
 
 /**
