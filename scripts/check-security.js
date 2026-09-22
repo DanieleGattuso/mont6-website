@@ -43,3 +43,21 @@ test('language redirects carry security headers and a secure preference cookie',
     assert.match(res.headers.get('Set-Cookie'), /; Secure/);
     assert.match(res.headers.get('Strict-Transport-Security'), /max-age/);
 });
+
+test('cached source paths are rejected before asset lookup while public licenses stay available', async () => {
+    const { onRequest } = await middleware;
+    let assetReads = 0;
+    const next = async () => { assetReads++; return new Response('public'); };
+    for (const path of ['/schema.sql', '/BACKEND-SETUP.md', '/worker-emails/worker.js', '/%73chema.sql',
+        '/scripts/build-en.js', '/.env', '/.git/config', '/package-lock.json', '/migrations/0002_booking_terms.sql']) {
+        const res = await onRequest({ request: new Request(`https://mont6cefalu.it${path}`), env: {}, next });
+        assert.equal(res.status, 404, path);
+        assert.equal(res.headers.get('Cache-Control'), 'no-store');
+    }
+    assert.equal(assetReads, 0);
+    for (const path of ['/vendor/leaflet/LICENSE', '/vendor/glightbox/LICENSE.md', '/prezzi.json', '/img/opt/photo.webp']) {
+        const res = await onRequest({ request: new Request(`https://mont6cefalu.it${path}`), env: {}, next });
+        assert.equal(res.status, 200, path);
+    }
+    assert.equal(assetReads, 4);
+});

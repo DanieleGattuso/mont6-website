@@ -102,6 +102,19 @@ async function routeRequest(context) {
             });
         }
 
+        // Also deny private source paths before reading static assets. This covers
+        // copies cached under the custom domain before the public dist was isolated.
+        let decodedPath;
+        try { decodedPath = decodeURIComponent(url.pathname); }
+        catch { return new Response('Not found', { status: 404, headers: { 'Cache-Control': 'no-store' } }); }
+        const internalPath = /^\/(?:functions|templates|scripts|worker-emails|migrations|node_modules|backups|dumps)(?:\/|$)/i.test(decodedPath)
+            || /(?:^|\/)\.(?!well-known(?:\/|$))/.test(decodedPath)
+            || /^\/[^/]+\.(?:sql|md|toml|bat|lock)$/i.test(decodedPath)
+            || /^\/(?:package(?:-lock)?\.json|wrangler\.jsonc?)$/i.test(decodedPath);
+        if (internalPath) return new Response('Not found', {
+            status: 404, headers: { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow' },
+        });
+
         // Production checkout must pass through the protected public domain.
         // A pages.dev alias must not bypass the zone's checkout rate limit.
         if (url.pathname.startsWith('/api/create-checkout-session')
