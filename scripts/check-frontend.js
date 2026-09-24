@@ -76,7 +76,7 @@ test('scroll enhancement is optional with no observer or reduced motion', () => 
 });
 
 // Exercise the real booking form with DOM/Flatpickr fixtures and no live calls.
-async function bookingFixture(lang) {
+async function bookingFixture(lang, width = 390) {
     const { pathToFileURL } = require('node:url');
     const rules = await import(pathToFileURL(path.join(root, 'booking-rules.js')).href);
     const ids = ['date-range', 'guest-count', 'btn-request-whatsapp', 'btn-request-stripe',
@@ -88,16 +88,17 @@ async function bookingFixture(lang) {
             handlers: {}, addEventListener(type, handler) { this.handlers[type] = handler; }, focus() {} }];
     }));
     const calls = [], opened = [];
+    const media = { matches: width > 768, addEventListener(type, handler) { this.onChange = handler; } };
     let options, fp;
     const source = read('app.js');
     vm.runInNewContext(source.slice(source.indexOf('const MESI ='), source.indexOf('function initFAQ()')) + '\ninitBookingForm();', {
         ...rules, Date, console, AbortSignal, URL, crypto,
         document: { getElementById: id => elements[id] || null, documentElement: { getAttribute: () => lang } },
-        window: { innerWidth: 390, addEventListener() {}, open: url => opened.push(url), location: {} },
+        window: { innerWidth: width, matchMedia: () => media, addEventListener() {}, open: url => opened.push(url), location: {} },
         sessionStorage: { getItem: () => null, setItem() {}, removeItem() {} },
         flatpickr(input, config) {
             options = config;
-            fp = { selectedDates: [], set() {}, redraw() {} };
+            fp = { selectedDates: [], config, set(key, value) { this.config[key] = value; }, redraw() {} };
             return fp;
         },
         async fetch(url, opts) {
@@ -110,7 +111,13 @@ async function bookingFixture(lang) {
     });
     await new Promise(setImmediate);
     const local = iso => { const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d); };
-    return { elements, calls, opened, select(start, end) {
+    return { elements, calls, opened, calendar: fp, resize(width) {
+        const matches = width > 768;
+        if (matches !== media.matches) {
+            media.matches = matches;
+            media.onChange({ matches });
+        }
+    }, select(start, end) {
         fp.selectedDates = [local(start), local(end)];
         const display = iso => iso.split('-').reverse().join('/');
         elements['date-range'].value = display(start) + (lang === 'en' ? ' to ' : ' al ') + display(end);
@@ -155,5 +162,29 @@ test('changing an invalid summer range to a valid range clears the minimum-stay 
     assert.equal(form.elements['form-msg'].classList.contains('visible'), true);
     form.select('2030-07-10', '2030-07-13');
     assert.equal(form.elements['form-msg'].classList.contains('visible'), false);
+    assert.equal(form.elements.dynamicPriceBox.classList.contains('visible'), true);
+});
+
+test('calendar switches month count at the mobile breakpoint without losing dates or validation', async () => {
+    const form = await bookingFixture('it', 1280);
+    form.select('2030-07-10', '2030-07-12');
+    const dates = form.calendar.selectedDates;
+    const value = form.elements['date-range'].value;
+    const message = form.elements['form-msg'].textContent;
+    assert.equal(form.calendar.config.showMonths, 2);
+    form.resize(390);
+    assert.equal(form.calendar.config.showMonths, 1);
+    assert.equal(form.calendar.selectedDates, dates);
+    assert.equal(form.elements['date-range'].value, value);
+    assert.equal(form.elements['form-msg'].textContent, message);
+    assert.equal(form.elements['form-msg'].classList.contains('visible'), true);
+    form.resize(768);
+    assert.equal(form.calendar.config.showMonths, 1);
+    form.resize(769);
+    assert.equal(form.calendar.config.showMonths, 2);
+    form.select('2030-07-10', '2030-07-13');
+    const total = form.elements.priceTotal.textContent;
+    form.resize(390);
+    assert.equal(form.elements.priceTotal.textContent, total);
     assert.equal(form.elements.dynamicPriceBox.classList.contains('visible'), true);
 });

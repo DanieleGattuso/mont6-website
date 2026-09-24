@@ -404,13 +404,14 @@ function initBookingForm() {
     // Il calendario segue la lingua della pagina: su /en/ mesi e separatore in inglese
     const EN_PAGE = document.documentElement.getAttribute('data-lang') === 'en';
     const SEP = EN_PAGE ? ' to ' : ' al ';
+    const calendarViewport = window.matchMedia('(min-width: 769px)');
 
     const fp = flatpickr(dateInput, {
         mode: "range",
         minDate: "today",
         dateFormat: "d/m/Y",
         locale: EN_PAGE ? 'default' : 'it',
-        showMonths: window.innerWidth > 768 ? 2 : 1,
+        showMonths: calendarViewport.matches ? 2 : 1,
         rangeSeparator: SEP,
         onChange: function(selectedDates) {
             // Scelto l'arrivo, il giorno in cui inizia la prenotazione successiva
@@ -419,6 +420,11 @@ function initBookingForm() {
             if (formMsg) formMsg.classList.remove('visible');
             refreshPriceBox();
         }
+    });
+    // Reconfigure the existing calendar on breakpoint changes (including
+    // device rotation), preserving the selected stay and validation message.
+    calendarViewport.addEventListener('change', event => {
+        fp.set('showMonths', event.matches ? 2 : 1);
     });
 
     /**
