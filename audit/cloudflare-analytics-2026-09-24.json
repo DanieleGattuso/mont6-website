@@ -1,0 +1,668 @@
+{
+  "retrievedAt": "2026-09-24T16:04:30Z",
+  "periods": {
+    "last28": {
+      "startInclusive": "2026-08-27T00:00:00Z",
+      "endExclusive": "2026-09-24T00:00:00Z"
+    },
+    "last90": {
+      "startInclusive": "2026-06-26T00:00:00Z",
+      "endExclusive": "2026-09-24T00:00:00Z"
+    }
+  },
+  "baseline": {
+    "query": "{viewer{accounts(filter:{accountTag:\"cbe4b8fcc54a9a6341527c0ba51d71f1\"}){last28:rumPageloadEventsAdaptiveGroups(limit:100,filter:{siteTag:\"8e37b1c500e742849c04232ae986be43\",datetime_lt:\"2026-09-24T00:00:00Z\",datetime_geq:\"2026-08-27T00:00:00Z\"}){count sum{visits}avg{sampleInterval}dimensions{requestHost bot}}last90:rumPageloadEventsAdaptiveGroups(limit:100,filter:{siteTag:\"8e37b1c500e742849c04232ae986be43\",datetime_lt:\"2026-09-24T00:00:00Z\",datetime_geq:\"2026-06-26T00:00:00Z\"}){count sum{visits}avg{sampleInterval}dimensions{requestHost bot}}vitals28:rumWebVitalsEventsAdaptiveGroups(limit:100,filter:{siteTag:\"8e37b1c500e742849c04232ae986be43\",datetime_lt:\"2026-09-24T00:00:00Z\",datetime_geq:\"2026-08-27T00:00:00Z\",bot:0}){count dimensions{deviceType}quantiles{largestContentfulPaintP75 cumulativeLayoutShiftP75 interactionToNextPaintP75 timeToFirstByteP75}sum{lcpTotal lcpGood lcpNeedsImprovement lcpPoor clsTotal clsGood clsNeedsImprovement clsPoor inpTotal inpGood inpNeedsImprovement inpPoor}}vitals90:rumWebVitalsEventsAdaptiveGroups(limit:100,filter:{siteTag:\"8e37b1c500e742849c04232ae986be43\",datetime_lt:\"2026-09-24T00:00:00Z\",datetime_geq:\"2026-06-26T00:00:00Z\",bot:0}){count dimensions{deviceType}quantiles{largestContentfulPaintP75 cumulativeLayoutShiftP75 interactionToNextPaintP75 timeToFirstByteP75}sum{lcpTotal lcpGood lcpNeedsImprovement lcpPoor clsTotal clsGood clsNeedsImprovement clsPoor inpTotal inpGood inpNeedsImprovement inpPoor}}}}}",
+    "response": {
+      "success": true,
+      "status": 200,
+      "result": {
+        "viewer": {
+          "accounts": [
+            {
+              "last28": [
+                {
+                  "avg": {
+                    "sampleInterval": 11.428571428571429
+                  },
+                  "count": 80,
+                  "dimensions": {
+                    "bot": 0,
+                    "requestHost": "mont6cefalu.it"
+                  },
+                  "sum": {
+                    "visits": 80
+                  }
+                }
+              ],
+              "last90": [
+                {
+                  "avg": {
+                    "sampleInterval": 10
+                  },
+                  "count": 80,
+                  "dimensions": {
+                    "bot": 1,
+                    "requestHost": "mont6cefalu.it"
+                  },
+                  "sum": {
+                    "visits": 70
+                  }
+                },
+                {
+                  "avg": {
+                    "sampleInterval": 10.416666666666666
+                  },
+                  "count": 250,
+                  "dimensions": {
+                    "bot": 0,
+                    "requestHost": "mont6cefalu.it"
+                  },
+                  "sum": {
+                    "visits": 220
+                  }
+                }
+              ],
+              "vitals28": [
+                {
+                  "count": 30,
+                  "dimensions": {
+                    "deviceType": "mobile"
+                  },
+                  "quantiles": {
+                    "cumulativeLayoutShiftP75": -1,
+                    "interactionToNextPaintP75": 40000,
+                    "largestContentfulPaintP75": 1432000,
+                    "timeToFirstByteP75": 620000
+                  },
+                  "sum": {
+                    "clsGood": 0,
+                    "clsNeedsImprovement": 0,
+                    "clsPoor": 0,
+                    "clsTotal": 0,
+                    "inpGood": 10,
+                    "inpNeedsImprovement": 0,
+                    "inpPoor": 0,
+                    "inpTotal": 10,
+                    "lcpGood": 20,
+                    "lcpNeedsImprovement": 0,
+                    "lcpPoor": 0,
+                    "lcpTotal": 20
+                  }
+                },
+                {
+                  "count": 30,
+                  "dimensions": {
+                    "deviceType": "desktop"
+                  },
+                  "quantiles": {
+                    "cumulativeLayoutShiftP75": 0.008,
+                    "interactionToNextPaintP75": -1,
+                    "largestContentfulPaintP75": 912000,
+                    "timeToFirstByteP75": 611000
+                  },
+                  "sum": {
+                    "clsGood": 20,
+                    "clsNeedsImprovement": 0,
+                    "clsPoor": 0,
+                    "clsTotal": 20,
+                    "inpGood": 0,
+                    "inpNeedsImprovement": 0,
+                    "inpPoor": 0,
+                    "inpTotal": 0,
+                    "lcpGood": 20,
+                    "lcpNeedsImprovement": 0,
+                    "lcpPoor": 0,
+                    "lcpTotal": 20
+                  }
+                }
+              ],
+              "vitals90": [
+                {
+                  "count": 140,
+                  "dimensions": {
+                    "deviceType": "mobile"
+                  },
+                  "quantiles": {
+                    "cumulativeLayoutShiftP75": -1,
+                    "interactionToNextPaintP75": 80000,
+                    "largestContentfulPaintP75": 947000,
+                    "timeToFirstByteP75": 519000
+                  },
+                  "sum": {
+                    "clsGood": 0,
+                    "clsNeedsImprovement": 0,
+                    "clsPoor": 0,
+                    "clsTotal": 0,
+                    "inpGood": 60,
+                    "inpNeedsImprovement": 0,
+                    "inpPoor": 0,
+                    "inpTotal": 60,
+                    "lcpGood": 100,
+                    "lcpNeedsImprovement": 0,
+                    "lcpPoor": 0,
+                    "lcpTotal": 100
+                  }
+                },
+                {
+                  "count": 140,
+                  "dimensions": {
+                    "deviceType": "desktop"
+                  },
+                  "quantiles": {
+                    "cumulativeLayoutShiftP75": 0.006,
+                    "interactionToNextPaintP75": 8000,
+                    "largestContentfulPaintP75": 696000,
+                    "timeToFirstByteP75": 163100
+                  },
+                  "sum": {
+                    "clsGood": 110,
+                    "clsNeedsImprovement": 0,
+                    "clsPoor": 20,
+                    "clsTotal": 130,
+                    "inpGood": 60,
+                    "inpNeedsImprovement": 0,
+                    "inpPoor": 0,
+                    "inpTotal": 60,
+                    "lcpGood": 130,
+                    "lcpNeedsImprovement": 0,
+                    "lcpPoor": 0,
+                    "lcpTotal": 130
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "errors": [],
+      "messages": []
+    }
+  },
+  "details": {
+    "query": "{viewer{accounts(filter:{accountTag:\"cbe4b8fcc54a9a6341527c0ba51d71f1\"}){referrers28:rumPageloadEventsAdaptiveGroups(limit:1000,filter:{siteTag:\"8e37b1c500e742849c04232ae986be43\",bot:0,datetime_lt:\"2026-09-24T00:00:00Z\",datetime_geq:\"2026-08-27T00:00:00Z\"}){count sum{visits}dimensions{refererHost}} pages28:rumPageloadEventsAdaptiveGroups(limit:1000,filter:{siteTag:\"8e37b1c500e742849c04232ae986be43\",bot:0,datetime_lt:\"2026-09-24T00:00:00Z\",datetime_geq:\"2026-08-27T00:00:00Z\"}){count sum{visits}dimensions{requestPath}} devices28:rumPageloadEventsAdaptiveGroups(limit:1000,filter:{siteTag:\"8e37b1c500e742849c04232ae986be43\",bot:0,datetime_lt:\"2026-09-24T00:00:00Z\",datetime_geq:\"2026-08-27T00:00:00Z\"}){count sum{visits}dimensions{deviceType}} countries28:rumPageloadEventsAdaptiveGroups(limit:1000,filter:{siteTag:\"8e37b1c500e742849c04232ae986be43\",bot:0,datetime_lt:\"2026-09-24T00:00:00Z\",datetime_geq:\"2026-08-27T00:00:00Z\"}){count sum{visits}dimensions{countryName}} referrers90:rumPageloadEventsAdaptiveGroups(limit:1000,filter:{siteTag:\"8e37b1c500e742849c04232ae986be43\",bot:0,datetime_lt:\"2026-09-24T00:00:00Z\",datetime_geq:\"2026-06-26T00:00:00Z\"}){count sum{visits}dimensions{refererHost}} pages90:rumPageloadEventsAdaptiveGroups(limit:1000,filter:{siteTag:\"8e37b1c500e742849c04232ae986be43\",bot:0,datetime_lt:\"2026-09-24T00:00:00Z\",datetime_geq:\"2026-06-26T00:00:00Z\"}){count sum{visits}dimensions{requestPath}} devices90:rumPageloadEventsAdaptiveGroups(limit:1000,filter:{siteTag:\"8e37b1c500e742849c04232ae986be43\",bot:0,datetime_lt:\"2026-09-24T00:00:00Z\",datetime_geq:\"2026-06-26T00:00:00Z\"}){count sum{visits}dimensions{deviceType}} countries90:rumPageloadEventsAdaptiveGroups(limit:1000,filter:{siteTag:\"8e37b1c500e742849c04232ae986be43\",bot:0,datetime_lt:\"2026-09-24T00:00:00Z\",datetime_geq:\"2026-06-26T00:00:00Z\"}){count sum{visits}dimensions{countryName}} daily90:rumPageloadEventsAdaptiveGroups(limit:1000,filter:{siteTag:\"8e37b1c500e742849c04232ae986be43\",bot:0,datetime_lt:\"2026-09-24T00:00:00Z\",datetime_geq:\"2026-06-26T00:00:00Z\"}){count sum{visits}dimensions{date}}}}}",
+    "response": {
+      "success": true,
+      "status": 200,
+      "result": {
+        "viewer": {
+          "accounts": [
+            {
+              "countries28": [
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "countryName": "DE"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                },
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "countryName": "FR"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                },
+                {
+                  "count": 40,
+                  "dimensions": {
+                    "countryName": "IT"
+                  },
+                  "sum": {
+                    "visits": 40
+                  }
+                },
+                {
+                  "count": 20,
+                  "dimensions": {
+                    "countryName": "US"
+                  },
+                  "sum": {
+                    "visits": 20
+                  }
+                }
+              ],
+              "countries90": [
+                {
+                  "count": 20,
+                  "dimensions": {
+                    "countryName": "DE"
+                  },
+                  "sum": {
+                    "visits": 20
+                  }
+                },
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "countryName": "FR"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                },
+                {
+                  "count": 170,
+                  "dimensions": {
+                    "countryName": "IT"
+                  },
+                  "sum": {
+                    "visits": 140
+                  }
+                },
+                {
+                  "count": 50,
+                  "dimensions": {
+                    "countryName": "US"
+                  },
+                  "sum": {
+                    "visits": 50
+                  }
+                }
+              ],
+              "daily90": [
+                {
+                  "count": 20,
+                  "dimensions": {
+                    "date": "2026-08-09"
+                  },
+                  "sum": {
+                    "visits": 20
+                  }
+                },
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "date": "2026-06-29"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                },
+                {
+                  "count": 30,
+                  "dimensions": {
+                    "date": "2026-07-29"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                },
+                {
+                  "count": 30,
+                  "dimensions": {
+                    "date": "2026-09-20"
+                  },
+                  "sum": {
+                    "visits": 30
+                  }
+                },
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "date": "2026-08-08"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                },
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "date": "2026-07-17"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                },
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "date": "2026-07-07"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                },
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "date": "2026-09-18"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                },
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "date": "2026-07-20"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                },
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "date": "2026-08-11"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                },
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "date": "2026-09-22"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                },
+                {
+                  "count": 20,
+                  "dimensions": {
+                    "date": "2026-07-28"
+                  },
+                  "sum": {
+                    "visits": 20
+                  }
+                },
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "date": "2026-09-09"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                },
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "date": "2026-08-01"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                },
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "date": "2026-08-03"
+                  },
+                  "sum": {
+                    "visits": 0
+                  }
+                },
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "date": "2026-07-09"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                },
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "date": "2026-09-16"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                },
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "date": "2026-07-03"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                },
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "date": "2026-08-28"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                }
+              ],
+              "devices28": [
+                {
+                  "count": 30,
+                  "dimensions": {
+                    "deviceType": "mobile"
+                  },
+                  "sum": {
+                    "visits": 30
+                  }
+                },
+                {
+                  "count": 50,
+                  "dimensions": {
+                    "deviceType": "desktop"
+                  },
+                  "sum": {
+                    "visits": 50
+                  }
+                }
+              ],
+              "devices90": [
+                {
+                  "count": 140,
+                  "dimensions": {
+                    "deviceType": "mobile"
+                  },
+                  "sum": {
+                    "visits": 130
+                  }
+                },
+                {
+                  "count": 110,
+                  "dimensions": {
+                    "deviceType": "desktop"
+                  },
+                  "sum": {
+                    "visits": 90
+                  }
+                }
+              ],
+              "pages28": [
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "requestPath": "/it/"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                },
+                {
+                  "count": 60,
+                  "dimensions": {
+                    "requestPath": "/"
+                  },
+                  "sum": {
+                    "visits": 60
+                  }
+                },
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "requestPath": "/en/"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                }
+              ],
+              "pages90": [
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "requestPath": "/it/"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                },
+                {
+                  "count": 180,
+                  "dimensions": {
+                    "requestPath": "/"
+                  },
+                  "sum": {
+                    "visits": 170
+                  }
+                },
+                {
+                  "count": 60,
+                  "dimensions": {
+                    "requestPath": "/en/"
+                  },
+                  "sum": {
+                    "visits": 40
+                  }
+                }
+              ],
+              "referrers28": [
+                {
+                  "count": 60,
+                  "dimensions": {
+                    "refererHost": ""
+                  },
+                  "sum": {
+                    "visits": 60
+                  }
+                },
+                {
+                  "count": 20,
+                  "dimensions": {
+                    "refererHost": "www.google.com"
+                  },
+                  "sum": {
+                    "visits": 20
+                  }
+                }
+              ],
+              "referrers90": [
+                {
+                  "count": 30,
+                  "dimensions": {
+                    "refererHost": "mont6cefalu.it"
+                  },
+                  "sum": {
+                    "visits": 0
+                  }
+                },
+                {
+                  "count": 190,
+                  "dimensions": {
+                    "refererHost": ""
+                  },
+                  "sum": {
+                    "visits": 190
+                  }
+                },
+                {
+                  "count": 10,
+                  "dimensions": {
+                    "refererHost": "checkout.stripe.com"
+                  },
+                  "sum": {
+                    "visits": 10
+                  }
+                },
+                {
+                  "count": 20,
+                  "dimensions": {
+                    "refererHost": "www.google.com"
+                  },
+                  "sum": {
+                    "visits": 20
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "errors": [],
+      "messages": []
+    },
+    "rules": {
+      "result": {
+        "ruleset": {
+          "zone_tag": "4de75bc5fe6b12a78c181c7f072d5dcf",
+          "zone_name": "mont6cefalu.it",
+          "enabled": true,
+          "id": "004e6c5a-f102-4340-bd6a-f075fc0655a9",
+          "lite": false
+        },
+        "rules": [
+          {
+            "host": "*",
+            "paths": [
+              "*"
+            ],
+            "inclusive": true,
+            "created": "2026-06-26T14:07:08.382071Z",
+            "is_paused": false,
+            "priority": 1000,
+            "id": "dd10cfbb-4c63-49d0-bf45-4c68e669c57c"
+          }
+        ]
+      },
+      "success": true,
+      "errors": [],
+      "messages": [],
+      "status": 200
+    }
+  },
+  "oldDomain": {
+    "checkedAt": "2026-09-24T16:04:29.995Z",
+    "zone": {
+      "status": 200,
+      "name": "mont6.it",
+      "state": "pending",
+      "nameServers": [
+        "beth.ns.cloudflare.com",
+        "sean.ns.cloudflare.com"
+      ],
+      "activatedOn": null,
+      "errors": []
+    },
+    "certificates": {
+      "status": 200,
+      "packs": [],
+      "errors": []
+    }
+  },
+  "oldDomainPublicDNS": {
+    "checkedAt": "2026-09-24T16:04:30Z",
+    "resolver": "dns.google",
+    "checks": [
+      {
+        "name": "mont6.it",
+        "type": "NS",
+        "status": 3,
+        "answer": null
+      },
+      {
+        "name": "www.mont6.it",
+        "type": "A",
+        "status": 3,
+        "answer": null
+      }
+    ]
+  }
+}

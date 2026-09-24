@@ -1,6 +1,6 @@
 # Verifica SEO, GEO e accessibilità — 24 settembre 2026
 
-Il sito ha una base tecnica solida e Search Console conferma l'indicizzazione delle home italiana e inglese, una sitemap riuscita e 2 elementi VacationRental validi senza errori. Il report AI di Google mostra anche 2 impressioni, su un campione minimo precedente all'upgrade. Non è corretto definirlo ottimale in ogni aspetto: il vecchio dominio non risolve, le prestazioni mobile hanno margine e i volumi di ricerca osservati sono ancora contenuti. Il test Lighthouse SEO riguarda requisiti tecnici di base, non posizioni o probabilità di citazione AI.
+Il sito ha una base tecnica solida e Search Console conferma l'indicizzazione delle home italiana e inglese, una sitemap riuscita e 2 elementi VacationRental validi senza errori. Il report AI di Google mostra anche 2 impressioni, su un campione minimo precedente all'upgrade. Il vecchio dominio mont6.it è stato recuperato dal proprietario e ora reindirizza correttamente con 301 e HTTPS al sito ufficiale. I volumi di ricerca osservati restano contenuti: il test Lighthouse SEO riguarda requisiti tecnici di base, non posizioni o probabilità di citazione AI.
 
 ## Controlli sul sito pubblico
 
@@ -69,9 +69,9 @@ Search Console è ora accessibile: l'utente ha aperto la proprietà con l'accoun
 
 | Verifica Search Console | Evidenza letta |
 | --- | --- |
-| Home indicizzate | `https://mont6cefalu.it/` e `/en/`; ultima scansione 10 settembre 2026 |
+| Home indicizzate | `https://mont6cefalu.it/` e `/en/`; ispezione aggiornata: ultima scansione 23 settembre 2026 |
 | 5 URL escluse | 2 redirect (`http://mont6cefalu.it/`, `?lang=en`), 1 variante con canonical (`?lang=it`), 2 privacy rilevate ma non indicizzate (`/privacy`, `/en/privacy`) |
-| Sitemap | Riuscita, 4 pagine; inviata e letta il 15 settembre 2026 |
+| Sitemap | Riuscita, 4 pagine; reinviata e letta il 24 settembre 2026 |
 | HTTPS e dati strutturati | 2 URL HTTPS valide, 0 problemi; 2 elementi VacationRental validi, 0 errori |
 | Ricerca Web, 25 agosto–21 settembre | 8 clic, 62 impressioni, CTR 12,9%, posizione media 3,1 |
 | Ricerca Web, 22 giugno–21 settembre | 26 clic, 254 impressioni, CTR 10,2%, posizione media 4,1 |
@@ -82,18 +82,51 @@ Il report di indicizzazione è aggiornato al 21 settembre e le scansioni riporta
 
 Le 2 impressioni nel [report AI di Google](https://search.google.com/u/1/search-console/performance/search-analytics/ai?resource_id=sc-domain%3Amont6cefalu.it&num_of_days=28) sono un primo segnale osservato, non una prova dell'efficacia delle modifiche appena pubblicate o di presenza su ChatGPT, Perplexity e Claude. La riga HTTP è storica e va distinta dal redirect HTTPS attuale.
 
-- Google Business Profile connesso: nome, indirizzo, telefono e sito ufficiale coerenti. [Scheda Maps](https://maps.google.com/maps?cid=4203028787668436511). Descrizione del profilo restituita vuota dal connettore.
+- Google Business Profile verificato anche nell'interfaccia del titolare: nome, indirizzo, telefono, sito, WhatsApp, social e orari check-in/check-out coerenti. [Scheda Maps](https://maps.google.com/maps?cid=4203028787668436511). Il connettore restituisce descrizione vuota, ma la UI di questa struttura non espone un campo descrizione: nessuna modifica necessaria o pubblicata. Dettagli in [audit/external-citations-2026-09-24.md](audit/external-citations-2026-09-24.md).
 - GA4 storica `mont6.it`: query vuote, non prova di traffico zero. Il sito non include GA4/GTM e la privacy dichiara Cloudflare Web Analytics; non emerge un tag GA4 rotto. Dettaglio delle letture e baseline GBP in [audit/connected-signals-2026-09-24.md](audit/connected-signals-2026-09-24.md).
-- Le query pubbliche non hanno mostrato il nuovo dominio. Questo non dimostra mancata indicizzazione e non sostituisce Search Console.
-- Il vecchio `mont6.it` compare ancora in risultati e citazioni, ma DNS Google restituisce NXDOMAIN per apex e www. Il proprietario conferma che è suo e ritiene possa essere scaduto. Scadenza e registrar non sono stati accertati; nessun rinnovo o acquisto eseguito. Va verificato nel pannello del registrar e, se recuperabile, ripristinato con redirect permanente al dominio nuovo.
+- Le prime query pubbliche non mostravano il nuovo dominio; la successiva ricerca di marchio nell'account del titolare mostra il sito e il relativo snippet aggiornato. È una ricerca personalizzata, non una misura del posizionamento generico; Search Console resta la fonte per l'indicizzazione.
+- Il proprietario ha acquistato nuovamente `mont6.it` su GoDaddy. Nameserver Cloudflare configurati e attivi; certificato Universal SSL attivo; tutte le varianti HTTP/HTTPS, apex/www, restituiscono 301 diretto al dominio nuovo conservando percorso e query. Verificato alle 18:12 CEST, senza disabilitare la verifica TLS. [Report redirect](audit/mont6-it-redirect-2026-09-24.md).
 - [Airbnb](https://www.airbnb.com/rooms/48284780), [Booking](https://www.booking.com/hotel/it/montdeg6.en-gb.html) e [Visit Cefalù](https://www.visitcefalu.com/de/ferienhaeuser-cefalu/) confermano l'identità e l'indirizzo. [Wanderlog](https://wanderlog.com/place/details/4573826/mont6) cita ancora il vecchio dominio. Il portale [Città Metropolitana di Palermo](https://turismo.cittametropolitana.pa.it/accomodation/page/254/) usa una classificazione diversa: da correggere presso la fonte se non pertinente, senza importare stelle o servizi non confermati nel sito.
 
-## Cosa rimane da completare
+## Interventi e baseline aggiuntivi
 
-1. Recupero/verifica del vecchio dominio presso il registrar e consolidamento delle citazioni con redirect.
+- CSS completo della home e del calendario incluso nell'HTML durante la build, con percorsi asset assoluti per IT/EN: elimina la richiesta CSS che bloccava il primo rendering, senza dipendere da JavaScript per lo stile. Il documento compresso cresce di circa 13 KB, sostituendo una richiesta CSS di circa 13 KB; il CSS non è più condiviso dalla cache tra le home. `home.css` rimane disponibile per l'HTML precedente in cache.
+- Aggiunti allo schema `sameAs` e a `llms.txt` i profili Facebook e Instagram già presenti nella scheda Google del titolare.
+- Verifica visiva ha rilevato un difetto residuo di Flatpickr al passaggio desktop→mobile: una sola griglia manteneva larghezza inline di 618 px. Corretto il reset delle larghezze e della classe `multiMonth`, preservando date e messaggi; test di regressione aggiornato. Browser a 390 px: calendario 307,875 px, documento e scroll 375 px, nessun overflow. Home inglese e desktop verificati visivamente.
+- Build e suite precedenti: 71 test più 26 controlli routing; dopo la correzione mirata del calendario, build e tutti i 12 test frontend passati. Nessun pagamento reale.
+- Email di aggiornamento sito inviata a `support@wanderlog.com` da `mont6.home@gmail.com`, con conferma Gmail. La correzione della scheda non è ancora confermata. La richiesta alla Città Metropolitana resta in bozza per scelta esplicita del proprietario.
+- Baseline Cloudflare Web Analytics raccolta in [audit/cloudflare-analytics-2026-09-24.md](audit/cloudflare-analytics-2026-09-24.md): 80 pageview e 80 visite stimate non bot negli ultimi 28 giorni completi; 250 pageview e 220 visite nei 90 giorni. Campionamento forte, circa 10–11×, e copertura iniziale parziale: non sono conteggi esatti né prenotazioni. Nessun referrer AI identificabile nel campione non dimostra assenza di citazioni AI.
+- RUM mobile 28 giorni: LCP p75 1,432 s, INP 40 ms, CLS non disponibile. Desktop LCP 0,912 s, CLS 0,008, INP non disponibile. Mancano metriche per dichiarare superati tutti i Core Web Vitals; questi dati precedono l'ottimizzazione odierna.
+- Controllo comparativo programmato per il **22 ottobre 2026 alle 10:00**, una sola esecuzione nella stessa task. Confronterà Search Console, Cloudflare e Google Business Profile con le baseline, riportando campionamento e limiti senza attribuire automaticamente le variazioni alle modifiche.
+
+## Cosa rimane da misurare o verificare
+
+### Rilascio e misura conclusivi, 18:19 CEST
+
+Pubblicato il commit `06fffb1f5e26a1de37142296ff018db8cbf98032`; deployment Cloudflare `45415814-d98e-44bd-8736-2d978b00c576` riuscito alle **18:17:25 CEST**. Verifica HTTP successiva: tre home 200 con un solo `style#home-styles`, app v29, tre JSON-LD validi e quattro `sameAs`; app.js, robots.txt e llms.txt identici ai sorgenti. Il report delle citazioni restituisce 404 sul sito, come previsto.
+
+[PageSpeed conclusivo, 18:18:38 CEST](https://pagespeed.web.dev/analysis/https-mont6cefalu-it/7zaul84c6v?form_factor=mobile), Lighthouse 13.5.0:
+
+| Metrica | Mobile | Desktop |
+| --- | ---: | ---: |
+| Prestazioni | **90** | **100** |
+| Accessibilità automatica | 100 | 100 |
+| Best practice | 100 | 100 |
+| SEO tecnico | 100 | 100 |
+| FCP | 2,3 s | 0,5 s |
+| LCP | 3,2 s | 0,7 s |
+| TBT | 0 ms | 0 ms |
+| CLS | 0,004 | 0,019 |
+| Speed Index | 3,1 s | 0,6 s |
+
+Rispetto alla misura precedente, mobile 88→90, Speed Index 4,4→3,1 s e TBT 50→0 ms; LCP sostanzialmente invariato a 3,2 s. La diagnostica non segnala più il CSS home tra le richieste bloccanti. I piccoli aumenti CLS restano sotto 0,1. È un confronto tra singole misure di laboratorio, soggette a variabilità, non una prova statistica né un esito dei Core Web Vitals sul campo. La modifica è mantenuta perché rimuove la dipendenza di rete CSS e non ha mostrato regressioni funzionali nella verifica.
+
+### Verifiche successive
+
+1. Risposta di Wanderlog e aggiornamento effettivo della sua scheda; il redirect del vecchio dominio è già operativo.
 2. Verificare l'aggiornamento dell'indice dopo le richieste accettate e raccogliere una baseline successiva di rendimento Web e AI. Accesso Search Console, indicizzazione delle home, test live IT e nuova lettura della sitemap del 24 settembre sono già confermati.
-3. Ottimizzazione ulteriore del rendering mobile e successiva raccolta di dati reali; non sono disponibili metriche INP sul campo.
+3. Raccolta di dati reali successivi al rilascio, con particolare attenzione alle metriche mancanti; LCP mobile di laboratorio a 3,2 s conserva margine di miglioramento.
 4. Verifica puntuale della geocodifica se si vuole perseguire l'esperienza Google Vacation Rentals; le coordinate confermate dal profilo hanno quattro decimali.
-5. Eventuali aggiornamenti della descrizione GBP e delle citazioni esterne, da preparare e pubblicare nella fonte pertinente. Recensioni, dati commerciali delle piattaforme e policy esterne non sono stati importati automaticamente.
+5. Eventuale verifica amministrativa della discordanza sul portale Città Metropolitana, lasciata in bozza per scelta del proprietario. Recensioni, dati commerciali delle piattaforme e policy esterne non sono stati importati automaticamente.
 
 Non è stato effettuato un pagamento reale. L'audit non certifica conformità normativa né garantisce citazioni da ChatGPT, Perplexity, Claude o Google AI Overviews. [Google chiarisce che le funzionalità AI seguono i requisiti di ricerca](https://developers.google.com/search/docs/appearance/ai-features).
