@@ -1,11 +1,9 @@
-# Early Hints (103): Cloudflare li serve prima dell'HTML — il browser
-# inizia a scaricare le risorse critiche durante il tempo di risposta
+# Early Hints (103): avvia il font del titolo prima dell'HTML.
+# Il CSS home e calendario e' gia' incluso nel documento dalla build.
 /
-  Link: </home.css?v=29>; rel=preload; as=style
   Link: </vendor/fonts/CormorantGaramond-500.woff2>; rel=preload; as=font; crossorigin
 
 /en/
-  Link: </home.css?v=29>; rel=preload; as=style
   Link: </vendor/fonts/CormorantGaramond-500.woff2>; rel=preload; as=font; crossorigin
 
 /*

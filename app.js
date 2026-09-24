@@ -425,6 +425,14 @@ function initBookingForm() {
     // device rotation), preserving the selected stay and validation message.
     calendarViewport.addEventListener('change', event => {
         fp.set('showMonths', event.matches ? 2 : 1);
+        // Flatpickr sets multiMonth only at construction and skips its width
+        // calculation for one month. Clear the old two-month inline widths
+        // when shrinking, so a 618px popup cannot overflow the mobile page.
+        fp.calendarContainer?.classList.toggle('multiMonth', event.matches);
+        if (!event.matches) {
+            fp.calendarContainer?.style.removeProperty('width');
+            fp.daysContainer?.style.removeProperty('width');
+        }
     });
 
     /**

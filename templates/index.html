@@ -45,9 +45,9 @@
     <!-- Font self-hosted: preload dei due critici (titolo hero + body) -->
     <link rel="preload" as="font" type="font/woff2" href="vendor/fonts/CormorantGaramond-500.woff2" crossorigin>
     
-    <!-- Un solo CSS per home e calendario: entrambi pronti prima dell'init.
-         Generato da npm run build; glightbox/leaflet restano asincroni. -->
-    <link rel="stylesheet" href="/home.css?v=29">
+    <!-- CSS home e calendario inseriti nel documento dalla build: stile completo
+         al primo paint anche senza JavaScript, senza una richiesta CSS bloccante. -->
+    <!-- HOME_STYLES -->
     
     <!-- Structured Data (JSON-LD). Coordinate: Google Business Profile del gestore, verificate il 24 settembre 2026. -->
     <script type="application/ld+json">
@@ -63,7 +63,9 @@
     "logo": "https://mont6cefalu.it/img/logo-dark-250.png",
     "sameAs": [
         "https://www.airbnb.it/rooms/48284780",
-        "https://maps.google.com/maps?cid=4203028787668436511"
+        "https://maps.google.com/maps?cid=4203028787668436511",
+        "https://www.facebook.com/mont6home",
+        "https://www.instagram.com/mont6casahome/"
     ],
     "telephone": "+39-388-190-8816",
     "email": "mont6.home@gmail.com",
@@ -1054,7 +1056,7 @@
     <script src="vendor/glightbox/glightbox.min.js"></script>
 
     <!-- Custom JS -->
-    <script type="module" src="app.js?v=28"></script>
+    <script type="module" src="app.js?v=29"></script>
     <!-- COOKIE_NOTICE -->
     <script src="/cookie-notice.js?v=1" defer></script>
 </body>

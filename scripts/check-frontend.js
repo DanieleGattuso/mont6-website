@@ -50,6 +50,28 @@ test('published documents have one language, one h1 and complete metadata', () =
         assert.equal(ids.length,new Set(ids).size,file);
     }
 });
+test('home renders the complete cascade without a CSS request or JavaScript, including language routes', () => {
+    const expectedCss = read('home.css').replace(/url\((['"]?)(?=(?:img|vendor)\/)/g, 'url($1/').trim();
+    for (const file of ['index.html', 'en/index.html', 'it/index.html']) {
+        const html = read(file);
+        const styles = [...html.matchAll(/<style id="home-styles">([\s\S]*?)<\/style>/g)];
+        assert.equal(styles.length, 1, `${file}: exactly one complete home stylesheet`);
+        assert.equal(styles[0][1].trim(), expectedCss, `${file}: preserve all calendar and responsive rules in their order`);
+        assert.ok(html.indexOf(styles[0][0]) < html.indexOf('</head>'), `${file}: styled before body rendering`);
+        assert.doesNotMatch(html, /<link\b[^>]*rel="stylesheet"/, `${file}: no render-blocking CSS request`);
+        for (const [, asset] of styles[0][1].matchAll(/url\(['"]?(\/[^)'"\s]+)/g)) {
+            assert.ok(fs.existsSync(path.join(root, asset.slice(1))), `${file}: inline CSS asset ${asset}`);
+        }
+        assert.doesNotMatch(styles[0][1], /url\(['"]?(?:vendor|img)\//, `${file}: no language-relative CSS URLs`);
+    }
+    for (const file of ['privacy.html', 'en/privacy.html', 'success.html', 'en/success.html', '404.html', 'en/404.html']) {
+        assert.doesNotMatch(read(file), /id="home-styles"/, `${file}: do not duplicate home styles on secondary pages`);
+        assert.match(read(file), /rel="stylesheet" href="\/style\.css\?v=27"/);
+    }
+    assert.doesNotMatch(read('_headers'), /home\.css/, 'no obsolete CSS Early Hint or duplicate fetch');
+    assert.match(read('_headers'), /style-src[^;]*'unsafe-inline'/, 'current CSP permits the generated style block');
+});
+
 test('schema describes the apartment and visible FAQs, never a fabricated booking', () => {
     for(const file of ['index.html','en/index.html']) {
         const data=[...read(file).matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(m=>JSON.parse(m[1]));
@@ -98,7 +120,26 @@ async function bookingFixture(lang, width = 390) {
         sessionStorage: { getItem: () => null, setItem() {}, removeItem() {} },
         flatpickr(input, config) {
             options = config;
-            fp = { selectedDates: [], config, set(key, value) { this.config[key] = value; }, redraw() {} };
+            const popupClasses = new Set(config.showMonths > 1 ? ['multiMonth'] : []);
+            const widthStyle = () => ({ width: config.showMonths > 1 ? '618px' : '', removeProperty(name) { this[name] = ''; } });
+            fp = {
+                selectedDates: [], config,
+                calendarContainer: { style: widthStyle(), classList: {
+                    contains: name => popupClasses.has(name),
+                    toggle(name, force) { force ? popupClasses.add(name) : popupClasses.delete(name); },
+                } },
+                daysContainer: { style: widthStyle() },
+                set(key, value) {
+                    this.config[key] = value;
+                    // Model the bundled Flatpickr behavior: two months sets
+                    // width, but returning to one leaves width/class behind.
+                    if (key === 'showMonths' && value > 1) {
+                        this.calendarContainer.style.width = '618px';
+                        this.daysContainer.style.width = '618px';
+                    }
+                },
+                redraw() {},
+            };
             return fp;
         },
         async fetch(url, opts) {
@@ -172,8 +213,13 @@ test('calendar switches month count at the mobile breakpoint without losing date
     const value = form.elements['date-range'].value;
     const message = form.elements['form-msg'].textContent;
     assert.equal(form.calendar.config.showMonths, 2);
+    assert.equal(form.calendar.calendarContainer.style.width, '618px');
+    assert.equal(form.calendar.calendarContainer.classList.contains('multiMonth'), true);
     form.resize(390);
     assert.equal(form.calendar.config.showMonths, 1);
+    assert.equal(form.calendar.calendarContainer.style.width, '');
+    assert.equal(form.calendar.daysContainer.style.width, '');
+    assert.equal(form.calendar.calendarContainer.classList.contains('multiMonth'), false);
     assert.equal(form.calendar.selectedDates, dates);
     assert.equal(form.elements['date-range'].value, value);
     assert.equal(form.elements['form-msg'].textContent, message);
@@ -182,9 +228,13 @@ test('calendar switches month count at the mobile breakpoint without losing date
     assert.equal(form.calendar.config.showMonths, 1);
     form.resize(769);
     assert.equal(form.calendar.config.showMonths, 2);
+    assert.equal(form.calendar.calendarContainer.style.width, '618px');
+    assert.equal(form.calendar.calendarContainer.classList.contains('multiMonth'), true);
     form.select('2030-07-10', '2030-07-13');
     const total = form.elements.priceTotal.textContent;
     form.resize(390);
+    assert.equal(form.calendar.calendarContainer.style.width, '');
+    assert.equal(form.calendar.daysContainer.style.width, '');
     assert.equal(form.elements.priceTotal.textContent, total);
     assert.equal(form.elements.dynamicPriceBox.classList.contains('visible'), true);
 });
