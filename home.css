@@ -687,9 +687,10 @@ body.cookie-notice-open { padding-bottom: max(80px, var(--cookie-notice-height, 
 }
 .faq-question:hover { color: var(--color-accent); }
 .faq-icon { font-size: 1.5rem; font-weight: 300; color: var(--color-accent); transition: transform 0.4s var(--ease-out); flex-shrink: 0; }
-.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.5s var(--ease-out); }
+.faq-answer { display: block; }
 .faq-answer p { padding-bottom: 1.5rem; color: var(--color-text-light); font-size: 1rem; line-height: 1.75; }
-.faq-item.active .faq-answer { max-height: 260px; }
+.faq-item.faq-enhanced .faq-answer[hidden] { display: none; }
+.faq-item:not(.faq-enhanced) .faq-icon { display: none; }
 .faq-item.active .faq-icon { transform: rotate(45deg); }
 
 /* Form */

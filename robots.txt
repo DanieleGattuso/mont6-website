@@ -2,8 +2,46 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-# /success.html non e' bloccata qui apposta: porta un <meta name="robots"
-# content="noindex">, che Google puo' leggere solo se le e' permesso aprirla.
-# Bloccata e basta, l'indirizzo poteva finire in ricerca senza contenuto.
+# Ogni gruppo specifico ripete /api/: non eredita le regole del gruppo *.
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /api/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /api/
+
+User-agent: GPTBot
+Allow: /
+Disallow: /api/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /api/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /api/
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /api/
+
+User-agent: Claude-User
+Allow: /
+Disallow: /api/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /api/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /api/
+
+# /success e /en/success restano accessibili per consentire la lettura di noindex.
+# robots.txt regola la scansione: l'accesso ai dati privati richiede controlli server.
 
 Sitemap: https://mont6cefalu.it/sitemap.xml
+# LLMs-txt e' una convenzione informativa, non una direttiva standard REP.
+LLMs-txt: https://mont6cefalu.it/llms.txt

@@ -220,6 +220,8 @@ function initScrollReveal() {
  */
 function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        // Preserve native anchor navigation and focus for keyboard skip links.
+        if (anchor.classList.contains('skip-link')) return;
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const targetId = this.getAttribute('href');
@@ -609,50 +611,42 @@ function initBookingForm() {
  * Handle FAQ Accordion
  */
 function initFAQ() {
-    const faqItems = document.querySelectorAll('.faq-item');
+    const faqItems = [...document.querySelectorAll('.faq-item')].filter(item =>
+        item.querySelector('.faq-question') && item.querySelector('.faq-answer'));
+    const setOpen = (item, open) => {
+        item.classList.toggle('active', open);
+        item.querySelector('.faq-question').setAttribute('aria-expanded', String(open));
+        item.querySelector('.faq-answer').hidden = !open;
+    };
+    const openOnly = target => faqItems.forEach(item => setOpen(item, item === target));
     const openLinkedFAQ = () => {
         const target = document.getElementById(window.location.hash.slice(1));
-        if (!target?.classList.contains('faq-item')) return;
-        faqItems.forEach(item => {
-            const open = item === target;
-            item.classList.toggle('active', open);
-            item.querySelector('.faq-question')?.setAttribute('aria-expanded', String(open));
-        });
+        if (faqItems.includes(target)) openOnly(target);
     };
     
-    faqItems.forEach(item => {
+    faqItems.forEach((item, index) => {
         const questionBtn = item.querySelector('.faq-question');
-        // Stato ARIA iniziale (accessibilità)
-        questionBtn.setAttribute('aria-expanded', item.classList.contains('active') ? 'true' : 'false');
+        const answer = item.querySelector('.faq-answer');
+        if (!answer.id) answer.id = `faq-answer-${index + 1}`;
+        questionBtn.type = 'button';
+        questionBtn.setAttribute('aria-controls', answer.id);
+        item.querySelector('.faq-icon')?.setAttribute('aria-hidden', 'true');
 
         questionBtn.addEventListener('click', () => {
             const isActive = item.classList.contains('active');
-
-            // Close all
-            faqItems.forEach(faq => {
-                faq.classList.remove('active');
-                const btn = faq.querySelector('.faq-question');
-                if (btn) btn.setAttribute('aria-expanded', 'false');
-            });
-
-            // Toggle current
-            if (!isActive) {
-                item.classList.add('active');
-                questionBtn.setAttribute('aria-expanded', 'true');
-            }
+            openOnly(isActive ? null : item);
         });
+        // Enhance only after the control is ready. All answers remain readable
+        // in the initial HTML and whenever JavaScript is unavailable.
+        item.classList.add('faq-enhanced');
+        setOpen(item, item.classList.contains('active'));
     });
     // Conditions linked beside payment must be readable when followed directly.
     window.addEventListener('hashchange', openLinkedFAQ);
     document.querySelectorAll('a[href="#cancellation-policy"]').forEach(link => {
         link.addEventListener('click', () => {
             const target = document.getElementById('cancellation-policy');
-            if (!target) return;
-            faqItems.forEach(item => {
-                const open = item === target;
-                item.classList.toggle('active', open);
-                item.querySelector('.faq-question')?.setAttribute('aria-expanded', String(open));
-            });
+            if (faqItems.includes(target)) openOnly(target);
         });
     });
     openLinkedFAQ();

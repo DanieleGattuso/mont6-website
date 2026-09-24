@@ -18,6 +18,7 @@
     <meta name="theme-color" content="#1C2420">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://mont6cefalu.it/en/">
+    <link rel="describedby" href="https://mont6cefalu.it/llms.txt" type="text/plain">
     <link rel="alternate" hreflang="it" href="https://mont6cefalu.it/">
     <link rel="alternate" hreflang="en" href="https://mont6cefalu.it/en/">
     <link rel="alternate" hreflang="x-default" href="https://mont6cefalu.it/">
@@ -55,10 +56,15 @@
     "@context": "https://schema.org",
     "@type": "VacationRental",
     "additionalType": "Apartment",
-    "name": "Mont°6 Luxury Retreat",
+    "name": "Mont°6",
+    "alternateName": "Mont°6 Luxury Retreat",
     "identifier": "IT082027C2YCA7QI4V",
     "description": "Self-contained apartment in the pedestrian old town of Cefalù: one bedroom, one bathroom, an equipped kitchen, air conditioning and fibre Wi-Fi. Two minutes on foot from the Cathedral, five from the beach.",
-    "url": "https://mont6cefalu.it/en/",
+    "url": "https://mont6cefalu.it/",
+    "logo": "https://mont6cefalu.it/img/logo-dark-250.png",
+    "sameAs": [
+        "https://www.airbnb.it/rooms/48284780"
+    ],
     "telephone": "+39-388-190-8816",
     "email": "mont6.home@gmail.com",
     "image": [
@@ -83,11 +89,10 @@
     },
     "geo": {
         "@type": "GeoCoordinates",
-        "latitude": "38.0386",
-        "longitude": "14.0226"
+        "latitude": 38.0386,
+        "longitude": 14.0226
     },
     "priceRange": "€82 - €200 per night",
-    "numberOfRooms": 1,
     "knowsLanguage": [
         "it-IT",
         "en-GB"
@@ -124,30 +129,32 @@
             },
             {
                 "@type": "LocationFeatureSpecification",
-                "name": "airportShuttle",
-                "value": false
-            },
-            {
-                "@type": "LocationFeatureSpecification",
                 "name": "petsAllowed",
                 "value": false
             }
         ]
     },
-    "checkinTime": "15:00:00+02:00",
-    "checkoutTime": "10:00:00+02:00",
+    "checkinTime": "15:00:00",
+    "checkoutTime": "10:00:00",
     "petsAllowed": false,
-    "childrenAllowed": true,
     "@id": "https://mont6cefalu.it/#apartment",
     "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": "https://mont6cefalu.it/en/#booking",
-        "inLanguage": "en"
+        "@id": "https://mont6cefalu.it/en/#webpage",
+        "url": "https://mont6cefalu.it/en/",
+        "name": "Mont°6 — Apartment in Cefalù Old Town, Sicily | Book direct",
+        "inLanguage": "en",
+        "isPartOf": {
+            "@id": "https://mont6cefalu.it/#website"
+        },
+        "mainEntity": {
+            "@id": "https://mont6cefalu.it/#apartment"
+        }
     }
 }
     </script>
 
-    <!-- FAQ: informazioni già presenti e leggibili nella pagina -->
+    <!-- FAQ answers are generated from the visible HTML by scripts/build-en.js. -->
     <script type="application/ld+json">
 {
     "@context": "https://schema.org",
@@ -166,7 +173,7 @@
             "name": "Where can I park?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Being located in the pedestrian historical center, we recommend parking at \"Parcheggio Coco\" on the seafront, about a 5-minute walk from us. There is also a ZTL zone for residents."
+                "text": "\"Parcheggio Coco\" on the seafront is about a 5-minute walk from Mont°6. The apartment is in the pedestrian old town, with a restricted traffic zone for residents."
             }
         },
         {
@@ -174,7 +181,7 @@
             "name": "Are pets allowed?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Unfortunately we cannot accept pets in the property for hygiene and regulatory reasons."
+                "text": "No, pets are not allowed at Mont°6."
             }
         },
         {
@@ -218,15 +225,40 @@
             }
         }
     ],
-    "inLanguage": "en"
+    "@id": "https://mont6cefalu.it/en/#faq",
+    "url": "https://mont6cefalu.it/en/#faq",
+    "inLanguage": "en",
+    "about": {
+        "@id": "https://mont6cefalu.it/#apartment"
+    },
+    "isPartOf": {
+        "@id": "https://mont6cefalu.it/en/#webpage"
+    }
+}
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://mont6cefalu.it/#website",
+    "url": "https://mont6cefalu.it/",
+    "name": "Mont°6",
+    "alternateName": "Mont°6 Luxury Retreat",
+    "inLanguage": [
+        "it",
+        "en"
+    ],
+    "publisher": {
+        "@id": "https://mont6cefalu.it/#apartment"
+    }
 }
     </script>
 </head>
 <body class="editorial-theme">
 
-    <a href="#booking" class="skip-link">
+    <a href="#main-content" class="skip-link">
 
-        <span>Skip to booking</span>
+        <span>Skip to content</span>
     </a>
 
     <!-- NAVIGATION -->
@@ -314,6 +346,7 @@
         </div>
     </nav>
 
+    <main id="main-content" tabindex="-1">
     <!-- HERO SECTION -->
     <header class="hero" id="home">
         <!-- Parallax Background Image -->
@@ -327,7 +360,7 @@
             </p>
             <h1 class="hero-title display-title">
 
-                <span><span class="italic-accent">Two minutes</span><br>from Cefalù Cathedral.</span>
+                <span><span class="italic-accent">Mont°6</span><br>Apartment in Cefalù.</span>
             </h1>
             <div class="hero-meta">
                 <span class="hero-badge">
@@ -389,7 +422,7 @@
                     <div class="accent-line"></div>
                     <p class="lead-text">
 
-                        <span>Mont°6 is a self-contained apartment in the pedestrian old town of Cefalù. Two minutes on foot from the Cathedral, five from the beach, thirty seconds from the restaurants.</span>
+                        <span>Mont°6 is a self-contained apartment for two guests in the pedestrian old town of Cefalù. Two minutes on foot from the Cathedral, five from the beach, thirty seconds from the restaurants.</span>
                     </p>
                     <p>
 
@@ -421,7 +454,7 @@
                 <div class="accent-line center"></div>
                 <p class="lead-text">
 
-                    <span>Back from the beach, leave your towels in the bathroom and make a coffee in the kitchen.</span>
+                    <span>An equipped kitchen, air conditioning, fibre Wi-Fi, bed linen and towels are included in your stay.</span>
                 </p>
             </div>
 
@@ -605,7 +638,7 @@
             <div class="accent-line center"></div>
             <p class="lead-text text-center">
 
-                <span>The Cathedral, beach and restaurants are a short walk from the apartment.</span>
+                <span>Mont°6 is at Vicolo Monteleone 6, 90015 Cefalù (Palermo), Sicily: two minutes on foot from the Cathedral and five from the beach.</span>
             </p>
 
             <div class="location-content">
@@ -809,14 +842,18 @@
                         <span>Pick your dates: you see the total straight away, with no booking fees. Pay online or message me on WhatsApp.</span>
                     </p>
 
-                    <h3 class="faq-heading"><span>Before you arrive</span></h3>
+                    <p class="price-tax" id="rates-summary">
+
+                        <span>Rates range from €82 to €200 per night depending on the month, for the entire apartment for up to two guests. Your total depends on the dates selected; city tax is excluded and paid on arrival.</span>
+                    </p>
+                    <h2 class="faq-heading"><span>Frequently asked questions about Mont°6</span></h2>
                     <div class="faq-list" id="faq">
                         <div class="faq-item">
-                            <h4 class="faq-question-heading"><button class="faq-question">
+                            <h3 class="faq-question-heading"><button class="faq-question">
 
                                 <span>Check-in and check-out times</span>
                                 <span class="faq-icon">+</span>
-                            </button></h4>
+                            </button></h3>
                             <div class="faq-answer">
                                 <p>
 
@@ -825,37 +862,37 @@
                             </div>
                         </div>
                         <div class="faq-item">
-                            <h4 class="faq-question-heading"><button class="faq-question">
+                            <h3 class="faq-question-heading"><button class="faq-question">
 
                                 <span>Where can I park?</span>
                                 <span class="faq-icon">+</span>
-                            </button></h4>
+                            </button></h3>
                             <div class="faq-answer">
                                 <p>
 
-                                    <span>Being located in the pedestrian historical center, we recommend parking at "Parcheggio Coco" on the seafront, about a 5-minute walk from us. There is also a ZTL zone for residents.</span>
+                                    <span>"Parcheggio Coco" on the seafront is about a 5-minute walk from Mont°6. The apartment is in the pedestrian old town, with a restricted traffic zone for residents.</span>
                                 </p>
                             </div>
                         </div>
                         <div class="faq-item">
-                            <h4 class="faq-question-heading"><button class="faq-question">
+                            <h3 class="faq-question-heading"><button class="faq-question">
 
                                 <span>Are pets allowed?</span>
                                 <span class="faq-icon">+</span>
-                            </button></h4>
+                            </button></h3>
                             <div class="faq-answer">
                                 <p>
 
-                                    <span>Unfortunately we cannot accept pets in the property for hygiene and regulatory reasons.</span>
+                                    <span>No, pets are not allowed at Mont°6.</span>
                                 </p>
                             </div>
                         </div>
                         <div class="faq-item">
-                            <h4 class="faq-question-heading"><button class="faq-question">
+                            <h3 class="faq-question-heading"><button class="faq-question">
 
                                 <span>Are bed linen and towels included?</span>
                                 <span class="faq-icon">+</span>
-                            </button></h4>
+                            </button></h3>
                             <div class="faq-answer">
                                 <p>
 
@@ -864,11 +901,11 @@
                             </div>
                         </div>
                         <div class="faq-item">
-                            <h4 class="faq-question-heading"><button class="faq-question">
+                            <h3 class="faq-question-heading"><button class="faq-question">
 
                                 <span>What is the minimum stay?</span>
                                 <span class="faq-icon">+</span>
-                            </button></h4>
+                            </button></h3>
                             <div class="faq-answer">
                                 <p>
 
@@ -877,11 +914,11 @@
                             </div>
                         </div>
                         <div class="faq-item" id="cancellation-policy">
-                            <h4 class="faq-question-heading"><button class="faq-question">
+                            <h3 class="faq-question-heading"><button class="faq-question">
 
                                 <span>Can I cancel? How do refunds work?</span>
                                 <span class="faq-icon">+</span>
-                            </button></h4>
+                            </button></h3>
                             <div class="faq-answer">
                                 <p>
 
@@ -890,11 +927,11 @@
                             </div>
                         </div>
                         <div class="faq-item">
-                            <h4 class="faq-question-heading"><button class="faq-question">
+                            <h3 class="faq-question-heading"><button class="faq-question">
 
                                 <span>Is the city tax included?</span>
                                 <span class="faq-icon">+</span>
-                            </button></h4>
+                            </button></h3>
                             <div class="faq-answer">
                                 <p>
 
@@ -903,11 +940,11 @@
                             </div>
                         </div>
                         <div class="faq-item">
-                            <h4 class="faq-question-heading"><button class="faq-question">
+                            <h3 class="faq-question-heading"><button class="faq-question">
 
                                 <span>Is it cheaper to book here than on the portals?</span>
                                 <span class="faq-icon">+</span>
-                            </button></h4>
+                            </button></h3>
                             <div class="faq-answer">
                                 <p>
 
@@ -919,10 +956,16 @@
                 </div>
 
                 <div class="booking-form-card shadow-luxe">
-                    <h3 class="form-title">
+                    <noscript>
+                        <p class="host-inline">
+
+                            <span>Enable JavaScript to use the calendar and online payment. You can also <a href="https://wa.me/393881908816">message Daniele on WhatsApp</a> or <a href="mailto:mont6.home@gmail.com">email him</a> for availability and a quote.</span>
+                        </p>
+                    </noscript>
+                    <h2 class="form-title">
 
                         <span>Dates and booking</span>
-                    </h3>
+                    </h2>
                     <p class="host-inline">
 
                         <span>I’m <strong>Daniele</strong>. You can message me below about your dates. And if you’re looking for somewhere to eat in Cefalù, I’m happy to recommend a good restaurant.</span>
@@ -1002,10 +1045,10 @@
                     </p>
 
                     <div class="direct-benefits-box mt-4" style="border-top: 1px solid rgba(0,0,0,0.08); padding-top: 2rem;">
-                        <h4 style="font-family: var(--font-heading); font-size: 1.1rem; margin-bottom: 1rem; color: var(--color-text);">
+                        <h3 style="font-family: var(--font-heading); font-size: 1.1rem; margin-bottom: 1rem; color: var(--color-text);">
 
                             <span>Why book here</span>
-                        </h4>
+                        </h3>
                         <ul style="list-style: none; padding-left: 0; font-size: 0.9rem; color: var(--color-text-light); display: flex; flex-direction: column; gap: 0.8rem; text-align: left;">
                             <li style="display: flex; align-items: start; gap: 10px;">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--color-accent)" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><polyline points="20 6 9 17 4 12"/></svg>
@@ -1041,6 +1084,8 @@
         </div>
     </section>
 
+    </main>
+
     <!-- FOOTER -->
     <footer class="footer-editorial">
         <div class="container">
@@ -1056,7 +1101,7 @@
                         CIR: 19082027C206522 &bull; CIN: IT082027C2YCA7QI4V
                     </span>
                 </p>
-                <div class="footer-links-ed">
+                <div class="footer-links-ed" id="contacts">
                     <a href="#concept">
 
                         <span>The apartment</span>
@@ -1069,10 +1114,8 @@
 
                         <span>Location</span>
                     </a>
-                    <a href="mailto:mont6.home@gmail.com">
-
-                        <span>Contact</span>
-                    </a>
+                    <a href="mailto:mont6.home@gmail.com">mont6.home@gmail.com</a>
+                    <a href="tel:+393881908816">+39 388 190 8816</a>
                     <a href="/en/privacy">
 
                         <span>Privacy Policy</span>

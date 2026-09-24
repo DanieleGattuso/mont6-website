@@ -10,6 +10,7 @@
     <meta name="theme-color" content="#1C2420">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://mont6cefalu.it/">
+    <link rel="describedby" href="https://mont6cefalu.it/llms.txt" type="text/plain">
     <link rel="alternate" hreflang="it" href="https://mont6cefalu.it/">
     <link rel="alternate" hreflang="en" href="https://mont6cefalu.it/en/">
     <link rel="alternate" hreflang="x-default" href="https://mont6cefalu.it/">
@@ -54,10 +55,13 @@
     "@context": "https://schema.org",
     "@type": "VacationRental",
     "additionalType": "Apartment",
-    "name": "Mont°6 Luxury Retreat",
+    "name": "Mont°6",
+    "alternateName": "Mont°6 Luxury Retreat",
     "identifier": "IT082027C2YCA7QI4V",
     "description": "Appartamento indipendente nel centro storico pedonale di Cefalù: una camera, un bagno, cucina attrezzata, aria condizionata e Wi-Fi in fibra. Due minuti a piedi dal Duomo, cinque dalla spiaggia.",
-    "url": "https://mont6cefalu.it",
+    "url": "https://mont6cefalu.it/",
+    "logo": "https://mont6cefalu.it/img/logo-dark-250.png",
+    "sameAs": ["https://www.airbnb.it/rooms/48284780"],
     "telephone": "+39-388-190-8816",
     "email": "mont6.home@gmail.com",
     "image": [
@@ -82,11 +86,10 @@
     },
     "geo": {
         "@type": "GeoCoordinates",
-        "latitude": "38.0386",
-        "longitude": "14.0226"
+        "latitude": 38.0386,
+        "longitude": 14.0226
     },
-    "priceRange": "€82 - €200 a notte",
-    "numberOfRooms": 1,
+    "priceRange": "€{{MIN_NIGHTLY_RATE}} - €{{MAX_NIGHTLY_RATE}} a notte",
     "knowsLanguage": [
         "it-IT",
         "en-GB"
@@ -123,144 +126,49 @@
             },
             {
                 "@type": "LocationFeatureSpecification",
-                "name": "airportShuttle",
-                "value": false
-            },
-            {
-                "@type": "LocationFeatureSpecification",
                 "name": "petsAllowed",
                 "value": false
             }
         ]
     },
-    "checkinTime": "15:00:00+02:00",
-    "checkoutTime": "10:00:00+02:00",
+    "checkinTime": "15:00:00",
+    "checkoutTime": "10:00:00",
     "petsAllowed": false,
-    "childrenAllowed": true,
-    "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.99",
-        "bestRating": "5",
-        "reviewCount": "120"
-    },
-    "review": [
-        {
-            "@type": "Review",
-            "author": {
-                "@type": "Person",
-                "name": "Lindsay"
-            },
-            "datePublished": "2025-10",
-            "reviewRating": {
-                "@type": "Rating",
-                "ratingValue": "5",
-                "bestRating": "5"
-            },
-            "reviewBody": "Il nostro soggiorno da Daniele è stato bellissimo! La posizione è perfetta, centrale e vicina a tutto. Dal patio si vede la Rocca di Cefalù e il mare è a sei minuti a piedi. Daniele ci ha fatto sentire a casa con piccole attenzioni: caffè, snack e vino. Grazie Daniele!"
-        },
-        {
-            "@type": "Review",
-            "author": {
-                "@type": "Person",
-                "name": "Anthony"
-            },
-            "datePublished": "2025-07",
-            "reviewRating": {
-                "@type": "Rating",
-                "ratingValue": "5",
-                "bestRating": "5"
-            },
-            "reviewBody": "Siamo stati molto bene. Daniele è stato un ottimo host, sempre disponibile nelle comunicazioni. L’arrivo è stato semplice e la casa è bella, in una posizione splendida: sei davvero nel cuore di Cefalù, senza essere disturbato dal rumore. Ci torneremmo volentieri."
-        }
-    ],
     "@id": "https://mont6cefalu.it/#apartment",
     "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": "https://mont6cefalu.it/#booking",
+        "@id": "https://mont6cefalu.it/#webpage",
         "inLanguage": "it"
     }
 }
     </script>
 
-    <!-- FAQ: informazioni già presenti e leggibili nella pagina -->
+    <!-- FAQ answers are generated from the visible HTML by scripts/build-en.js. -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "FAQPage",
-        "mainEntity": [
-            {
-                "@type": "Question",
-                "name": "Quali sono gli orari di check-in e check-out di Mont°6 a Cefalù?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Il check-in è dalle ore 15:00, il check-out entro le ore 10:00. Mont°6 offre self check-in automatizzato tramite serratura digitale, quindi puoi arrivare in autonomia a qualsiasi ora dalle 15:00 in poi."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "Dove si parcheggia vicino a Mont°6 nel centro storico di Cefalù?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "L'appartamento si trova nel centro storico pedonale. Consigliamo il Parcheggio Coco sul lungomare, a circa 5 minuti a piedi."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "Mont°6 accetta animali domestici?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "No, per motivi igienici e normativi non è possibile soggiornare con animali domestici."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "Biancheria e asciugamani sono inclusi nel soggiorno?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Sì: biancheria da letto, asciugamani e un set base di prodotti per la colazione sono sempre inclusi nel prezzo."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "Qual è il soggiorno minimo a Mont°6?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Il soggiorno minimo è di 2 notti. In alta stagione (luglio-agosto) possono essere richieste 3 notti. I prezzi vanno da €82 a €200 a notte in base al mese."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "Conviene prenotare Mont°6 direttamente dal sito?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Sì: prenotando direttamente su mont6cefalu.it risparmi fino al 15% rispetto ai portali (nessuna commissione), ricevi una bottiglia di vino locale in omaggio e hai flessibilità sugli orari di check-in e check-out."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "Posso annullare la prenotazione a Mont°6 e come funziona il rimborso?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Con almeno 14 giorni di anticipo sull'arrivo, la cancellazione è gratuita: rimborso del 100%. Con almeno 7 giorni ma meno di 14 giorni di anticipo, il rimborso è del 50%. Con meno di 7 giorni di anticipo, oppure in caso di mancato arrivo, non è previsto rimborso. Il rimborso torna sulla stessa carta usata per il pagamento, in genere entro 5-10 giorni lavorativi."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "L'imposta di soggiorno è inclusa nel prezzo di Mont°6?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "No. Il Comune di Cefalù chiede 2 € a persona per notte, per un massimo di 5 notti, e si paga in contanti all'arrivo. Tutto il resto è incluso nel totale mostrato sul sito."
-                }
-            }
-        ]
+        "mainEntity": []
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "@id": "https://mont6cefalu.it/#website",
+        "url": "https://mont6cefalu.it/",
+        "name": "Mont°6",
+        "alternateName": "Mont°6 Luxury Retreat",
+        "inLanguage": ["it", "en"],
+        "publisher": { "@id": "https://mont6cefalu.it/#apartment" }
     }
     </script>
 </head>
 <body class="editorial-theme">
 
-    <a href="#booking" class="skip-link">
-        <span class="lang-it">Salta alla prenotazione</span>
-        <span class="lang-en">Skip to booking</span>
+    <a href="#main-content" class="skip-link">
+        <span class="lang-it">Salta al contenuto</span>
+        <span class="lang-en">Skip to content</span>
     </a>
 
     <!-- NAVIGATION -->
@@ -348,6 +256,7 @@
         </div>
     </nav>
 
+    <main id="main-content" tabindex="-1">
     <!-- HERO SECTION -->
     <header class="hero" id="home">
         <!-- Parallax Background Image -->
@@ -360,8 +269,8 @@
                 <span class="lang-en">Apartment in the old town • Cefalù</span>
             </p>
             <h1 class="hero-title display-title">
-                <span class="lang-it"><span class="italic-accent">Due passi</span><br>dal Duomo di Cefalù.</span>
-                <span class="lang-en"><span class="italic-accent">Two minutes</span><br>from Cefalù Cathedral.</span>
+                <span class="lang-it"><span class="italic-accent">Mont°6</span><br>Appartamento a Cefalù.</span>
+                <span class="lang-en"><span class="italic-accent">Mont°6</span><br>Apartment in Cefalù.</span>
             </h1>
             <div class="hero-meta">
                 <span class="hero-badge">
@@ -380,8 +289,8 @@
                     <span class="lang-en">1 Bathroom</span>
                 </span>
                 <span class="hero-price">
-                    <span class="lang-it">da <strong class="price-value">€82</strong>/notte</span>
-                    <span class="lang-en">from <strong class="price-value">€82</strong>/night</span>
+                    <span class="lang-it">da <strong class="price-value">€{{MIN_NIGHTLY_RATE}}</strong>/notte</span>
+                    <span class="lang-en">from <strong class="price-value">€{{MIN_NIGHTLY_RATE}}</strong>/night</span>
                 </span>
             </div>
             <div class="hero-cta-wrapper mt-4">
@@ -422,8 +331,8 @@
                     </h2>
                     <div class="accent-line"></div>
                     <p class="lead-text">
-                        <span class="lang-it">Mont°6 è un appartamento indipendente nel centro storico pedonale di Cefalù. Due minuti a piedi dal Duomo, cinque dalla spiaggia, trenta secondi dai ristoranti.</span>
-                        <span class="lang-en">Mont°6 is a self-contained apartment in the pedestrian old town of Cefalù. Two minutes on foot from the Cathedral, five from the beach, thirty seconds from the restaurants.</span>
+                        <span class="lang-it">Mont°6 è un appartamento indipendente per due ospiti nel centro storico pedonale di Cefalù. Due minuti a piedi dal Duomo, cinque dalla spiaggia, trenta secondi dai ristoranti.</span>
+                        <span class="lang-en">Mont°6 is a self-contained apartment for two guests in the pedestrian old town of Cefalù. Two minutes on foot from the Cathedral, five from the beach, thirty seconds from the restaurants.</span>
                     </p>
                     <p>
                         <span class="lang-it">Una camera, un bagno, cucina attrezzata, travi a vista e pavimenti in maiolica. Aria condizionata in ogni ambiente, fibra ottica, biancheria e asciugamani inclusi. Si entra da soli con la serratura digitale, a qualsiasi ora dalle 15:00.</span>
@@ -454,8 +363,8 @@
                 </h2>
                 <div class="accent-line center"></div>
                 <p class="lead-text">
-                    <span class="lang-it">Torni dalla spiaggia, lasci gli asciugamani in bagno e prepari un caffè in cucina.</span>
-                    <span class="lang-en">Back from the beach, leave your towels in the bathroom and make a coffee in the kitchen.</span>
+                    <span class="lang-it">Cucina attrezzata, aria condizionata, Wi-Fi in fibra, biancheria e asciugamani sono inclusi nel soggiorno.</span>
+                    <span class="lang-en">An equipped kitchen, air conditioning, fibre Wi-Fi, bed linen and towels are included in your stay.</span>
                 </p>
             </div>
             
@@ -638,8 +547,8 @@
             </h2>
             <div class="accent-line center"></div>
             <p class="lead-text text-center">
-                <span class="lang-it">Il Duomo, la spiaggia e i ristoranti sono a pochi minuti da casa.</span>
-                <span class="lang-en">The Cathedral, beach and restaurants are a short walk from the apartment.</span>
+                <span class="lang-it">Mont°6 si trova in Vicolo Monteleone 6, 90015 Cefalù (PA), Sicilia: due minuti a piedi dal Duomo e cinque dalla spiaggia.</span>
+                <span class="lang-en">Mont°6 is at Vicolo Monteleone 6, 90015 Cefalù (Palermo), Sicily: two minutes on foot from the Cathedral and five from the beach.</span>
             </p>
             
             <div class="location-content">
@@ -843,14 +752,18 @@
                         <span class="lang-en">Pick your dates: you see the total straight away, with no booking fees. Pay online or message me on WhatsApp.</span>
                     </p>
                     
-                    <h3 class="faq-heading"><span class="lang-it">Prima di arrivare</span><span class="lang-en">Before you arrive</span></h3>
+                    <p class="price-tax" id="rates-summary">
+                        <span class="lang-it">Tariffe da €{{MIN_NIGHTLY_RATE}} a €{{MAX_NIGHTLY_RATE}} a notte in base al mese, per l'intero appartamento fino a due ospiti. Il totale dipende dalle date scelte; l'imposta di soggiorno è esclusa e si paga all'arrivo.</span>
+                        <span class="lang-en">Rates range from €{{MIN_NIGHTLY_RATE}} to €{{MAX_NIGHTLY_RATE}} per night depending on the month, for the entire apartment for up to two guests. Your total depends on the dates selected; city tax is excluded and paid on arrival.</span>
+                    </p>
+                    <h2 class="faq-heading"><span class="lang-it">Domande frequenti su Mont°6</span><span class="lang-en">Frequently asked questions about Mont°6</span></h2>
                     <div class="faq-list" id="faq">
                         <div class="faq-item">
-                            <h4 class="faq-question-heading"><button class="faq-question">
+                            <h3 class="faq-question-heading"><button class="faq-question">
                                 <span class="lang-it">Orari di arrivo e partenza</span>
                                 <span class="lang-en">Check-in and check-out times</span>
                                 <span class="faq-icon">+</span>
-                            </button></h4>
+                            </button></h3>
                             <div class="faq-answer">
                                 <p>
                                     <span class="lang-it">Puoi entrare dalle 15:00 con la serratura digitale. Il giorno della partenza lascia la casa entro le 10:00, così possiamo prepararla per i prossimi ospiti.</span>
@@ -859,37 +772,37 @@
                             </div>
                         </div>
                         <div class="faq-item">
-                            <h4 class="faq-question-heading"><button class="faq-question">
+                            <h3 class="faq-question-heading"><button class="faq-question">
                                 <span class="lang-it">Dove posso parcheggiare?</span>
                                 <span class="lang-en">Where can I park?</span>
                                 <span class="faq-icon">+</span>
-                            </button></h4>
+                            </button></h3>
                             <div class="faq-answer">
                                 <p>
-                                    <span class="lang-it">Trovandoci nel centro storico pedonale, consigliamo di parcheggiare l'auto al "Parcheggio Coco" sul lungomare, a circa 5 minuti a piedi da noi. Esiste anche una zona ZTL per residenti.</span>
-                                    <span class="lang-en">Being located in the pedestrian historical center, we recommend parking at "Parcheggio Coco" on the seafront, about a 5-minute walk from us. There is also a ZTL zone for residents.</span>
+                                    <span class="lang-it">Il "Parcheggio Coco" sul lungomare è a circa 5 minuti a piedi da Mont°6. L'appartamento si trova nel centro storico pedonale, con una zona ZTL per residenti.</span>
+                                    <span class="lang-en">"Parcheggio Coco" on the seafront is about a 5-minute walk from Mont°6. The apartment is in the pedestrian old town, with a restricted traffic zone for residents.</span>
                                 </p>
                             </div>
                         </div>
                         <div class="faq-item">
-                            <h4 class="faq-question-heading"><button class="faq-question">
+                            <h3 class="faq-question-heading"><button class="faq-question">
                                 <span class="lang-it">È possibile soggiornare con animali?</span>
                                 <span class="lang-en">Are pets allowed?</span>
                                 <span class="faq-icon">+</span>
-                            </button></h4>
+                            </button></h3>
                             <div class="faq-answer">
                                 <p>
-                                    <span class="lang-it">Purtroppo non possiamo accettare animali domestici nella struttura per motivi igienici e normativi.</span>
-                                    <span class="lang-en">Unfortunately we cannot accept pets in the property for hygiene and regulatory reasons.</span>
+                                    <span class="lang-it">No, gli animali domestici non sono ammessi a Mont°6.</span>
+                                    <span class="lang-en">No, pets are not allowed at Mont°6.</span>
                                 </p>
                             </div>
                         </div>
                         <div class="faq-item">
-                            <h4 class="faq-question-heading"><button class="faq-question">
+                            <h3 class="faq-question-heading"><button class="faq-question">
                                 <span class="lang-it">La biancheria e gli asciugamani sono inclusi?</span>
                                 <span class="lang-en">Are bed linen and towels included?</span>
                                 <span class="faq-icon">+</span>
-                            </button></h4>
+                            </button></h3>
                             <div class="faq-answer">
                                 <p>
                                     <span class="lang-it">Sì, forniamo biancheria da letto, asciugamani e un set base di prodotti per la colazione.</span>
@@ -898,24 +811,24 @@
                             </div>
                         </div>
                         <div class="faq-item">
-                            <h4 class="faq-question-heading"><button class="faq-question">
+                            <h3 class="faq-question-heading"><button class="faq-question">
                                 <span class="lang-it">Qual è il soggiorno minimo?</span>
                                 <span class="lang-en">What is the minimum stay?</span>
                                 <span class="faq-icon">+</span>
-                            </button></h4>
+                            </button></h3>
                             <div class="faq-answer">
                                 <p>
-                                    <span class="lang-it">Il soggiorno minimo è di 2 notti. Durante l'alta stagione (luglio-agosto) potrebbero essere richiesti 3 notti.</span>
+                                    <span class="lang-it">Il soggiorno minimo è di 2 notti. Durante l'alta stagione (luglio-agosto) potrebbero essere richieste 3 notti.</span>
                                     <span class="lang-en">The minimum stay is 2 nights. During high season (July-August) 3 nights may be required.</span>
                                 </p>
                             </div>
                         </div>
                         <div class="faq-item" id="cancellation-policy">
-                            <h4 class="faq-question-heading"><button class="faq-question">
+                            <h3 class="faq-question-heading"><button class="faq-question">
                                 <span class="lang-it">Posso annullare? Come funziona il rimborso?</span>
                                 <span class="lang-en">Can I cancel? How do refunds work?</span>
                                 <span class="faq-icon">+</span>
-                            </button></h4>
+                            </button></h3>
                             <div class="faq-answer">
                                 <p>
                                     <span class="lang-it">Con almeno 14 giorni di anticipo sull'arrivo, la cancellazione è gratuita: rimborso del 100%. Con almeno 7 giorni ma meno di 14 giorni di anticipo, il rimborso è del 50%. Con meno di 7 giorni di anticipo, oppure in caso di mancato arrivo, non è previsto rimborso. Il rimborso torna sulla stessa carta con cui hai pagato, in genere entro 5-10 giorni lavorativi. Per annullare basta scrivermi su WhatsApp o via email.</span>
@@ -924,11 +837,11 @@
                             </div>
                         </div>
                         <div class="faq-item">
-                            <h4 class="faq-question-heading"><button class="faq-question">
+                            <h3 class="faq-question-heading"><button class="faq-question">
                                 <span class="lang-it">L'imposta di soggiorno è inclusa?</span>
                                 <span class="lang-en">Is the city tax included?</span>
                                 <span class="faq-icon">+</span>
-                            </button></h4>
+                            </button></h3>
                             <div class="faq-answer">
                                 <p>
                                     <span class="lang-it">No, è l'unica cosa che non è inclusa nel totale che vedi qui. Il Comune di Cefalù chiede 2 € a persona per notte, per un massimo di 5 notti: si paga all'arrivo, in contanti. Per due persone e tre notti sono 12 €.</span>
@@ -937,11 +850,11 @@
                             </div>
                         </div>
                         <div class="faq-item">
-                            <h4 class="faq-question-heading"><button class="faq-question">
+                            <h3 class="faq-question-heading"><button class="faq-question">
                                 <span class="lang-it">Conviene prenotare qui invece che sui portali?</span>
                                 <span class="lang-en">Is it cheaper to book here than on the portals?</span>
                                 <span class="faq-icon">+</span>
-                            </button></h4>
+                            </button></h3>
                             <div class="faq-answer">
                                 <p>
                                     <span class="lang-it">Qui prenoti direttamente con me, senza commissioni di prenotazione. Per confrontare le offerte, controlla sempre le stesse date e condizioni. Trovi una bottiglia di vino siciliano ad aspettarti e gli orari di arrivo e partenza sono flessibili quando la casa è libera.</span>
@@ -953,10 +866,16 @@
                 </div>
                 
                 <div class="booking-form-card shadow-luxe">
-                    <h3 class="form-title">
+                    <noscript>
+                        <p class="host-inline">
+                            <span class="lang-it">Per usare il calendario e il pagamento online abilita JavaScript. Puoi anche <a href="https://wa.me/393881908816">scrivere a Daniele su WhatsApp</a> o <a href="mailto:mont6.home@gmail.com">via email</a> per disponibilità e preventivo.</span>
+                            <span class="lang-en">Enable JavaScript to use the calendar and online payment. You can also <a href="https://wa.me/393881908816">message Daniele on WhatsApp</a> or <a href="mailto:mont6.home@gmail.com">email him</a> for availability and a quote.</span>
+                        </p>
+                    </noscript>
+                    <h2 class="form-title">
                         <span class="lang-it">Date e prenotazione</span>
                         <span class="lang-en">Dates and booking</span>
-                    </h3>
+                    </h2>
                     <p class="host-inline">
                         <span class="lang-it">Sono <strong>Daniele</strong>. Per le date puoi scrivermi qui sotto. E se cerchi un posto per cena a Cefalù, mi fa piacere consigliarti un buon ristorante.</span>
                         <span class="lang-en">I’m <strong>Daniele</strong>. You can message me below about your dates. And if you’re looking for somewhere to eat in Cefalù, I’m happy to recommend a good restaurant.</span>
@@ -1036,10 +955,10 @@
                     </p>
                     
                     <div class="direct-benefits-box mt-4" style="border-top: 1px solid rgba(0,0,0,0.08); padding-top: 2rem;">
-                        <h4 style="font-family: var(--font-heading); font-size: 1.1rem; margin-bottom: 1rem; color: var(--color-text);">
+                        <h3 style="font-family: var(--font-heading); font-size: 1.1rem; margin-bottom: 1rem; color: var(--color-text);">
                             <span class="lang-it">Perché prenotare qui</span>
                             <span class="lang-en">Why book here</span>
-                        </h4>
+                        </h3>
                         <ul style="list-style: none; padding-left: 0; font-size: 0.9rem; color: var(--color-text-light); display: flex; flex-direction: column; gap: 0.8rem; text-align: left;">
                             <li style="display: flex; align-items: start; gap: 10px;">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--color-accent)" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><polyline points="20 6 9 17 4 12"/></svg>
@@ -1075,6 +994,8 @@
         </div>
     </section>
 
+    </main>
+
     <!-- FOOTER -->
     <footer class="footer-editorial">
         <div class="container">
@@ -1090,7 +1011,7 @@
                         CIR: 19082027C206522 &bull; CIN: IT082027C2YCA7QI4V
                     </span>
                 </p>
-                <div class="footer-links-ed">
+                <div class="footer-links-ed" id="contacts">
                     <a href="#concept">
                         <span class="lang-it">La casa</span>
                         <span class="lang-en">The apartment</span>
@@ -1103,10 +1024,8 @@
                         <span class="lang-it">Posizione</span>
                         <span class="lang-en">Location</span>
                     </a>
-                    <a href="mailto:mont6.home@gmail.com">
-                        <span class="lang-it">Contatti</span>
-                        <span class="lang-en">Contact</span>
-                    </a>
+                    <a href="mailto:mont6.home@gmail.com">mont6.home@gmail.com</a>
+                    <a href="tel:+393881908816">+39 388 190 8816</a>
                     <a href="/privacy">
                         <span class="lang-it">Privacy</span>
                         <span class="lang-en">Privacy Policy</span>

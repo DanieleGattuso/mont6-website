@@ -56,7 +56,8 @@ test('schema describes the apartment and visible FAQs, never a fabricated bookin
         const rental=data.find(d=>d['@type']==='VacationRental');
         assert.equal(rental.identifier,'IT082027C2YCA7QI4V');
         assert.equal(rental.containsPlace.occupancy.value,2);
-        assert.ok(rental.mainEntityOfPage['@id'].endsWith('#booking'));
+        assert.equal(rental['@id'], 'https://mont6cefalu.it/#apartment');
+        assert.ok(rental.mainEntityOfPage['@id'].endsWith('#webpage'));
         assert.ok(!rental.aggregateRating&&!rental.review);
         assert.equal(data.find(d=>d['@type']==='FAQPage').mainEntity.length,8);
         assert.ok(!data.some(d=>d['@type']==='LodgingReservation'));
