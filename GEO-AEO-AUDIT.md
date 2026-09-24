@@ -1,6 +1,6 @@
 # Mont°6 — Audit GEO/AEO e codice applicato
 
-Verifica del repository: 24 settembre 2026. Modifiche applicate e build locale completata; nessuna pubblicazione sul dominio eseguita.
+Verifica del repository e pubblicazione: 24 settembre 2026. Modifiche applicate, build completata e rilascio in produzione verificato; dettagli in fondo al documento.
 
 ## File completi e posizione pubblica
 
@@ -274,4 +274,16 @@ FAQPage rimane una descrizione semantica delle domande visibili. Google ha disme
 
 VacationRental è una specializzazione di LodgingBusiness coerente con questo appartamento; l’accesso alla specifica esperienza Google Vacation Rentals richiede anche requisiti e integrazioni esterne allo schema. Fonti: [Schema.org VacationRental](https://schema.org/VacationRental), [Google Vacation Rental](https://developers.google.com/search/docs/appearance/structured-data/vacation-rental).
 
-Dopo la pubblicazione, verificare risposte HTTP e possibili blocchi CDN/WAF ai crawler, quindi controllare gli URL con Search Console. Queste verifiche live non sono state eseguite e non si presume alcuna indicizzazione già avvenuta.
+Le verifiche HTTP sul dominio sono state completate come descritto sotto. Il controllo degli URL con Search Console resta successivo: non si presume alcuna indicizzazione già avvenuta.
+
+## Pubblicazione e verifica sul dominio
+
+- Sito: https://mont6cefalu.it/. Commit applicativo pubblicato: `c9a289df5824db000faeb78bc680b4c18959e181` sul ramo `main`.
+- Cloudflare Pages, progetto `mont6-website`: deployment `bc8644dc-554b-4094-b0e9-b9a4063ee3b4` completato con successo il 24 settembre 2026 alle 14:45:25 UTC (16:45:25 in Italia).
+- Home IT/EN: HTTP 200, contenuti aggiornati, 8 FAQ e tre blocchi JSON-LD corretti. robots.txt, llms.txt, sitemap.xml, app.js e home.css corrispondono al rilascio (normalizzate le terminazioni di riga Windows/Linux).
+- API pubblica di disponibilità: HTTP 200. Pagina esito prenotazione: noindex presente. Report e sorgenti interni: HTTP 404. Nessun pagamento reale eseguito.
+- Rilevato e corretto un blocco Cloudflare precedente al rilascio: `ai_bots_protection` era `block` e `ai_training` era `disallow`. Entrambi impostati su `disabled`, in coerenza con la richiesta esplicita di consentire anche GPTBot, ClaudeBot e gli altri crawler AI. Sono state modificate solo queste due impostazioni della zona mont6cefalu.it.
+- Protezione del checkout verificata invariata: regola di limitazione richieste abilitata, stessa versione 1 e stesso percorso `/api/create-checkout-session`. Le protezioni generali non sono state disattivate.
+- Richieste di prova con i dieci user-agent Googlebot, OAI-SearchBot, ChatGPT-User, GPTBot, PerplexityBot, ClaudeBot, Claude-SearchBot, Claude-User, Google-Extended e Applebot-Extended: tutte HTTP 200 con il nuovo contenuto. robots.txt e llms.txt rimangono identici ai file del repository.
+
+Questi controlli simulano gli user-agent e verificano la configurazione e la raggiungibilità dalla connessione di prova; non dimostrano scansioni effettive dai servizi né citazioni già avvenute. Riferimento sulle impostazioni: [Cloudflare AI bot policies](https://developers.cloudflare.com/bots/additional-configurations/block-ai-bots/).
