@@ -2,6 +2,8 @@
 
 Verifica del repository e pubblicazione: 24 settembre 2026. Modifiche applicate, build completata e rilascio in produzione verificato; dettagli in fondo al documento.
 
+Aggiornamento successivo: vedi [verifica completa SEO/GEO](SEO-GEO-VERIFICA.md) per misure PageSpeed, dati Search Console, coordinate confermate e soggiorno minimo stagionale. I tre blocchi JSON-LD qui sotto sono aggiornati al codice corrente.
+
 ## File completi e posizione pubblica
 
 - [robots.txt:1](<C:/Users/danie/OneDrive/Desktop/Sito Ufficiale Mont6/robots.txt:1>): file completo, con tutti i bot richiesti più Claude-SearchBot e Claude-User. Ogni gruppo consente il sito pubblico ed esclude /api/. Sitemap e LLMs-txt sono riferimenti assoluti. Le pagine di esito restano scansionabili affinché i motori possano leggere noindex.
@@ -32,7 +34,8 @@ Già inserito in [index.html:54](<C:/Users/danie/OneDrive/Desktop/Sito Ufficiale
     "url": "https://mont6cefalu.it/",
     "logo": "https://mont6cefalu.it/img/logo-dark-250.png",
     "sameAs": [
-        "https://www.airbnb.it/rooms/48284780"
+        "https://www.airbnb.it/rooms/48284780",
+        "https://maps.google.com/maps?cid=4203028787668436511"
     ],
     "telephone": "+39-388-190-8816",
     "email": "mont6.home@gmail.com",
@@ -46,8 +49,8 @@ Già inserito in [index.html:54](<C:/Users/danie/OneDrive/Desktop/Sito Ufficiale
         "https://mont6cefalu.it/img/_MG_4135.jpg",
         "https://mont6cefalu.it/img/_MG_4179.jpg"
     ],
-    "latitude": 38.0386,
-    "longitude": 14.0226,
+    "latitude": 38.0372,
+    "longitude": 14.0221,
     "address": {
         "@type": "PostalAddress",
         "streetAddress": "Vicolo Monteleone 6",
@@ -58,8 +61,8 @@ Già inserito in [index.html:54](<C:/Users/danie/OneDrive/Desktop/Sito Ufficiale
     },
     "geo": {
         "@type": "GeoCoordinates",
-        "latitude": 38.0386,
-        "longitude": 14.0226
+        "latitude": 38.0372,
+        "longitude": 14.0221
     },
     "priceRange": "€82 - €200 a notte",
     "knowsLanguage": [
@@ -171,7 +174,7 @@ Già inserito in [index.html:158](<C:/Users/danie/OneDrive/Desktop/Sito Ufficial
             "name": "Qual è il soggiorno minimo?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Il soggiorno minimo è di 2 notti. Durante l'alta stagione (luglio-agosto) potrebbero essere richieste 3 notti."
+                "text": "Il soggiorno minimo è di 3 notti se comprende almeno una notte a luglio o agosto; di 2 notti negli altri periodi."
             }
         },
         {
@@ -248,8 +251,8 @@ Il sito era già prerenderizzato in HTML italiano e inglese: descrizioni, foto, 
 
 ## Dati da confermare e manutenzione
 
-- Coordinate: 38.0386, 14.0226 sono quelle del repository, ma app.js le definisce approssimate. Sono state conservate senza inventare precisione aggiuntiva. Verificare il punto effettivo dell’immobile prima di considerarlo geocodifica esatta.
-- Minimo notti: il frontend/backend applicano due notti; il testo ammette che in luglio/agosto possano esserne richieste tre. llms.txt mantiene questa possibilità come da confermare con il gestore. Per renderla obbligatoria occorre una scelta commerciale e un aggiornamento congiunto delle regole di prenotazione.
+- Coordinate aggiornate a 38.0372, 14.0221 dal Google Business Profile del titolare, verificato il 24 settembre. Non è stata inventata precisione aggiuntiva.
+- Minimo notti confermato dal gestore: tre se almeno una notte cade in luglio/agosto, due negli altri periodi. Browser e server usano booking-rules.js condiviso; FAQ visibili, JSON-LD e llms.txt riflettono la regola.
 - Non sono presenti orari di reception verificabili: non è stato inventato openingHours. Check-in 15:00 e check-out 10:00 sono orari locali, senza fissare erroneamente UTC+2 anche in inverno.
 - Logo e sameAs derivano dagli asset e dal link Airbnb esistenti. Rimossi childrenAllowed, airportShuttle e numberOfRooms non supportati con precisione dal testo. Recensioni e rating di Airbnb rimangono attribuiti nel contenuto visibile, senza duplicarli nello schema dell’attività.
 - Ogni aggiornamento delle tariffe richiede una nuova build; il preventivo finale continua a essere calcolato per le date scelte. Policy e imposta sono riportate come informazioni pubblicate nel sito, senza una verifica normativa esterna.
@@ -264,7 +267,7 @@ Il sito era già prerenderizzato in HTML italiano e inglese: descrizioni, foto, 
 
 ## Limiti e riferimenti ufficiali
 
-robots.txt disciplina la scansione, non sostituisce i controlli di accesso. Le risorse private restano escluse dalla distribuzione e gestite dal server. LLMs-txt è un riferimento informativo non standard REP: i parser che non lo riconoscono possono ignorarlo. È stato aggiunto anche rel="describedby" nel `<head>`, come raccomandato dalla [proposta llms.txt](https://llmstxt.org/).
+robots.txt disciplina la scansione, non sostituisce i controlli di accesso. Le risorse private restano escluse dalla distribuzione e gestite dal server. LLMs-txt è mantenuto come commento informativo: non è una direttiva REP e come riga attiva generava un errore nel test Lighthouse. È stato aggiunto anche rel="describedby" nel `<head>`, come raccomandato dalla [proposta llms.txt](https://llmstxt.org/).
 
 I bot hanno finalità diverse: OAI-SearchBot riguarda la ricerca, ChatGPT-User le richieste degli utenti, GPTBot l’addestramento. Sono autorizzati tutti come richiesto. Fonte: [documentazione crawler OpenAI](https://developers.openai.com/api/docs/bots).
 
@@ -274,7 +277,7 @@ FAQPage rimane una descrizione semantica delle domande visibili. Google ha disme
 
 VacationRental è una specializzazione di LodgingBusiness coerente con questo appartamento; l’accesso alla specifica esperienza Google Vacation Rentals richiede anche requisiti e integrazioni esterne allo schema. Fonti: [Schema.org VacationRental](https://schema.org/VacationRental), [Google Vacation Rental](https://developers.google.com/search/docs/appearance/structured-data/vacation-rental).
 
-Le verifiche HTTP sul dominio sono state completate come descritto sotto. Il controllo degli URL con Search Console resta successivo: non si presume alcuna indicizzazione già avvenuta.
+Le verifiche HTTP sul dominio sono state completate come descritto sotto. Il controllo successivo Search Console conferma entrambe le home indicizzate; date, rendimento e limiti sono documentati nella verifica completa.
 
 ## Pubblicazione e verifica sul dominio
 
