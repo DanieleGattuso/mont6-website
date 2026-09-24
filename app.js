@@ -1,6 +1,7 @@
 /* ==========================================================================
    APP.JS - INTERACTIVE FUNCTIONS FOR MONT°6 EDITORIAL THEME
    ========================================================================== */
+import { minimumStayNights, minimumStayMessage } from './booking-rules.js';
 
 /**
  * CSS non critici caricati in async: non bloccano il primo paint.
@@ -156,23 +157,97 @@ function initNavbar() {
     }
 
     if (mobileBtn && mobileNav) {
-        mobileBtn.addEventListener('click', () => {
-            navbar.classList.toggle('nav-open');
-            mobileNav.classList.toggle('open');
-            
-            if (mobileNav.classList.contains('open')) {
-                body.style.overflow = 'hidden';
-            } else {
-                body.style.overflow = '';
+        const mobileViewport = window.matchMedia('(max-width: 768px)');
+        let menuOpen = false;
+        let previousOverflow = '';
+        let inertBackground = [];
+        const menuControls = () => [mobileBtn, ...mobileNav.querySelectorAll('a[href], button:not([disabled])')];
+
+        const closeMenu = (restoreFocus = true) => {
+            if (!menuOpen) return;
+            menuOpen = false;
+            navbar.classList.remove('nav-open');
+            mobileNav.classList.remove('open');
+            mobileBtn.setAttribute('aria-expanded', 'false');
+            body.style.overflow = previousOverflow;
+            inertBackground.forEach(([element, wasInert]) => { element.inert = wasInert; });
+            inertBackground = [];
+            // Move focus before hiding the panel from assistive technology.
+            if (restoreFocus) mobileBtn.focus({ preventScroll: true });
+            mobileNav.inert = true;
+            mobileNav.setAttribute('aria-hidden', 'true');
+        };
+
+        const openMenu = () => {
+            if (menuOpen || !mobileViewport.matches) return;
+            menuOpen = true;
+            previousOverflow = body.style.overflow;
+            mobileNav.inert = false;
+            mobileNav.setAttribute('aria-hidden', 'false');
+            navbar.classList.add('nav-open');
+            mobileNav.classList.add('open');
+            mobileBtn.setAttribute('aria-expanded', 'true');
+            body.style.overflow = 'hidden';
+            // The fullscreen panel covers the page. Keep its links and close
+            // button reachable, and make covered controls unfocusable.
+            const background = [
+                ...[...body.children].filter(element => element !== navbar && !['SCRIPT', 'STYLE'].includes(element.tagName)),
+                ...navbar.querySelectorAll('.nav-container > a, .nav-links, .desktop-only'),
+            ];
+            inertBackground = background.map(element => [element, element.inert]);
+            background.forEach(element => { element.inert = true; });
+            mobileNav.querySelector('a[href]')?.focus({ preventScroll: true });
+        };
+
+        mobileBtn.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
+        document.addEventListener('keydown', event => {
+            if (!menuOpen) return;
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                closeMenu();
+            } else if (event.key === 'Tab') {
+                const controls = menuControls();
+                const first = controls[0];
+                const last = controls[controls.length - 1];
+                const active = document.activeElement;
+                if (event.shiftKey && (active === first || !controls.includes(active))) {
+                    event.preventDefault();
+                    last.focus();
+                } else if (!event.shiftKey && (active === last || !controls.includes(active))) {
+                    event.preventDefault();
+                    first.focus();
+                }
             }
         });
 
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
-                navbar.classList.remove('nav-open');
-                mobileNav.classList.remove('open');
-                body.style.overflow = '';
+                const target = document.getElementById(link.getAttribute('href').slice(1));
+                closeMenu();
+                // The scroll handler runs next. Focus the destination without
+                // scrolling twice or leaving focus on a now-hidden menu link.
+                const destination = target?.querySelector('h1, h2, h3') || target;
+                if (destination) {
+                    if (!destination.hasAttribute('tabindex')) {
+                        destination.setAttribute('tabindex', '-1');
+                        destination.addEventListener('blur', () => destination.removeAttribute('tabindex'), { once: true });
+                    }
+                    destination.focus({ preventScroll: true });
+                }
             });
+        });
+
+        mobileViewport.addEventListener('change', event => {
+            const active = document.activeElement;
+            if (!event.matches && menuOpen) {
+                const href = active?.getAttribute('href');
+                const desktopTarget = [...navbar.querySelectorAll('.nav-links a, .desktop-only a')]
+                    .find(link => link.getAttribute('href') === href) || navbar.querySelector('.nav-container > a');
+                closeMenu(false);
+                desktopTarget?.focus({ preventScroll: true });
+            } else if (event.matches && navbar.contains(active) && !active.getClientRects().length) {
+                mobileBtn.focus({ preventScroll: true });
+            }
         });
     }
 }
@@ -268,7 +343,11 @@ async function caricaTariffe() {
     return false;
 }
 
-const MIN_NOTTI = 2; // soggiorno minimo, uguale a quello che applica il server
+// Flatpickr uses local Dates. Normalize calendar days before sharing rules with
+// the server so DST and the visitor's timezone cannot change the night count.
+const bookingDayUTC = date => new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+const bookingNightCount = (start, end) => (bookingDayUTC(end) - bookingDayUTC(start)) / 86400000;
+const bookingMinimumNights = (start, end) => minimumStayNights(bookingDayUTC(start), bookingDayUTC(end));
 
 // Imposta di soggiorno del Comune di Cefalù: si paga all'arrivo, non passa
 // da Stripe. Il tetto e' sulle notti, non sull'importo.
@@ -337,6 +416,7 @@ function initBookingForm() {
             // Scelto l'arrivo, il giorno in cui inizia la prenotazione successiva
             // torna selezionabile: quella mattina e' una partenza valida.
             applyDisabled(selectedDates.length === 1 ? selectedDates[0] : null);
+            if (formMsg) formMsg.classList.remove('visible');
             refreshPriceBox();
         }
     });
@@ -366,8 +446,14 @@ function initBookingForm() {
 
         // Sotto il minimo non si mostra un prezzo che poi verrebbe rifiutato:
         // prima convivevano sullo schermo un totale e il rifiuto di quel totale.
-        if (nightCount < MIN_NOTTI) {
+        if (nightCount <= 0) {
             priceBox.classList.remove('visible');
+            return;
+        }
+        const minimumNights = bookingMinimumNights(selezione[0], selezione[1]);
+        if (nightCount < minimumNights) {
+            priceBox.classList.remove('visible');
+            say(minimumStayMessage(minimumNights, 'it'), minimumStayMessage(minimumNights, 'en'));
             return;
         }
 
@@ -521,8 +607,14 @@ function initBookingForm() {
         }
         // Notti di calendario, non ore: nel weekend del cambio d'ora un giorno
         // dura 23 o 25 ore e un soggiorno legittimo verrebbe rifiutato.
-        if (Math.round((toDate(checkOut) - toDate(checkIn)) / 86400000) < MIN_NOTTI) {
-            say('Il soggiorno minimo è di 2 notti.', 'The minimum stay is 2 nights.');
+        const start = toDate(checkIn), end = toDate(checkOut);
+        if (!Number.isFinite(+start) || !Number.isFinite(+end) || end <= start) {
+            say('Scegli date di arrivo e partenza valide.', 'Choose valid arrival and departure dates.');
+            return null;
+        }
+        const minimumNights = bookingMinimumNights(start, end);
+        if (bookingNightCount(start, end) < minimumNights) {
+            say(minimumStayMessage(minimumNights, 'it'), minimumStayMessage(minimumNights, 'en'));
             return null;
         }
         return [checkIn, checkOut];
@@ -721,7 +813,8 @@ function initMap() {
     const lang = document.documentElement.getAttribute('data-lang') || 'it';
     const t = (it, en) => (lang === 'en' ? en : it);
 
-    const property = [38.0386, 14.0226]; // posizione approssimata, centro storico
+    // Google Business Profile del gestore, verificato il 24 settembre 2026.
+    const property = [38.0372, 14.0221];
     const map = L.map(el, { scrollWheelZoom: false, zoomControl: true }).setView(property, 16);
 
     // Standard OSM tiles: browser caching and Referer are preserved.

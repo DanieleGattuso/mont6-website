@@ -74,3 +74,86 @@ test('scroll enhancement is optional with no observer or reduced motion', () => 
         window:{...(reduced?{IntersectionObserver:function(){}}:{}),matchMedia:()=>({matches:reduced})},
     });
 });
+
+// Exercise the real booking form with DOM/Flatpickr fixtures and no live calls.
+async function bookingFixture(lang) {
+    const { pathToFileURL } = require('node:url');
+    const rules = await import(pathToFileURL(path.join(root, 'booking-rules.js')).href);
+    const ids = ['date-range', 'guest-count', 'btn-request-whatsapp', 'btn-request-stripe',
+        'dynamicPriceBox', 'priceNightly', 'priceTotal', 'priceNights', 'taxAmount', 'taxAmountEn', 'form-msg'];
+    const elements = Object.fromEntries(ids.map(id => {
+        const classes = new Set();
+        return [id, { value: id === 'guest-count' ? '2' : '', textContent: '', innerHTML: '', disabled: false,
+            classList: { add: name => classes.add(name), remove: name => classes.delete(name), contains: name => classes.has(name) },
+            handlers: {}, addEventListener(type, handler) { this.handlers[type] = handler; }, focus() {} }];
+    }));
+    const calls = [], opened = [];
+    let options, fp;
+    const source = read('app.js');
+    vm.runInNewContext(source.slice(source.indexOf('const MESI ='), source.indexOf('function initFAQ()')) + '\ninitBookingForm();', {
+        ...rules, Date, console, AbortSignal, URL, crypto,
+        document: { getElementById: id => elements[id] || null, documentElement: { getAttribute: () => lang } },
+        window: { innerWidth: 390, addEventListener() {}, open: url => opened.push(url), location: {} },
+        sessionStorage: { getItem: () => null, setItem() {}, removeItem() {} },
+        flatpickr(input, config) {
+            options = config;
+            fp = { selectedDates: [], set() {}, redraw() {} };
+            return fp;
+        },
+        async fetch(url, opts) {
+            calls.push({ url, opts });
+            if (url === '/prezzi.json') return { ok: true, json: async () => JSON.parse(read('prezzi.json')) };
+            if (url.startsWith('/api/get-booked-dates')) return { ok: true, json: async () => ({ ranges: [], partial: false }) };
+            if (url === '/api/create-checkout-session') return { ok: false, json: async () => ({ error: 'Offline fixture' }) };
+            throw new Error(`Unexpected request: ${url}`);
+        },
+    });
+    await new Promise(setImmediate);
+    const local = iso => { const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d); };
+    return { elements, calls, opened, select(start, end) {
+        fp.selectedDates = [local(start), local(end)];
+        const display = iso => iso.split('-').reverse().join('/');
+        elements['date-range'].value = display(start) + (lang === 'en' ? ' to ' : ' al ') + display(end);
+        options.onChange(fp.selectedDates);
+    } };
+}
+
+test('booking form rejects short summer stays before WhatsApp or payment in both languages', async () => {
+    for (const lang of ['it', 'en']) for (const [start, end] of [
+        ['2030-06-30', '2030-07-02'], ['2030-07-10', '2030-07-12'], ['2030-08-31', '2030-09-02'],
+    ]) {
+        const form = await bookingFixture(lang);
+        form.select(start, end);
+        assert.equal(form.elements.dynamicPriceBox.classList.contains('visible'), false);
+        assert.ok(form.elements['form-msg'].textContent.includes(lang === 'en' ? '3 nights' : '3 notti'));
+        form.elements['btn-request-whatsapp'].handlers.click();
+        await form.elements['btn-request-stripe'].handlers.click();
+        assert.equal(form.opened.length, 0);
+        assert.equal(form.calls.filter(c => c.url === '/api/create-checkout-session').length, 0);
+    }
+});
+
+test('booking form accepts exact minimum, exclusive checkout, year and DST boundaries', async () => {
+    for (const [start, end] of [
+        ['2030-06-29', '2030-07-01'], ['2030-06-30', '2030-07-03'],
+        ['2030-08-31', '2030-09-03'], ['2030-09-01', '2030-09-03'],
+        ['2030-12-31', '2031-01-02'], ['2030-03-30', '2030-04-01'], ['2030-10-26', '2030-10-28'],
+    ]) {
+        const form = await bookingFixture('en');
+        form.select(start, end);
+        assert.equal(form.elements.dynamicPriceBox.classList.contains('visible'), true, `${start}/${end}`);
+        form.elements['btn-request-whatsapp'].handlers.click();
+        assert.equal(form.opened.length, 1);
+        await form.elements['btn-request-stripe'].handlers.click();
+        assert.equal(form.calls.filter(c => c.url === '/api/create-checkout-session').length, 1);
+    }
+});
+
+test('changing an invalid summer range to a valid range clears the minimum-stay notice', async () => {
+    const form = await bookingFixture('it');
+    form.select('2030-07-10', '2030-07-12');
+    assert.equal(form.elements['form-msg'].classList.contains('visible'), true);
+    form.select('2030-07-10', '2030-07-13');
+    assert.equal(form.elements['form-msg'].classList.contains('visible'), false);
+    assert.equal(form.elements.dynamicPriceBox.classList.contains('visible'), true);
+});

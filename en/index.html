@@ -48,9 +48,9 @@
 
     <!-- Un solo CSS per home e calendario: entrambi pronti prima dell'init.
          Generato da npm run build; glightbox/leaflet restano asincroni. -->
-    <link rel="stylesheet" href="/home.css?v=28">
+    <link rel="stylesheet" href="/home.css?v=29">
 
-    <!-- Structured Data (JSON-LD) -->
+    <!-- Structured Data (JSON-LD). Coordinate: Google Business Profile del gestore, verificate il 24 settembre 2026. -->
     <script type="application/ld+json">
 {
     "@context": "https://schema.org",
@@ -63,7 +63,8 @@
     "url": "https://mont6cefalu.it/",
     "logo": "https://mont6cefalu.it/img/logo-dark-250.png",
     "sameAs": [
-        "https://www.airbnb.it/rooms/48284780"
+        "https://www.airbnb.it/rooms/48284780",
+        "https://maps.google.com/maps?cid=4203028787668436511"
     ],
     "telephone": "+39-388-190-8816",
     "email": "mont6.home@gmail.com",
@@ -77,8 +78,8 @@
         "https://mont6cefalu.it/img/_MG_4135.jpg",
         "https://mont6cefalu.it/img/_MG_4179.jpg"
     ],
-    "latitude": 38.0386,
-    "longitude": 14.0226,
+    "latitude": 38.0372,
+    "longitude": 14.0221,
     "address": {
         "@type": "PostalAddress",
         "streetAddress": "Vicolo Monteleone 6",
@@ -89,8 +90,8 @@
     },
     "geo": {
         "@type": "GeoCoordinates",
-        "latitude": 38.0386,
-        "longitude": 14.0226
+        "latitude": 38.0372,
+        "longitude": 14.0221
     },
     "priceRange": "€82 - €200 per night",
     "knowsLanguage": [
@@ -197,7 +198,7 @@
             "name": "What is the minimum stay?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "The minimum stay is 2 nights. During high season (July-August) 3 nights may be required."
+                "text": "The minimum stay is 3 nights if it includes any night in July or August, and 2 nights at other times."
             }
         },
         {
@@ -262,7 +263,7 @@
     </a>
 
     <!-- NAVIGATION -->
-    <nav class="navbar" id="navbar">
+    <nav class="navbar" id="navbar" aria-label="Main navigation">
         <div class="nav-container">
             <a href="#home">
                 <img src="/img/logo-white-250.png" alt="Mont°6" width="250" height="134" class="brand-logo logo-light">
@@ -300,7 +301,7 @@
                 </div>
 
                 <!-- Mobile Menu Toggle -->
-                <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Menu">
+                <button type="button" class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="mobile-nav">
                     <div class="hamburger">
                         <span></span><span></span><span></span>
                     </div>
@@ -309,7 +310,7 @@
         </div>
 
         <!-- Mobile Dropdown Fullscreen -->
-        <div class="mobile-nav-fullscreen" id="mobile-nav">
+        <div class="mobile-nav-fullscreen" id="mobile-nav" aria-hidden="true" inert>
             <!-- Language Selector Mobile -->
             <div class="lang-selector mobile-lang">
                 <a class="lang-btn" href="/" hreflang="it">IT</a>
@@ -909,7 +910,7 @@
                             <div class="faq-answer">
                                 <p>
 
-                                    <span>The minimum stay is 2 nights. During high season (July-August) 3 nights may be required.</span>
+                                    <span>The minimum stay is 3 nights if it includes any night in July or August, and 2 nights at other times.</span>
                                 </p>
                             </div>
                         </div>
@@ -1141,7 +1142,7 @@
     <script src="/vendor/glightbox/glightbox.min.js"></script>
 
     <!-- Custom JS -->
-    <script src="/app.js?v=26"></script>
+    <script type="module" src="/app.js?v=27"></script>
         <aside class="cookie-banner" id="cookieBanner" hidden aria-label="Cookies">
         <div class="cookie-content">
             <p><span>We use only essential cookies for the site and your booking.</span></p>

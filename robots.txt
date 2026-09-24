@@ -43,5 +43,5 @@ Disallow: /api/
 # robots.txt regola la scansione: l'accesso ai dati privati richiede controlli server.
 
 Sitemap: https://mont6cefalu.it/sitemap.xml
-# LLMs-txt e' una convenzione informativa, non una direttiva standard REP.
-LLMs-txt: https://mont6cefalu.it/llms.txt
+# Riferimento informativo: llms.txt non e' una direttiva standard REP.
+# LLMs-txt: https://mont6cefalu.it/llms.txt

@@ -47,9 +47,9 @@
     
     <!-- Un solo CSS per home e calendario: entrambi pronti prima dell'init.
          Generato da npm run build; glightbox/leaflet restano asincroni. -->
-    <link rel="stylesheet" href="/home.css?v=28">
+    <link rel="stylesheet" href="/home.css?v=29">
     
-    <!-- Structured Data (JSON-LD) -->
+    <!-- Structured Data (JSON-LD). Coordinate: Google Business Profile del gestore, verificate il 24 settembre 2026. -->
     <script type="application/ld+json">
 {
     "@context": "https://schema.org",
@@ -61,7 +61,10 @@
     "description": "Appartamento indipendente nel centro storico pedonale di Cefalù: una camera, un bagno, cucina attrezzata, aria condizionata e Wi-Fi in fibra. Due minuti a piedi dal Duomo, cinque dalla spiaggia.",
     "url": "https://mont6cefalu.it/",
     "logo": "https://mont6cefalu.it/img/logo-dark-250.png",
-    "sameAs": ["https://www.airbnb.it/rooms/48284780"],
+    "sameAs": [
+        "https://www.airbnb.it/rooms/48284780",
+        "https://maps.google.com/maps?cid=4203028787668436511"
+    ],
     "telephone": "+39-388-190-8816",
     "email": "mont6.home@gmail.com",
     "image": [
@@ -74,8 +77,8 @@
         "https://mont6cefalu.it/img/_MG_4135.jpg",
         "https://mont6cefalu.it/img/_MG_4179.jpg"
     ],
-    "latitude": 38.0386,
-    "longitude": 14.0226,
+    "latitude": 38.0372,
+    "longitude": 14.0221,
     "address": {
         "@type": "PostalAddress",
         "streetAddress": "Vicolo Monteleone 6",
@@ -86,8 +89,8 @@
     },
     "geo": {
         "@type": "GeoCoordinates",
-        "latitude": 38.0386,
-        "longitude": 14.0226
+        "latitude": 38.0372,
+        "longitude": 14.0221
     },
     "priceRange": "€{{MIN_NIGHTLY_RATE}} - €{{MAX_NIGHTLY_RATE}} a notte",
     "knowsLanguage": [
@@ -172,7 +175,7 @@
     </a>
 
     <!-- NAVIGATION -->
-    <nav class="navbar" id="navbar">
+    <nav class="navbar" id="navbar" aria-label="Navigazione principale" data-aria-label-en="Main navigation">
         <div class="nav-container">
             <a href="#home">
                 <img src="img/logo-white-250.png" alt="Mont°6 Logo" data-alt-en="Mont°6" width="250" height="134" class="brand-logo logo-light">
@@ -210,7 +213,7 @@
                 </div>
                 
                 <!-- Mobile Menu Toggle -->
-                <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Menu">
+                <button type="button" class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="mobile-nav">
                     <div class="hamburger">
                         <span></span><span></span><span></span>
                     </div>
@@ -219,7 +222,7 @@
         </div>
         
         <!-- Mobile Dropdown Fullscreen -->
-        <div class="mobile-nav-fullscreen" id="mobile-nav">
+        <div class="mobile-nav-fullscreen" id="mobile-nav" aria-hidden="true" inert>
             <!-- Language Selector Mobile -->
             <div class="lang-selector mobile-lang">
                 <a class="lang-btn active" href="/" hreflang="it" aria-current="true">IT</a>
@@ -818,8 +821,8 @@
                             </button></h3>
                             <div class="faq-answer">
                                 <p>
-                                    <span class="lang-it">Il soggiorno minimo è di 2 notti. Durante l'alta stagione (luglio-agosto) potrebbero essere richieste 3 notti.</span>
-                                    <span class="lang-en">The minimum stay is 2 nights. During high season (July-August) 3 nights may be required.</span>
+                                    <span class="lang-it">Il soggiorno minimo è di 3 notti se comprende almeno una notte a luglio o agosto; di 2 notti negli altri periodi.</span>
+                                    <span class="lang-en">The minimum stay is 3 nights if it includes any night in July or August, and 2 nights at other times.</span>
                                 </p>
                             </div>
                         </div>
@@ -1051,7 +1054,7 @@
     <script src="vendor/glightbox/glightbox.min.js"></script>
 
     <!-- Custom JS -->
-    <script src="app.js?v=26"></script>
+    <script type="module" src="app.js?v=27"></script>
     <!-- COOKIE_NOTICE -->
     <script src="/cookie-notice.js?v=1" defer></script>
 </body>

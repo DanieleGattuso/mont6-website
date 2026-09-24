@@ -102,6 +102,29 @@ test('past dates, short stays and malformed guests cannot reach Stripe',async()=
     for(const data of [choice({checkIn:'01/01/2020',checkOut:'03/01/2020'}),choice({checkOut:'11/09/2030'}),choice({checkIn:'31/02/2030'}),choice({guests:'2<script>'}),choice({guests:1.9}),choice({guests:true})]) assert.equal((await pay(data)).status,400);
     assert.equal(requests.length,0);
 });
+
+for (const [checkIn, checkOut, accepted, minimum, lang = 'it'] of [
+    ['2030-06-29', '2030-07-01', true, 2],
+    ['2030-06-30', '2030-07-02', false, 3],
+    ['2030-06-30', '2030-07-03', true, 3],
+    ['2030-07-10', '2030-07-12', false, 3, 'en'],
+    ['2030-07-10', '2030-07-13', true, 3],
+    ['2030-08-31', '2030-09-02', false, 3],
+    ['2030-08-31', '2030-09-03', true, 3],
+    ['2030-09-01', '2030-09-03', true, 2],
+    ['2030-12-31', '2031-01-02', true, 2],
+]) test(`checkout applies seasonal minimum: ${checkIn} to ${checkOut}`, async () => {
+    const response = await pay(choice({ checkIn, checkOut, lang }));
+    assert.equal(response.status, accepted ? 200 : 400);
+    assert.equal(requests.length, accepted ? 1 : 0, 'Rejected stays never call Stripe');
+    assert.equal((await env.DB.prepare('SELECT count(*) AS n FROM checkout_holds').first()).n, accepted ? 1 : 0,
+        'Rejected stays never reserve inventory');
+    if (!accepted) {
+        const { error } = await response.json();
+        assert.ok(error.includes(`${minimum} ${lang === 'en' ? 'nights' : 'notti'}`));
+        assert.ok(error.includes(lang === 'en' ? 'July or August' : 'luglio o agosto'));
+    }
+});
 test('missing DB or webhook secret prevents charging',async()=>{
     const db=env.DB;delete env.DB;assert.equal((await pay(choice())).status,503);env.DB=db;
     delete env.STRIPE_WEBHOOK_SECRET;assert.equal((await pay(choice())).status,503);assert.equal(requests.length,0);

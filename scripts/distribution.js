@@ -9,7 +9,7 @@ const path = require('node:path');
 const PUBLIC_FILES = Object.freeze([
     ...['', 'en/'].flatMap(prefix => ['index', 'privacy', 'success', '404'].map(page => `${prefix}${page}.html`)),
     'it/index.html',
-    'app.js', 'booking-status.js', 'lang-init.js', 'cookie-notice.js',
+    'app.js', 'booking-rules.js', 'booking-status.js', 'lang-init.js', 'cookie-notice.js',
     'style.css', 'home.css', '_headers', 'robots.txt', 'sitemap.xml', 'llms.txt',
     'blocked-dates.json', 'prezzi.json',
     'vendor/leaflet/leaflet.js', 'vendor/leaflet/leaflet.css', 'vendor/leaflet/LICENSE',

@@ -2,6 +2,7 @@ import { getBookedRanges, overlapsBooked } from '../_lib/booked.js';
 import { DAY, MONTHS, parseDate, isoDate, todayInRome, json, readAsset, stripe, reconcileHolds } from '../_lib/payment.js';
 import { BodyTooLargeError, readBoundedText } from '../_lib/body.js';
 import { CURRENT_TERMS_VERSION, checkoutTermsText } from '../_lib/booking-terms.js';
+import { minimumStayNights, minimumStayMessage } from '../../booking-rules.js';
 
 export async function onRequestPost({ request, env }) {
     let lang = 'it';
@@ -26,10 +27,14 @@ export async function onRequestPost({ request, env }) {
         if (!env.DB || !env.STRIPE_SECRET_KEY || !env.STRIPE_WEBHOOK_SECRET) return unavailable();
         const start = parseDate(body.checkIn), end = parseDate(body.checkOut);
         const guests = typeof body.guests === 'number' || typeof body.guests === 'string' ? Number(body.guests) : NaN;
-        if (!start || !end || isoDate(start) < todayInRome() || (end - start) / DAY < 2
+        if (!start || !end || isoDate(start) < todayInRome() || end <= start
             || (end - start) / DAY > 365 || ![1, 2].includes(guests)) {
-            return json(400, { error: t('Scegli date valide, da oggi in poi, per almeno 2 notti e 1 o 2 ospiti. Per soggiorni oltre un anno, contattami.',
-                'Choose valid dates from today, for at least 2 nights and 1 or 2 guests. For stays over a year, contact me.') });
+            return json(400, { error: t('Scegli date valide, da oggi in poi, e 1 o 2 ospiti. Per soggiorni oltre un anno, contattami.',
+                'Choose valid dates from today and 1 or 2 guests. For stays over a year, contact me.') });
+        }
+        const minimumNights = minimumStayNights(start, end);
+        if ((end - start) / DAY < minimumNights) {
+            return json(400, { error: minimumStayMessage(minimumNights, lang) });
         }
         const checkIn = isoDate(start), checkOut = isoDate(end);
         const id = body.requestId || crypto.randomUUID();

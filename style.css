@@ -661,6 +661,7 @@ body.cookie-notice-open { padding-bottom: max(80px, var(--cookie-notice-height, 
 .booking-premium { padding: var(--space-xl) 0; }
 .booking-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
 .booking-info .lead-text { color: #625C52; }
+.booking-info #rates-summary { color: #625C52; }
 
 /* FAQ */
 .faq-list { margin-top: 3rem; }
