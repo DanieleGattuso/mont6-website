@@ -31,7 +31,7 @@
         .nf-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
     </style>
     <meta name="mont6-analytics-id" content="G-G63SNBBC39">
-    <link rel="stylesheet" href="/analytics-consent.css?v=1">
+    <link rel="stylesheet" href="/analytics-consent.css?v=2">
     <script src="/analytics.js?v=1" defer></script>
 </head>
 <body class="editorial-theme">
@@ -63,13 +63,19 @@
     <script src="/lang-init.js"></script>
         <aside class="cookie-banner" id="cookieBanner" hidden aria-label="Cookies">
         <div class="cookie-content">
-            <p><span>Essential cookies make the site work. With your consent, Google Analytics helps us understand how it is used and where bookings come from. You can decline and still book.</span> <a href="/en/privacy#cookie"><span>Privacy notice</span></a></p>
+            <div class="cookie-copy">
+                <h2><span>Your privacy</span></h2>
+                <p><span>We use essential cookies. With your consent, Google Analytics helps us understand visits and where bookings come from. You can decline and still book.</span></p>
+            </div>
             <div class="cookie-actions">
                 <div class="cookie-choice-actions">
-                    <button id="cookieReject" class="btn-cookie" type="button" data-cookie-choice="rejected"><span>Decline statistics</span></button>
-                    <button id="cookieAccept" class="btn-cookie" type="button" data-cookie-choice="accepted"><span>Accept statistics</span></button>
+                    <button id="cookieReject" class="btn-cookie" type="button" data-cookie-choice="rejected" aria-label="Decline statistics"><span>Decline</span></button>
+                    <button id="cookieAccept" class="btn-cookie" type="button" data-cookie-choice="accepted" aria-label="Accept statistics"><span>Accept</span></button>
                 </div>
-                <a href="/en/privacy#cookie" data-cookie-preferences><span>Preferences</span></a>
+                <div class="cookie-links">
+                    <a href="/en/privacy#cookie" data-cookie-preferences><span>Preferences</span></a>
+                    <a href="/en/privacy#cookie"><span>Privacy notice</span></a>
+                </div>
             </div>
         </div>
     </aside>

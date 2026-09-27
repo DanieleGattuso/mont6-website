@@ -57,7 +57,7 @@ function build(page, lang) {
     html = renderLanguage(html, lang)
         .replace('<html lang="it" data-lang="it">', `<html lang="${lang}" data-lang="${lang}">`);
     html = html.replace('</head>', `    <meta name="mont6-analytics-id" content="${ANALYTICS_ID}">
-${page === 'index' ? '' : '    <link rel="stylesheet" href="/analytics-consent.css?v=1">\n'}    <script src="/analytics.js?v=1" defer></script>
+${page === 'index' ? '' : '    <link rel="stylesheet" href="/analytics-consent.css?v=2">\n'}    <script src="/analytics.js?v=1" defer></script>
 </head>`)
         .replace('/cookie-notice.js?v=1', '/cookie-notice.js?v=2');
     const [title, description] = meta[page][lang];

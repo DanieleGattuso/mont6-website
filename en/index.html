@@ -1028,15 +1028,37 @@ span.flatpickr-weekday { color: var(--color-accent) !important; font-weight: 600
     .policy-container, .success-card { padding: 2rem 1.25rem !important; }
 }
 
-/* Consent controls use the existing Mont°6 palette, with equal choice weight. */
-.cookie-banner { padding-block: 1rem; padding-bottom: max(1rem, env(safe-area-inset-bottom)); max-height: 75dvh; overflow: auto; }
-.cookie-content { align-items: center; gap: 1.5rem; }
-.cookie-content p { font-size: 0.9375rem; max-width: 70ch; }
-.cookie-actions { flex-direction: column; align-items: stretch; gap: 0.4rem; }
-.cookie-actions > a { align-self: flex-start; }
-.cookie-choice-actions { display: flex; align-items: stretch; gap: 0.75rem; }
-.cookie-choice-actions .btn-cookie { flex: 1 1 0; margin: 0; padding: 0.65rem 1rem; min-height: 44px; font-size: 0.9375rem; line-height: 1.4; white-space: normal; text-align: center; }
-.cookie-preferences { width: min(92vw, 600px); padding: clamp(1.25rem, 4vw, 2rem); }
+/* A quiet, compact notice in Mont°6's limestone palette. Both choices are equal. */
+.cookie-banner {
+    left: max(1.5rem, env(safe-area-inset-left));
+    bottom: max(1.5rem, env(safe-area-inset-bottom));
+    width: min(460px, calc(100% - 3rem));
+    max-height: calc(100dvh - 3rem);
+    overflow: auto;
+    padding: 1.5rem 1.5rem 1rem;
+    border: 0;
+    border-radius: 12px;
+    background: var(--color-bg-light);
+    color: var(--color-text);
+    box-shadow: 0 8px 32px rgba(28, 36, 32, 0.18);
+}
+.cookie-content { display: flex; flex-direction: column; align-items: stretch; gap: 1.25rem; margin: 0; }
+.cookie-copy h2 { font-family: var(--font-heading); font-size: 1.875rem; font-weight: 500; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 0.65rem; }
+.cookie-content p { padding: 0; font-size: 0.875rem; line-height: 1.6; color: var(--color-text); }
+.cookie-actions { width: 100%; margin: 0; flex-direction: column; align-items: stretch; gap: 0.35rem; }
+.cookie-choice-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: 0.625rem; }
+.cookie-choice-actions .btn-cookie {
+    margin: 0; padding: 0.75rem 0.6rem; min-height: 46px;
+    border: 1px solid #81776A; border-radius: 6px;
+    background: transparent; color: var(--color-text);
+    font-size: 0.875rem; font-weight: 600; line-height: 1.4; white-space: normal; text-align: center;
+}
+.cookie-choice-actions .btn-cookie:hover { background: var(--color-bg-dark); border-color: var(--color-bg-dark); color: var(--color-bg-card); }
+.cookie-choice-actions .btn-cookie:active { background: #303D33; }
+.cookie-links { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 1rem; }
+.cookie-content .cookie-links a { min-height: 44px; font-size: 0.75rem; line-height: 1.5; color: var(--color-text-light); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.cookie-content .cookie-links a:hover { color: var(--color-text); }
+.cookie-preferences { width: min(92vw, 600px); padding: clamp(1.25rem, 4vw, 2rem); border-radius: 12px; }
 .cookie-preferences p { font-size: 1rem; line-height: 1.6; }
 .cookie-preferences .cookie-choice-actions { margin-top: 1.5rem; }
 .cookie-preferences .cookie-choice-actions .btn-cookie { margin-top: 0; }
@@ -1046,13 +1068,17 @@ span.flatpickr-weekday { color: var(--color-accent) !important; font-weight: 600
 .cookie-text-button[data-cookie-close] { margin-inline-start: auto; }
 .cookie-banner :focus-visible, .cookie-preferences :focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
 .cookie-banner [hidden], .cookie-preferences [hidden] { display: none !important; }
-@media (max-width: 850px) {
-    .cookie-content { flex-direction: column; align-items: stretch; gap: 0.75rem; }
-    .cookie-content p { font-size: 1rem; }
-    .cookie-actions { width: 100%; }
-}
-@media (max-width: 360px) {
-    .cookie-choice-actions { flex-direction: column; }
+body.cookie-notice-open { padding-bottom: calc(var(--cookie-notice-height, 0px) + 3rem); }
+@media (max-width: 600px) {
+    .cookie-banner {
+        left: max(0.75rem, env(safe-area-inset-left));
+        bottom: max(0.75rem, env(safe-area-inset-bottom));
+        width: calc(100% - 1.5rem); max-height: calc(100dvh - 1.5rem);
+        padding: 1.25rem 1.25rem 0.75rem;
+    }
+    .cookie-copy h2 { font-size: 1.75rem; }
+    .cookie-content { gap: 1rem; }
+    body.cookie-notice-open { padding-bottom: calc(var(--cookie-notice-height, 0px) + 1.5rem); }
 }
 
     </style>
@@ -2156,13 +2182,19 @@ span.flatpickr-weekday { color: var(--color-accent) !important; font-weight: 600
     <script type="module" src="/app.js?v=30"></script>
         <aside class="cookie-banner" id="cookieBanner" hidden aria-label="Cookies">
         <div class="cookie-content">
-            <p><span>Essential cookies make the site work. With your consent, Google Analytics helps us understand how it is used and where bookings come from. You can decline and still book.</span> <a href="/en/privacy#cookie"><span>Privacy notice</span></a></p>
+            <div class="cookie-copy">
+                <h2><span>Your privacy</span></h2>
+                <p><span>We use essential cookies. With your consent, Google Analytics helps us understand visits and where bookings come from. You can decline and still book.</span></p>
+            </div>
             <div class="cookie-actions">
                 <div class="cookie-choice-actions">
-                    <button id="cookieReject" class="btn-cookie" type="button" data-cookie-choice="rejected"><span>Decline statistics</span></button>
-                    <button id="cookieAccept" class="btn-cookie" type="button" data-cookie-choice="accepted"><span>Accept statistics</span></button>
+                    <button id="cookieReject" class="btn-cookie" type="button" data-cookie-choice="rejected" aria-label="Decline statistics"><span>Decline</span></button>
+                    <button id="cookieAccept" class="btn-cookie" type="button" data-cookie-choice="accepted" aria-label="Accept statistics"><span>Accept</span></button>
                 </div>
-                <a href="/en/privacy#cookie" data-cookie-preferences><span>Preferences</span></a>
+                <div class="cookie-links">
+                    <a href="/en/privacy#cookie" data-cookie-preferences><span>Preferences</span></a>
+                    <a href="/en/privacy#cookie"><span>Privacy notice</span></a>
+                </div>
             </div>
         </div>
     </aside>
