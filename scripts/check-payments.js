@@ -205,7 +205,7 @@ test('webhook rejects streamed bodies past 1 MiB before signature or booking pro
 });
 test('server calculates the total and sets a bounded card Checkout',async()=>{
     assert.equal((await pay(choice({checkIn:'30/09/2030',checkOut:'02/10/2030',amount:1}))).status,200);
-    assert.equal(requests[0].get('line_items[0][price_data][unit_amount]'),'21800');
+    assert.equal(requests[0].get('line_items[0][price_data][unit_amount]'),'30000');
     assert.equal(requests[0].get('payment_method_types[0]'),'card');
     assert.ok(Number(requests[0].get('expires_at'))>Date.now()/1000+1800);
 });
@@ -227,7 +227,7 @@ test('new Checkout sessions persist the approved terms and show them in the sele
         assert.ok(!text.includes(lang === 'en' ? 'Cancellazione:' : 'Cancellation:'));
         const hold = await env.DB.prepare('SELECT terms_version FROM checkout_holds WHERE id = ?').bind(selection.requestId).first();
         assert.equal(hold.terms_version, '2026-09-22');
-        assert.equal(params.get('line_items[0][price_data][unit_amount]'), '25400');
+        assert.equal(params.get('line_items[0][price_data][unit_amount]'), '34000');
     }
 });
 test('terms remain identical when retrying an uncertain Stripe creation',async()=>{
@@ -338,9 +338,9 @@ test('a refund before completion cannot revive a cancelled booking',async()=>{
 });
 test('partial refund keeps dates; full refund releases them',async()=>{
     const s=await createPaid();await payment.recordPaidSession(env,s);
-    assert.equal((await event('charge.refunded',{id:'ch_test',payment_intent:'pi_test',amount:25400,amount_refunded:12700},'evt_partial')).status,200);
+    assert.equal((await event('charge.refunded',{id:'ch_test',payment_intent:'pi_test',amount:s.amount_total,amount_refunded:s.amount_total / 2},'evt_partial')).status,200);
     assert.equal((await pay(choice())).status,409);
-    assert.equal((await event('charge.refunded',{id:'ch_test',payment_intent:'pi_test',amount:25400,amount_refunded:25400},'evt_full')).status,200);
+    assert.equal((await event('charge.refunded',{id:'ch_test',payment_intent:'pi_test',amount:s.amount_total,amount_refunded:s.amount_total},'evt_full')).status,200);
     assert.equal((await pay(choice())).status,200);
 });
 test('webhook signature rejects forgeries and stale timestamps',async()=>{
@@ -371,7 +371,7 @@ test('new guest confirmations retain their versioned terms, identity and escaped
         assert.ok(email.html.includes('Daniele Gattuso'));
         assert.ok(email.html.includes('Vicolo Monteleone 6, 90015 Cefalù (PA)'));
         assert.ok(email.html.includes('mailto:mont6.home@gmail.com'));
-        assert.ok(email.html.includes('€254.00'));
+        assert.ok(email.html.includes('€340.00'));
         assert.ok(email.html.includes('&lt;img src=x onerror=alert(1)&gt;'));
         assert.ok(!email.html.includes('<img'));
         assert.ok(!email.html.includes(lang === 'en' ? 'Cancellazione:' : 'Cancellation:'));
@@ -451,7 +451,7 @@ test('return page verifies paid and registered status without exposing guest dat
     assert.equal((await call('fake')).status,400);
     await pay(choice());const s=[...sessions.values()][0];assert.equal((await(await call(s.id)).json()).status,'pending');
     s.payment_status='paid';s.status='complete';const r=await call(s.id), data=await r.json();
-    assert.equal(data.status,'confirmed');assert.equal(data.amount,25400);assert.equal(data.email,undefined);assert.equal(data.name,undefined);
+    assert.equal(data.status,'confirmed');assert.equal(data.amount,34000);assert.equal(data.email,undefined);assert.equal(data.name,undefined);
     assert.equal(r.headers.get('Cache-Control'),'no-store');
     await payment.cancelSession(env,s);assert.equal((await(await call(s.id)).json()).status,'cancelled');
 });
