@@ -976,3 +976,30 @@ span.flatpickr-weekday { color: var(--color-accent) !important; font-weight: 600
     .policy-wrapper { padding: 2rem 0 !important; }
     .policy-container, .success-card { padding: 2rem 1.25rem !important; }
 }
+
+/* Consent controls use the existing Mont°6 palette, with equal choice weight. */
+.cookie-banner { padding-block: 1rem; padding-bottom: max(1rem, env(safe-area-inset-bottom)); max-height: 75dvh; overflow: auto; }
+.cookie-content { align-items: center; gap: 1.5rem; }
+.cookie-content p { font-size: 0.9375rem; max-width: 70ch; }
+.cookie-actions { flex-direction: column; align-items: stretch; gap: 0.4rem; }
+.cookie-actions > a { align-self: flex-start; }
+.cookie-choice-actions { display: flex; align-items: stretch; gap: 0.75rem; }
+.cookie-choice-actions .btn-cookie { flex: 1 1 0; margin: 0; padding: 0.65rem 1rem; min-height: 44px; font-size: 0.9375rem; line-height: 1.4; white-space: normal; text-align: center; }
+.cookie-preferences { width: min(92vw, 600px); padding: clamp(1.25rem, 4vw, 2rem); }
+.cookie-preferences p { font-size: 1rem; line-height: 1.6; }
+.cookie-preferences .cookie-choice-actions { margin-top: 1.5rem; }
+.cookie-preferences .cookie-choice-actions .btn-cookie { margin-top: 0; }
+.cookie-consent-status { font-weight: 600; }
+.cookie-preferences-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.75rem; margin-top: 1rem; }
+.cookie-text-button { border: 0; background: transparent; color: inherit; font: inherit; font-size: 0.9375rem; padding: 0.5rem 0; min-height: 44px; cursor: pointer; text-decoration: underline; text-underline-offset: 0.2em; }
+.cookie-text-button[data-cookie-close] { margin-inline-start: auto; }
+.cookie-banner :focus-visible, .cookie-preferences :focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.cookie-banner [hidden], .cookie-preferences [hidden] { display: none !important; }
+@media (max-width: 850px) {
+    .cookie-content { flex-direction: column; align-items: stretch; gap: 0.75rem; }
+    .cookie-content p { font-size: 1rem; }
+    .cookie-actions { width: 100%; }
+}
+@media (max-width: 360px) {
+    .cookie-choice-actions { flex-direction: column; }
+}

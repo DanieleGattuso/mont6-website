@@ -12,7 +12,10 @@ export async function onRequestGet({ request, env }) {
         // The unguessable session ID is a bearer token. Return no names/emails.
         return json(200, { status: booking.status === 'confirmed' ? 'confirmed' : 'cancelled',
             ...(booking.status === 'confirmed' ? { checkIn: booking.check_in, checkOut: booking.check_out,
-                guests: booking.guests, amount: booking.amount_total, currency: booking.currency } : {}) });
+                guests: booking.guests, amount: booking.amount_total, currency: booking.currency,
+                // Analytics gets a stable, non-authorizing ID, never the Stripe bearer token.
+                ...(Number.isSafeInteger(booking.id) && booking.id > 0
+                    ? { transactionId: `mont6_${booking.id}` } : {}) } : {}) });
     } catch (error) {
         console.error('Booking status unavailable:', error.message);
         return json(error.status === 404 ? 404 : 503, { status: error.status === 404 ? 'invalid' : 'unavailable' });

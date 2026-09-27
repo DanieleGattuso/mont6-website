@@ -34,7 +34,7 @@ Le pagine seguenti sono le fonti pubbliche di riferimento. Prezzi e disponibilit
 - [Pagamento e imposta di soggiorno](https://mont6cefalu.it/#booking): il soggiorno si paga per intero su Stripe. Il sito indica un'imposta di soggiorno separata di 2 euro a persona per notte, per un massimo di 5 notti, da pagare all'arrivo.
 - [Cancellazioni e rimborsi](https://mont6cefalu.it/#cancellation-policy): rimborso del 100% con almeno 14 giorni di anticipo sull'arrivo; del 50% con almeno 7 ma meno di 14 giorni; nessun rimborso con meno di 7 giorni o in caso di mancato arrivo. La richiesta si invia via email o WhatsApp al gestore. Il rimborso torna sulla carta usata per il pagamento, in genere entro 5–10 giorni lavorativi.
 - [Privacy](https://mont6cefalu.it/privacy): titolare Daniele Gattuso, dati trattati per contatti e prenotazioni, fornitori dei servizi, conservazione e diritti degli interessati.
-- [Cookie e servizi del sito](https://mont6cefalu.it/privacy#cookie): informazioni sulle memorie del browser, il pagamento Stripe, la mappa OpenStreetMap e le statistiche Cloudflare Web Analytics.
+- [Cookie e servizi del sito](https://mont6cefalu.it/privacy#cookie): cookie necessari per lingua e prenotazione; statistiche Cloudflare Web Analytics senza cookie di tracciamento. Google Analytics 4 è facoltativo e si carica solo dopo consenso esplicito, revocabile in qualsiasi momento dalle preferenze cookie. Rifiutare non impedisce la prenotazione. Le statistiche misurano pagine, clic WhatsApp, avvio del pagamento e prenotazioni pagate senza inviare nomi, email, date del soggiorno o numero di ospiti; nessuna pubblicità personalizzata o Meta Pixel.
 
 ## Optional
 

@@ -448,12 +448,33 @@ test('D1 failure never exports an empty successful iCal',async()=>{
 });
 test('return page verifies paid and registered status without exposing guest data',async()=>{
     const call=id=>status.onRequestGet({env,request:new Request(`https://mont6cefalu.it/api/booking-status?session_id=${id}`)});
-    assert.equal((await call('fake')).status,400);
-    await pay(choice());const s=[...sessions.values()][0];assert.equal((await(await call(s.id)).json()).status,'pending');
+    const invalid=await call('fake');assert.equal(invalid.status,400);
+    assert.deepEqual(await invalid.json(),{status:'invalid'});
+    await pay(choice());const s=[...sessions.values()][0];
+    assert.deepEqual(await(await call(s.id)).json(),{status:'pending'});
+    s.status='expired';assert.deepEqual(await(await call(s.id)).json(),{status:'expired'});
     s.payment_status='paid';s.status='complete';const r=await call(s.id), data=await r.json();
-    assert.equal(data.status,'confirmed');assert.equal(data.amount,34000);assert.equal(data.email,undefined);assert.equal(data.name,undefined);
+    const booking=await env.DB.prepare('SELECT id FROM bookings WHERE stripe_session_id = ?').bind(s.id).first();
+    assert.ok(Number.isSafeInteger(booking.id) && booking.id > 0);
+    assert.deepEqual(data,{status:'confirmed',checkIn:'2030-09-10',checkOut:'2030-09-12',
+        guests:2,amount:34000,currency:'eur',transactionId:`mont6_${booking.id}`});
+    assert.ok(!JSON.stringify(data).includes(s.id),'Stripe bearer token must not appear in the response');
     assert.equal(r.headers.get('Cache-Control'),'no-store');
-    await payment.cancelSession(env,s);assert.equal((await(await call(s.id)).json()).status,'cancelled');
+    assert.deepEqual(await(await call(s.id)).json(),data,'Repeated status calls keep the same transaction ID');
+    assert.equal((await env.DB.prepare('SELECT count(*) AS n FROM bookings').first()).n,1);
+    await payment.cancelSession(env,s);assert.deepEqual(await(await call(s.id)).json(),{status:'cancelled'});
+});
+
+test('return page omits the analytics transaction ID for a non-positive stored booking ID',async()=>{
+    const s=await createPaid();await payment.recordPaidSession(env,s);
+    for (const invalidId of [0,-1]) {
+        await env.DB.prepare('UPDATE bookings SET id = ? WHERE stripe_session_id = ?').bind(invalidId,s.id).run();
+        const response=await status.onRequestGet({env,request:new Request(`https://mont6cefalu.it/api/booking-status?session_id=${s.id}`)});
+        assert.equal(response.status,200);
+        const data=await response.json();
+        assert.equal(data.status,'confirmed');assert.equal(data.amount,34000);
+        assert.equal(Object.hasOwn(data,'transactionId'),false);
+    }
 });
 test('automatic email escapes guest HTML and unsafe review URLs',()=>{
     const content=cron.emailContent('review',{guest_name:'<img src=x onerror=alert(1)>',lang:'en'},{REVIEW_URL:'javascript:alert(1)'});

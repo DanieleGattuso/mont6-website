@@ -30,6 +30,9 @@
         .nf-wrap p { margin-bottom: 2rem; }
         .nf-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
     </style>
+    <meta name="mont6-analytics-id" content="G-G63SNBBC39">
+    <link rel="stylesheet" href="/analytics-consent.css?v=1">
+    <script src="/analytics.js?v=1" defer></script>
 </head>
 <body class="editorial-theme">
 
@@ -60,21 +63,37 @@
     <script src="/lang-init.js"></script>
         <aside class="cookie-banner" id="cookieBanner" hidden aria-label="Cookie">
         <div class="cookie-content">
-            <p><span>Usiamo solo cookie essenziali per il sito e la prenotazione.</span></p>
+            <p><span>I cookie essenziali fanno funzionare il sito. Con il tuo consenso, Google Analytics ci aiuta a capire come viene usato e da dove arrivano le prenotazioni. Puoi rifiutare e prenotare comunque.</span> <a href="/privacy#cookie"><span>Informativa</span></a></p>
             <div class="cookie-actions">
+                <div class="cookie-choice-actions">
+                    <button id="cookieReject" class="btn-cookie" type="button" data-cookie-choice="rejected"><span>Rifiuta statistiche</span></button>
+                    <button id="cookieAccept" class="btn-cookie" type="button" data-cookie-choice="accepted"><span>Accetta statistiche</span></button>
+                </div>
                 <a href="/privacy#cookie" data-cookie-preferences><span>Preferenze</span></a>
-                <button id="cookieAccept" class="btn-cookie" type="button"><span>Ho capito</span></button>
             </div>
         </div>
     </aside>
     <dialog id="cookiePreferences" class="cookie-preferences" aria-labelledby="cookiePreferencesTitle">
         <h2 id="cookiePreferencesTitle"><span>Preferenze cookie</span></h2>
-        <p><span>I cookie tecnici servono al funzionamento del sito e della prenotazione. Sono sempre attivi e non richiedono il tuo consenso.</span></p>
-        <p><span>Non usiamo cookie pubblicitari o di profilazione: non ci sono cookie facoltativi da accettare o rifiutare.</span></p>
+        <p><span>I cookie essenziali servono al sito, al pagamento e a ricordare la tua scelta. Sono sempre attivi.</span></p>
+        <p><span>Le statistiche facoltative di Google Analytics misurano visite, richieste di contatto e prenotazioni. Si attivano solo se accetti. Non usiamo Google Analytics per la pubblicità personalizzata.</span></p>
+        <p><span>Ricordiamo la scelta per 180 giorni. Puoi cambiarla o revocare il consenso in qualsiasi momento da “Preferenze cookie” in fondo alla pagina.</span></p>
+        <p class="cookie-consent-status" role="status">
+            <span data-consent-status="undecided"><span>Statistiche non attive: non hai ancora scelto.</span></span>
+            <span data-consent-status="accepted" hidden><span>Hai consentito le statistiche.</span></span>
+            <span data-consent-status="rejected" hidden><span>Statistiche disattivate.</span></span>
+        </p>
         <a href="/privacy#cookie"><span>Leggi l’informativa completa</span></a>
-        <button class="btn-cookie" type="button" data-cookie-close autofocus><span>Chiudi</span></button>
+        <div class="cookie-choice-actions">
+            <button class="btn-cookie" type="button" data-cookie-choice="rejected"><span>Rifiuta statistiche</span></button>
+            <button class="btn-cookie" type="button" data-cookie-choice="accepted"><span>Accetta statistiche</span></button>
+        </div>
+        <div class="cookie-preferences-footer">
+            <button class="cookie-text-button" type="button" data-cookie-revoke hidden><span>Revoca consenso</span></button>
+            <button class="cookie-text-button" type="button" data-cookie-close autofocus><span>Chiudi</span></button>
+        </div>
     </dialog>
 
-    <script src="/cookie-notice.js?v=1" defer></script>
+    <script src="/cookie-notice.js?v=2" defer></script>
 </body>
 </html>

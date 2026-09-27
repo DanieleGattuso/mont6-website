@@ -657,6 +657,7 @@ function initBookingForm() {
                 ? `Hi! I'd like to book Mont°6.%0A%0ACheck-in: ${checkIn}%0ACheck-out: ${checkOut}%0AGuests: ${guests()}%0A%0AThank you!`
                 : `Salve! Vorrei prenotare Mont°6.%0A%0ACheck-in: ${checkIn}%0ACheck-out: ${checkOut}%0AOspiti: ${guests()}%0A%0AGrazie.`;
 
+            try { window.Mont6Analytics?.track('contact_request', { method: 'whatsapp', placement: 'booking' }); } catch { /* Analytics must never block an enquiry. */ }
             window.open(`https://wa.me/393881908816?text=${message}`, '_blank', 'noopener');
         });
     }
@@ -700,6 +701,11 @@ function initBookingForm() {
                 }
                 const checkoutUrl = new URL(data.url);
                 if (checkoutUrl.protocol !== 'https:' || checkoutUrl.hostname !== 'checkout.stripe.com') throw new Error(isEn() ? 'Invalid payment link.' : 'Link di pagamento non valido.');
+                try {
+                    window.Mont6Analytics?.track('begin_checkout', {
+                        value: calculatePrice(fp.selectedDates[0], fp.selectedDates[1]).total, currency: 'EUR',
+                    });
+                } catch { /* Analytics must never interrupt payment. */ }
                 window.location.href = checkoutUrl.href;
             } catch (err) {
                 say(err.message, err.message);

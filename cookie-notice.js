@@ -1,41 +1,58 @@
-// This is an essential-storage notice, not consent to tracking.
 document.addEventListener('DOMContentLoaded', () => {
     const banner = document.getElementById('cookieBanner');
-    const dismiss = document.getElementById('cookieAccept');
     const dialog = document.getElementById('cookiePreferences');
-    if (!banner || !dismiss || !dialog) return;
+    const analytics = window.Mont6Analytics;
+    if (!banner || !dialog || !analytics) return; // analytics is optional; booking remains available
 
-    let acknowledged = false;
-    try { acknowledged = localStorage.getItem('mont6_cookie_accepted') === 'true'; } catch { /* optional storage */ }
+    let opener;
     const updateSpace = () => {
         document.documentElement.style.setProperty('--cookie-notice-height', `${banner.hidden ? 0 : banner.offsetHeight}px`);
     };
-    const closeNotice = () => {
-        banner.hidden = true;
-        banner.classList.remove('visible');
-        document.body.classList.remove('cookie-notice-open');
+    const render = () => {
+        const consent = analytics.getConsent();
+        banner.hidden = consent !== null;
+        banner.classList.toggle('visible', !banner.hidden);
+        document.body.classList.toggle('cookie-notice-open', !banner.hidden);
+        dialog.querySelectorAll('[data-consent-status]').forEach(status => {
+            status.hidden = status.dataset.consentStatus !== (consent || 'undecided');
+        });
+        dialog.querySelector('[data-cookie-revoke]').hidden = consent !== 'accepted';
         updateSpace();
-        try { localStorage.setItem('mont6_cookie_accepted', 'true'); } catch { /* page-only acknowledgement */ }
     };
-    if (!acknowledged) {
-        banner.hidden = false;
-        banner.classList.add('visible');
-        document.body.classList.add('cookie-notice-open');
-        updateSpace();
-    }
-    dismiss.addEventListener('click', closeNotice);
-    if ('ResizeObserver' in window) new ResizeObserver(updateSpace).observe(banner);
-    window.addEventListener('resize', updateSpace);
-
-    let opener;
-    document.querySelectorAll('[data-cookie-preferences]').forEach(link => {
-        link.addEventListener('click', event => {
-            if (typeof dialog.showModal !== 'function') return; // ordinary privacy link fallback
-            event.preventDefault();
-            opener = link;
-            dialog.showModal();
+    const closePreferences = () => {
+        if (typeof dialog.close === 'function' && dialog.open) dialog.close();
+        else dialog.removeAttribute('open');
+        opener?.focus();
+    };
+    document.querySelectorAll('[data-cookie-choice]').forEach(button => {
+        button.addEventListener('click', () => {
+            analytics.setConsent(button.dataset.cookieChoice);
+            closePreferences();
+            render();
         });
     });
-    dialog.querySelector('[data-cookie-close]').addEventListener('click', () => dialog.close());
+    document.querySelectorAll('[data-cookie-preferences]').forEach(link => {
+        link.addEventListener('click', event => {
+            event.preventDefault();
+            opener = link;
+            render();
+            if (typeof dialog.showModal === 'function') {
+                if (!dialog.open) dialog.showModal();
+            } else {
+                dialog.setAttribute('open', '');
+                dialog.querySelector('[data-cookie-close]')?.focus();
+            }
+        });
+    });
+    dialog.querySelector('[data-cookie-close]').addEventListener('click', closePreferences);
+    dialog.querySelector('[data-cookie-revoke]').addEventListener('click', () => {
+        analytics.revoke();
+        closePreferences();
+        render();
+    });
     dialog.addEventListener('close', () => opener?.focus());
+    window.addEventListener('mont6:analytics-consent', render);
+    if ('ResizeObserver' in window) new ResizeObserver(updateSpace).observe(banner);
+    window.addEventListener('resize', updateSpace);
+    render();
 });

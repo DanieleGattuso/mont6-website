@@ -6,6 +6,34 @@
     const details = document.getElementById('booking-status-details');
     document.getElementById('booking-home').href = en ? '/en/' : '/?lang=it';
     const show = (heading, text) => { title.textContent = heading; message.textContent = text; document.title = `Mont°6 — ${heading}`; };
+    const reportPurchase = data => {
+        try {
+            const analytics = window.Mont6Analytics;
+            if (!analytics || typeof data.transactionId !== 'string' || !/^mont6_[1-9]\d*$/.test(data.transactionId)
+                || !Number.isSafeInteger(data.amount) || data.amount <= 0
+                || typeof data.currency !== 'string' || data.currency.toUpperCase() !== 'EUR') return;
+            const value = data.amount / 100;
+            const payload = { transaction_id: data.transactionId, value, currency: 'EUR',
+                items: [{ item_id: 'mont6_stay', item_name: 'Soggiorno Mont6', quantity: 1, price: value }] };
+            const send = () => {
+                try { analytics.track('purchase', payload); } catch { /* Analytics never affects the booking. */ }
+            };
+            const consent = analytics.getConsent();
+            if (consent === 'accepted') send();
+            else if (consent === null) {
+                // Keep this verified purchase in memory only while this page awaits a choice.
+                const onConsent = () => {
+                    try {
+                        const next = analytics.getConsent();
+                        if (next !== 'accepted' && next !== 'rejected') return;
+                        window.removeEventListener('mont6:analytics-consent', onConsent);
+                        if (next === 'accepted') send();
+                    } catch { /* An optional analytics failure cannot change the confirmation. */ }
+                };
+                window.addEventListener('mont6:analytics-consent', onConsent);
+            }
+        } catch { /* Missing or unavailable analytics must not interrupt a verified booking. */ }
+    };
     const id = new URLSearchParams(location.search).get('session_id');
     if (!id) {
         show(t('Nessuna prenotazione da verificare', 'No booking to verify'),
@@ -27,6 +55,7 @@
                 details.textContent = `${date(data.checkIn)} → ${date(data.checkOut)} · ${data.guests} ${t('ospiti', 'guests')} · ${new Intl.NumberFormat(en ? 'en-GB' : 'it-IT', { style: 'currency', currency: data.currency }).format(data.amount / 100)}`;
                 details.hidden = false;
                 try { sessionStorage.removeItem('mont6_sel'); sessionStorage.removeItem('mont6_checkout'); } catch { /* optional storage */ }
+                reportPurchase(data);
                 return;
             }
             if (data.status === 'cancelled' || data.status === 'expired' || data.status === 'invalid') {

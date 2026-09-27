@@ -1,16 +1,32 @@
     <aside class="cookie-banner" id="cookieBanner" hidden aria-label="Cookie" data-aria-label-en="Cookies">
         <div class="cookie-content">
-            <p><span class="lang-it">Usiamo solo cookie essenziali per il sito e la prenotazione.</span><span class="lang-en">We use only essential cookies for the site and your booking.</span></p>
+            <p><span class="lang-it">I cookie essenziali fanno funzionare il sito. Con il tuo consenso, Google Analytics ci aiuta a capire come viene usato e da dove arrivano le prenotazioni. Puoi rifiutare e prenotare comunque.</span><span class="lang-en">Essential cookies make the site work. With your consent, Google Analytics helps us understand how it is used and where bookings come from. You can decline and still book.</span> <a href="/privacy#cookie"><span class="lang-it">Informativa</span><span class="lang-en">Privacy notice</span></a></p>
             <div class="cookie-actions">
+                <div class="cookie-choice-actions">
+                    <button id="cookieReject" class="btn-cookie" type="button" data-cookie-choice="rejected"><span class="lang-it">Rifiuta statistiche</span><span class="lang-en">Decline statistics</span></button>
+                    <button id="cookieAccept" class="btn-cookie" type="button" data-cookie-choice="accepted"><span class="lang-it">Accetta statistiche</span><span class="lang-en">Accept statistics</span></button>
+                </div>
                 <a href="/privacy#cookie" data-cookie-preferences><span class="lang-it">Preferenze</span><span class="lang-en">Preferences</span></a>
-                <button id="cookieAccept" class="btn-cookie" type="button"><span class="lang-it">Ho capito</span><span class="lang-en">Got it</span></button>
             </div>
         </div>
     </aside>
     <dialog id="cookiePreferences" class="cookie-preferences" aria-labelledby="cookiePreferencesTitle">
         <h2 id="cookiePreferencesTitle"><span class="lang-it">Preferenze cookie</span><span class="lang-en">Cookie preferences</span></h2>
-        <p><span class="lang-it">I cookie tecnici servono al funzionamento del sito e della prenotazione. Sono sempre attivi e non richiedono il tuo consenso.</span><span class="lang-en">Essential cookies support the site and the booking process. They are always active and do not require consent.</span></p>
-        <p><span class="lang-it">Non usiamo cookie pubblicitari o di profilazione: non ci sono cookie facoltativi da accettare o rifiutare.</span><span class="lang-en">We do not use advertising or profiling cookies, so there are no optional cookies to accept or reject.</span></p>
+        <p><span class="lang-it">I cookie essenziali servono al sito, al pagamento e a ricordare la tua scelta. Sono sempre attivi.</span><span class="lang-en">Essential cookies support the site, payment and your saved choice. They are always active.</span></p>
+        <p><span class="lang-it">Le statistiche facoltative di Google Analytics misurano visite, richieste di contatto e prenotazioni. Si attivano solo se accetti. Non usiamo Google Analytics per la pubblicità personalizzata.</span><span class="lang-en">Optional Google Analytics statistics measure visits, contact requests and bookings. They start only if you accept. We do not use Google Analytics for personalised advertising.</span></p>
+        <p><span class="lang-it">Ricordiamo la scelta per 180 giorni. Puoi cambiarla o revocare il consenso in qualsiasi momento da “Preferenze cookie” in fondo alla pagina.</span><span class="lang-en">We remember your choice for 180 days. You can change it or withdraw consent at any time using “Cookie preferences” at the bottom of the page.</span></p>
+        <p class="cookie-consent-status" role="status">
+            <span data-consent-status="undecided"><span class="lang-it">Statistiche non attive: non hai ancora scelto.</span><span class="lang-en">Statistics are off: you have not chosen yet.</span></span>
+            <span data-consent-status="accepted" hidden><span class="lang-it">Hai consentito le statistiche.</span><span class="lang-en">You have allowed statistics.</span></span>
+            <span data-consent-status="rejected" hidden><span class="lang-it">Statistiche disattivate.</span><span class="lang-en">Statistics are off.</span></span>
+        </p>
         <a href="/privacy#cookie"><span class="lang-it">Leggi l’informativa completa</span><span class="lang-en">Read the full privacy notice</span></a>
-        <button class="btn-cookie" type="button" data-cookie-close autofocus><span class="lang-it">Chiudi</span><span class="lang-en">Close</span></button>
+        <div class="cookie-choice-actions">
+            <button class="btn-cookie" type="button" data-cookie-choice="rejected"><span class="lang-it">Rifiuta statistiche</span><span class="lang-en">Decline statistics</span></button>
+            <button class="btn-cookie" type="button" data-cookie-choice="accepted"><span class="lang-it">Accetta statistiche</span><span class="lang-en">Accept statistics</span></button>
+        </div>
+        <div class="cookie-preferences-footer">
+            <button class="cookie-text-button" type="button" data-cookie-revoke hidden><span class="lang-it">Revoca consenso</span><span class="lang-en">Withdraw consent</span></button>
+            <button class="cookie-text-button" type="button" data-cookie-close autofocus><span class="lang-it">Chiudi</span><span class="lang-en">Close</span></button>
+        </div>
     </dialog>

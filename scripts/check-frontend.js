@@ -98,7 +98,7 @@ test('scroll enhancement is optional with no observer or reduced motion', () => 
 });
 
 // Exercise the real booking form with DOM/Flatpickr fixtures and no live calls.
-async function bookingFixture(lang, width = 390) {
+async function bookingFixture(lang, width = 390, analyticsOptions = {}) {
     const { pathToFileURL } = require('node:url');
     const rules = await import(pathToFileURL(path.join(root, 'booking-rules.js')).href);
     const ids = ['date-range', 'guest-count', 'btn-request-whatsapp', 'btn-request-stripe',
@@ -109,14 +109,18 @@ async function bookingFixture(lang, width = 390) {
             classList: { add: name => classes.add(name), remove: name => classes.delete(name), contains: name => classes.has(name) },
             handlers: {}, addEventListener(type, handler) { this.handlers[type] = handler; }, focus() {} }];
     }));
-    const calls = [], opened = [];
+    const calls = [], opened = [], tracked = [], location = {};
     const media = { matches: width > 768, addEventListener(type, handler) { this.onChange = handler; } };
     let options, fp;
     const source = read('app.js');
     vm.runInNewContext(source.slice(source.indexOf('const MESI ='), source.indexOf('function initFAQ()')) + '\ninitBookingForm();', {
         ...rules, Date, console, AbortSignal, URL, crypto,
         document: { getElementById: id => elements[id] || null, documentElement: { getAttribute: () => lang } },
-        window: { innerWidth: width, matchMedia: () => media, addEventListener() {}, open: url => opened.push(url), location: {} },
+        window: { innerWidth: width, matchMedia: () => media, addEventListener() {}, open: url => opened.push(url), location,
+            Mont6Analytics: { track(name, params) {
+                if (analyticsOptions.throws) throw new Error('Optional analytics unavailable');
+                tracked.push({ name, params: JSON.parse(JSON.stringify(params)) });
+            } } },
         sessionStorage: { getItem: () => null, setItem() {}, removeItem() {} },
         flatpickr(input, config) {
             options = config;
@@ -146,13 +150,15 @@ async function bookingFixture(lang, width = 390) {
             calls.push({ url, opts });
             if (url === '/prezzi.json') return { ok: true, json: async () => JSON.parse(read('prezzi.json')) };
             if (url.startsWith('/api/get-booked-dates')) return { ok: true, json: async () => ({ ranges: [], partial: false }) };
-            if (url === '/api/create-checkout-session') return { ok: false, json: async () => ({ error: 'Offline fixture' }) };
+            if (url === '/api/create-checkout-session') return analyticsOptions.checkoutOK
+                ? { ok: true, json: async () => ({ url: 'https://checkout.stripe.com/c/pay/test_fixture' }) }
+                : { ok: false, json: async () => ({ error: 'Offline fixture' }) };
             throw new Error(`Unexpected request: ${url}`);
         },
     });
     await new Promise(setImmediate);
     const local = iso => { const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d); };
-    return { elements, calls, opened, calendar: fp, resize(width) {
+    return { elements, calls, opened, tracked, location, calendar: fp, resize(width) {
         const matches = width > 768;
         if (matches !== media.matches) {
             media.matches = matches;
@@ -177,8 +183,34 @@ test('booking form rejects short summer stays before WhatsApp or payment in both
         form.elements['btn-request-whatsapp'].handlers.click();
         await form.elements['btn-request-stripe'].handlers.click();
         assert.equal(form.opened.length, 0);
+        assert.equal(form.tracked.length, 0);
         assert.equal(form.calls.filter(c => c.url === '/api/create-checkout-session').length, 0);
     }
+});
+
+test('enquiries and a created checkout are separate events with no guest or payment identifiers', async () => {
+    const form = await bookingFixture('it', 390, { checkoutOK: true });
+    form.select('2030-07-10', '2030-07-13');
+    form.elements['btn-request-whatsapp'].handlers.click();
+    await form.elements['btn-request-stripe'].handlers.click();
+    assert.deepEqual(form.tracked, [
+        { name: 'contact_request', params: { method: 'whatsapp', placement: 'booking' } },
+        { name: 'begin_checkout', params: { value: 630, currency: 'EUR' } },
+    ]);
+    assert.equal(form.location.href, 'https://checkout.stripe.com/c/pay/test_fixture');
+    const failed = await bookingFixture('it');
+    failed.select('2030-07-10', '2030-07-13');
+    await failed.elements['btn-request-stripe'].handlers.click();
+    assert.equal(failed.tracked.length, 0, 'an unsuccessful checkout is not counted');
+});
+
+test('analytics errors do not prevent WhatsApp or a valid checkout redirect', async () => {
+    const form = await bookingFixture('en', 390, { checkoutOK: true, throws: true });
+    form.select('2030-07-10', '2030-07-13');
+    form.elements['btn-request-whatsapp'].handlers.click();
+    await form.elements['btn-request-stripe'].handlers.click();
+    assert.equal(form.opened.length, 1);
+    assert.equal(form.location.href, 'https://checkout.stripe.com/c/pay/test_fixture');
 });
 
 test('booking form accepts exact minimum, exclusive checkout, year and DST boundaries', async () => {

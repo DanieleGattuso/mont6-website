@@ -30,6 +30,9 @@
         .nf-wrap p { margin-bottom: 2rem; }
         .nf-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
     </style>
+    <meta name="mont6-analytics-id" content="G-G63SNBBC39">
+    <link rel="stylesheet" href="/analytics-consent.css?v=1">
+    <script src="/analytics.js?v=1" defer></script>
 </head>
 <body class="editorial-theme">
 
@@ -60,21 +63,37 @@
     <script src="/lang-init.js"></script>
         <aside class="cookie-banner" id="cookieBanner" hidden aria-label="Cookies">
         <div class="cookie-content">
-            <p><span>We use only essential cookies for the site and your booking.</span></p>
+            <p><span>Essential cookies make the site work. With your consent, Google Analytics helps us understand how it is used and where bookings come from. You can decline and still book.</span> <a href="/en/privacy#cookie"><span>Privacy notice</span></a></p>
             <div class="cookie-actions">
+                <div class="cookie-choice-actions">
+                    <button id="cookieReject" class="btn-cookie" type="button" data-cookie-choice="rejected"><span>Decline statistics</span></button>
+                    <button id="cookieAccept" class="btn-cookie" type="button" data-cookie-choice="accepted"><span>Accept statistics</span></button>
+                </div>
                 <a href="/en/privacy#cookie" data-cookie-preferences><span>Preferences</span></a>
-                <button id="cookieAccept" class="btn-cookie" type="button"><span>Got it</span></button>
             </div>
         </div>
     </aside>
     <dialog id="cookiePreferences" class="cookie-preferences" aria-labelledby="cookiePreferencesTitle">
         <h2 id="cookiePreferencesTitle"><span>Cookie preferences</span></h2>
-        <p><span>Essential cookies support the site and the booking process. They are always active and do not require consent.</span></p>
-        <p><span>We do not use advertising or profiling cookies, so there are no optional cookies to accept or reject.</span></p>
+        <p><span>Essential cookies support the site, payment and your saved choice. They are always active.</span></p>
+        <p><span>Optional Google Analytics statistics measure visits, contact requests and bookings. They start only if you accept. We do not use Google Analytics for personalised advertising.</span></p>
+        <p><span>We remember your choice for 180 days. You can change it or withdraw consent at any time using “Cookie preferences” at the bottom of the page.</span></p>
+        <p class="cookie-consent-status" role="status">
+            <span data-consent-status="undecided"><span>Statistics are off: you have not chosen yet.</span></span>
+            <span data-consent-status="accepted" hidden><span>You have allowed statistics.</span></span>
+            <span data-consent-status="rejected" hidden><span>Statistics are off.</span></span>
+        </p>
         <a href="/en/privacy#cookie"><span>Read the full privacy notice</span></a>
-        <button class="btn-cookie" type="button" data-cookie-close autofocus><span>Close</span></button>
+        <div class="cookie-choice-actions">
+            <button class="btn-cookie" type="button" data-cookie-choice="rejected"><span>Decline statistics</span></button>
+            <button class="btn-cookie" type="button" data-cookie-choice="accepted"><span>Accept statistics</span></button>
+        </div>
+        <div class="cookie-preferences-footer">
+            <button class="cookie-text-button" type="button" data-cookie-revoke hidden><span>Withdraw consent</span></button>
+            <button class="cookie-text-button" type="button" data-cookie-close autofocus><span>Close</span></button>
+        </div>
     </dialog>
 
-    <script src="/cookie-notice.js?v=1" defer></script>
+    <script src="/cookie-notice.js?v=2" defer></script>
 </body>
 </html>

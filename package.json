@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "build": "node scripts/build-en.js",
-    "test": "node --test scripts/check-payments.js scripts/check-frontend.js scripts/check-distribution.js scripts/check-security.js && node scripts/check-lang.js",
+    "test": "node --test scripts/check-payments.js scripts/check-frontend.js scripts/check-distribution.js scripts/check-security.js scripts/check-analytics.js scripts/check-purchase-analytics.js && node scripts/check-lang.js",
     "test:browser": "node scripts/check-browser.cjs"
   },
   "devDependencies": {

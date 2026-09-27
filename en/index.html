@@ -1028,6 +1028,33 @@ span.flatpickr-weekday { color: var(--color-accent) !important; font-weight: 600
     .policy-container, .success-card { padding: 2rem 1.25rem !important; }
 }
 
+/* Consent controls use the existing Mont°6 palette, with equal choice weight. */
+.cookie-banner { padding-block: 1rem; padding-bottom: max(1rem, env(safe-area-inset-bottom)); max-height: 75dvh; overflow: auto; }
+.cookie-content { align-items: center; gap: 1.5rem; }
+.cookie-content p { font-size: 0.9375rem; max-width: 70ch; }
+.cookie-actions { flex-direction: column; align-items: stretch; gap: 0.4rem; }
+.cookie-actions > a { align-self: flex-start; }
+.cookie-choice-actions { display: flex; align-items: stretch; gap: 0.75rem; }
+.cookie-choice-actions .btn-cookie { flex: 1 1 0; margin: 0; padding: 0.65rem 1rem; min-height: 44px; font-size: 0.9375rem; line-height: 1.4; white-space: normal; text-align: center; }
+.cookie-preferences { width: min(92vw, 600px); padding: clamp(1.25rem, 4vw, 2rem); }
+.cookie-preferences p { font-size: 1rem; line-height: 1.6; }
+.cookie-preferences .cookie-choice-actions { margin-top: 1.5rem; }
+.cookie-preferences .cookie-choice-actions .btn-cookie { margin-top: 0; }
+.cookie-consent-status { font-weight: 600; }
+.cookie-preferences-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.75rem; margin-top: 1rem; }
+.cookie-text-button { border: 0; background: transparent; color: inherit; font: inherit; font-size: 0.9375rem; padding: 0.5rem 0; min-height: 44px; cursor: pointer; text-decoration: underline; text-underline-offset: 0.2em; }
+.cookie-text-button[data-cookie-close] { margin-inline-start: auto; }
+.cookie-banner :focus-visible, .cookie-preferences :focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.cookie-banner [hidden], .cookie-preferences [hidden] { display: none !important; }
+@media (max-width: 850px) {
+    .cookie-content { flex-direction: column; align-items: stretch; gap: 0.75rem; }
+    .cookie-content p { font-size: 1rem; }
+    .cookie-actions { width: 100%; }
+}
+@media (max-width: 360px) {
+    .cookie-choice-actions { flex-direction: column; }
+}
+
     </style>
 
     <!-- Structured Data (JSON-LD). Coordinate: Google Business Profile del gestore, verificate il 24 settembre 2026. -->
@@ -1236,6 +1263,8 @@ span.flatpickr-weekday { color: var(--color-accent) !important; font-weight: 600
     }
 }
     </script>
+    <meta name="mont6-analytics-id" content="G-G63SNBBC39">
+    <script src="/analytics.js?v=1" defer></script>
 </head>
 <body class="editorial-theme">
 
@@ -2124,24 +2153,40 @@ span.flatpickr-weekday { color: var(--color-accent) !important; font-weight: 600
     <script src="/vendor/glightbox/glightbox.min.js"></script>
 
     <!-- Custom JS -->
-    <script type="module" src="/app.js?v=29"></script>
+    <script type="module" src="/app.js?v=30"></script>
         <aside class="cookie-banner" id="cookieBanner" hidden aria-label="Cookies">
         <div class="cookie-content">
-            <p><span>We use only essential cookies for the site and your booking.</span></p>
+            <p><span>Essential cookies make the site work. With your consent, Google Analytics helps us understand how it is used and where bookings come from. You can decline and still book.</span> <a href="/en/privacy#cookie"><span>Privacy notice</span></a></p>
             <div class="cookie-actions">
+                <div class="cookie-choice-actions">
+                    <button id="cookieReject" class="btn-cookie" type="button" data-cookie-choice="rejected"><span>Decline statistics</span></button>
+                    <button id="cookieAccept" class="btn-cookie" type="button" data-cookie-choice="accepted"><span>Accept statistics</span></button>
+                </div>
                 <a href="/en/privacy#cookie" data-cookie-preferences><span>Preferences</span></a>
-                <button id="cookieAccept" class="btn-cookie" type="button"><span>Got it</span></button>
             </div>
         </div>
     </aside>
     <dialog id="cookiePreferences" class="cookie-preferences" aria-labelledby="cookiePreferencesTitle">
         <h2 id="cookiePreferencesTitle"><span>Cookie preferences</span></h2>
-        <p><span>Essential cookies support the site and the booking process. They are always active and do not require consent.</span></p>
-        <p><span>We do not use advertising or profiling cookies, so there are no optional cookies to accept or reject.</span></p>
+        <p><span>Essential cookies support the site, payment and your saved choice. They are always active.</span></p>
+        <p><span>Optional Google Analytics statistics measure visits, contact requests and bookings. They start only if you accept. We do not use Google Analytics for personalised advertising.</span></p>
+        <p><span>We remember your choice for 180 days. You can change it or withdraw consent at any time using “Cookie preferences” at the bottom of the page.</span></p>
+        <p class="cookie-consent-status" role="status">
+            <span data-consent-status="undecided"><span>Statistics are off: you have not chosen yet.</span></span>
+            <span data-consent-status="accepted" hidden><span>You have allowed statistics.</span></span>
+            <span data-consent-status="rejected" hidden><span>Statistics are off.</span></span>
+        </p>
         <a href="/en/privacy#cookie"><span>Read the full privacy notice</span></a>
-        <button class="btn-cookie" type="button" data-cookie-close autofocus><span>Close</span></button>
+        <div class="cookie-choice-actions">
+            <button class="btn-cookie" type="button" data-cookie-choice="rejected"><span>Decline statistics</span></button>
+            <button class="btn-cookie" type="button" data-cookie-choice="accepted"><span>Accept statistics</span></button>
+        </div>
+        <div class="cookie-preferences-footer">
+            <button class="cookie-text-button" type="button" data-cookie-revoke hidden><span>Withdraw consent</span></button>
+            <button class="cookie-text-button" type="button" data-cookie-close autofocus><span>Close</span></button>
+        </div>
     </dialog>
 
-    <script src="/cookie-notice.js?v=1" defer></script>
+    <script src="/cookie-notice.js?v=2" defer></script>
 </body>
 </html>
